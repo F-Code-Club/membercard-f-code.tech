@@ -2,12 +2,29 @@ import styled from 'styled-components';
 import theme from './../../theme';
 import BaseButton from './BaseButton';
 
+const definedPosition = {
+  'top-right': {
+    position: 'absolute',
+    top: '1em',
+    right: '1em',
+  },
+};
+
+const parseCSS = (position) => {
+  let result = '';
+  for (let key in definedPosition[position]) {
+    result = result + key + ': ' + definedPosition[position][key] + ';\n';
+  }
+  return result;
+};
+
 const StyledCloseButton = styled(BaseButton)`
   padding: 0.25em;
-  background-color: ${(props) => props.theme.red2};
-  color: ${(props) => props.theme.red1};
+  background-color: ${theme.red2};
+  color: ${theme.red1};
   border-radius: 999px;
   font-size: ${(props) => props.size}rem;
+  ${(props) => (props.position ? parseCSS(props.position) : '')}
 
   & > ion-icon {
     --ionicon-stroke-width: 50px;
@@ -16,7 +33,7 @@ const StyledCloseButton = styled(BaseButton)`
 
 const CloseButton = (props) => {
   return (
-    <StyledCloseButton theme={theme} size={props.size} onClick={props.onClick}>
+    <StyledCloseButton {...props}>
       <ion-icon name="close-outline"></ion-icon>
     </StyledCloseButton>
   );
