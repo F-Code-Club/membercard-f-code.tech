@@ -2,8 +2,10 @@
 const theme = {
   high_contrast: '#11181C',
   low_contrast: '#54585C',
-  state1: '#687076',
-  state2: '#F8F9FA',
+  low_contrast_20: '#54585C20',
+  slate1: '#687076',
+  slate1_10: '#68707610',
+  slate2: '#F8F9FA',
   slate3: '#EFEEF1',
   slate4: '#C4C4C4',
   teal: '#067A6F',
