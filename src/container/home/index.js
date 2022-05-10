@@ -1,7 +1,7 @@
 import { Content } from "./style";
 
 const Home = () => {
-  return <Content></Content>;
+  return <Content>Welcome home</Content>;
 };
 
 export default Home;
