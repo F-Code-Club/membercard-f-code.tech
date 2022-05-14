@@ -1,28 +1,7 @@
-import styled from 'styled-components';
-import theme from '../../theme';
-
-const styles = {
-  dashed: {},
-};
-
-const StyledDivider = styled.hr`
-  height: 1.25px;
-  width: 100%;
-  background-image: linear-gradient(
-    90deg,
-    ${theme.slate4},
-    ${theme.slate4} 75%,
-    transparent 75%,
-    transparent 100%
-  );
-  background-size: ${(props) =>
-      props.variant === 'dashed' ? '0.5em' : '999em'}
-    1.25px;
-  border: none;
-`;
+import { StyledDivider } from './style';
 
 const Divider = (props) => {
-  return <StyledDivider {...props}></StyledDivider>;
+  return <StyledDivider {...props}/>;
 };
 
-export { Divider };
+export default Divider;

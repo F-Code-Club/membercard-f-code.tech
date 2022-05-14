@@ -5,8 +5,8 @@ import BaseButton from './BaseButton';
 const definedPosition = {
   'top-right': {
     position: 'absolute',
-    top: '1em',
-    right: '1em',
+    top: '1.5em',
+    right: '1.5em',
   },
 };
 
