@@ -1,6 +1,7 @@
 // colors
 const theme = {
   high_contrast: '#11181C',
+  high_contrast_10: '#11181C10',
   low_contrast: '#54585C',
   low_contrast_20: '#54585C20',
   slate1: '#687076',

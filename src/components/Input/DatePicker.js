@@ -1,5 +1,4 @@
 import './DatePicker.css';
-import styled from 'styled-components';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
