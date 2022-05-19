@@ -6,6 +6,5 @@ import LocalStorageUtils from "./../utils/LocalStorageUtils";
 
 export const PublicRoute = (props) => {
   const user = LocalStorageUtils.getUser();
-  console.log(user);
-  return !user || user.username?.length <= 0 ? <Outlet /> : <Navigate to="/" />;
+  return !user || user.id?.length <= 0 ? <Outlet /> : <Navigate to="/" replace />;
 };

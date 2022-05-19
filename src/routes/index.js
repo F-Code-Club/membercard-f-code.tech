@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "../container/home";
 import Auth from "../container/auth";
@@ -25,16 +25,6 @@ export const privateRoute = [
 export const Switch = () => {
   return (
     <Routes>
-      <Route path="/" element={<PublicRoute />}>
-        {publicRoute.map((route) => (
-          <Route
-            key={route.name}
-            exact={true}
-            path={route.path}
-            element={route.element}
-          />
-        ))}
-      </Route>
       <Route path="/" element={<PrivateRoute />}>
         {privateRoute.map((route) => (
           <Route
@@ -45,8 +35,18 @@ export const Switch = () => {
           />
         ))}
       </Route>
+      <Route path="/login" element={<PublicRoute />}>
+        {publicRoute.map((route) => (
+          <Route
+            key={route.name}
+            exact={true}
+            path={route.path}
+            element={route.element}
+          />
+        ))}
+      </Route>
+      <Route element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
-
 export default Switch;
