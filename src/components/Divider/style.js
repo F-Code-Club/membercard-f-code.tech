@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import theme from './../../theme';
+import styled from "styled-components";
+import theme from "./../../theme";
 
 const StyledDivider = styled.hr`
   height: 1.25px;
-  width: 100%;
+  width: ${(props) => (props.width ? props.width + "px" : "100%")};
   background-image: linear-gradient(
     90deg,
     ${theme.slate4},
@@ -12,7 +12,7 @@ const StyledDivider = styled.hr`
     transparent 100%
   );
   background-size: ${(props) =>
-      props.variant === 'dashed' ? '0.5em' : '999em'}
+      props.variant === "dashed" ? "0.5em" : "999em"}
     1.25px;
   border: none;
 `;

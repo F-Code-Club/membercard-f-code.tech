@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StyledWrapper } from './style';
+import Flexbox from '../Flexbox';
 
 const getWindowDimensions = () => {
   const { innerWidth: width, innerHeight: height } = window;
@@ -25,9 +26,9 @@ const useWindowDimensions = () => {
 
 const Wrapper = (props) => {
   const { height, width } = useWindowDimensions();
-  const { children, ...rest } = props;
+  const { children, minHeight, ...rest } = props;
   return (
-    <StyledWrapper {...rest} currentWidth={width}>
+    <StyledWrapper {...rest} minHeight={minHeight} currentWidth={width}>
       {children}
     </StyledWrapper>
   );
