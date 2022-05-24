@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  database:
+    image: mysql
+    container_name: database
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      - MYSQL_HOST
+      - MYSQL_ROOT_PASSWORD
+    ports:
+      - "3306:3306"
+    expose: 
+      - "3306"
+    volumes: 
+      - db-config:/etc/mysql
+      - db-data:/var/lib/mysql
+      - ./db/backup/files/:/data_backup/data
+  test:
+    container_name: member-card
+    image: nghia14302/fcode-member-card
+    ports:
+      - "4000:4000"
+    expose:
+      - "4000"
+    restart: always
+volumes: 
+  db-config:
+  db-data:

@@ -19,6 +19,6 @@ const theme = {
   red1: '#CD2B31',
   red2: '#FFE5E5',
   red3: '#F5C0C1',
-};
+}
 
-export default theme;
+export default theme
