@@ -1,7 +1,17 @@
 import { useLocation, Navigate } from 'react-router-dom'
 
+import Icon from '../../components/Icon'
+
 import LocalStorageUtils from './../../utils/LocalStorageUtils'
-import { Button } from './style'
+import {
+  Logo,
+  LoginWrapper,
+  LoginHeading,
+  LoginDescription,
+  LoginDivider,
+  LoginButton,
+  LoginCredit,
+} from './style'
 
 const Auth = () => {
   const ApiUrl = process.env.REACT_APP_API_URL + '/api/auth/'
@@ -18,9 +28,30 @@ const Auth = () => {
     return <Navigate to="/" replace />
   }
   return (
-    <div>
-      <Button href={ApiUrl + 'google'}>Sign in</Button>
-    </div>
+    // <div>
+    //   <LoginButton href={ApiUrl + 'google'}>Sign in</LoginButton>
+    // </div>
+    <LoginWrapper minHeight="100vh">
+      <Logo size={60} />
+      <LoginHeading>
+        Welcome to <strong>F-Code.</strong>
+      </LoginHeading>
+      <LoginDescription>A simple platform for event management.</LoginDescription>
+      <LoginDivider width={120} />
+      <LoginButton href={ApiUrl + 'google'}>
+        Sign in with Google account{' '}
+        <Icon
+          name="arrow-forward"
+          style={{
+            'margin-left': '5px',
+            transform: 'translateY(0.5px)',
+          }}
+        />
+      </LoginButton>
+      <LoginCredit>
+        Designed by <strong>F-Code Team.</strong>
+      </LoginCredit>
+    </LoginWrapper>
   )
 }
 
