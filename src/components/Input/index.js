@@ -1,5 +1,5 @@
-import { StyledHeading } from './style';
-import DatePicker from './DatePicker';
+import DatePicker from './DatePicker'
+import { StyledHeading } from './style'
 
 const DateInput = (props) => {
   return (
@@ -7,7 +7,7 @@ const DateInput = (props) => {
       <StyledHeading>{props.title}</StyledHeading>
       <DatePicker />
     </div>
-  );
-};
+  )
+}
 
-export {DateInput};
+export { DateInput }

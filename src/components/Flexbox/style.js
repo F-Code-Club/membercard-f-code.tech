@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const StyledFlexbox = styled.div`
   width: 100%;
@@ -8,6 +8,6 @@ const StyledFlexbox = styled.div`
   align-items: ${(props) => props.alignItems};
   flex-direction: ${(props) => props.flexDirection};
   gap: ${(props) => props.gap};
-`;
+`
 
-export {StyledFlexbox};
+export { StyledFlexbox }

@@ -1,7 +1,7 @@
-import { StyledDivider } from './style';
+import { StyledDivider } from './style'
 
 const Divider = (props) => {
-  return <StyledDivider {...props}/>;
-};
+  return <StyledDivider {...props} />
+}
 
-export default Divider;
+export default Divider

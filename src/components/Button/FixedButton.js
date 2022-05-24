@@ -1,6 +1,7 @@
-import styled from 'styled-components';
-import theme from './../../theme';
-import BaseButton from './BaseButton';
+import styled from 'styled-components'
+
+import theme from './../../theme'
+import { BaseButton } from './BaseButton'
 
 const definedPosition = {
   'top-right': {
@@ -8,15 +9,15 @@ const definedPosition = {
     top: '1.5em',
     right: '1.5em',
   },
-};
+}
 
 const parseCSS = (position) => {
-  let result = '';
+  let result = ''
   for (let key in definedPosition[position]) {
-    result = result + key + ': ' + definedPosition[position][key] + ';\n';
+    result = result + key + ': ' + definedPosition[position][key] + ';\n'
   }
-  return result;
-};
+  return result
+}
 
 const StyledCloseButton = styled(BaseButton)`
   padding: 0.25em;
@@ -29,14 +30,14 @@ const StyledCloseButton = styled(BaseButton)`
   & > ion-icon {
     --ionicon-stroke-width: 50px;
   }
-`;
+`
 
 const CloseButton = (props) => {
   return (
     <StyledCloseButton {...props}>
       <ion-icon name="close-outline"></ion-icon>
     </StyledCloseButton>
-  );
-};
+  )
+}
 
-export { CloseButton };
+export { CloseButton }

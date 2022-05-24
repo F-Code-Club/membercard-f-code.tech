@@ -1,37 +1,35 @@
-import { useState, useEffect } from 'react';
-import { StyledWrapper } from './style';
-import Flexbox from '../Flexbox';
+import { useState, useEffect } from 'react'
+
+import { StyledWrapper } from './style'
 
 const getWindowDimensions = () => {
-  const { innerWidth: width, innerHeight: height } = window;
-  return { width, height };
-};
+  const { innerWidth: width, innerHeight: height } = window
+  return { width, height }
+}
 
 const useWindowDimensions = () => {
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowDimensions(getWindowDimensions());
-    };
+      setWindowDimensions(getWindowDimensions())
+    }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
-  return windowDimensions;
-};
+  return windowDimensions
+}
 
 const Wrapper = (props) => {
-  const { height, width } = useWindowDimensions();
-  const { children, minHeight, ...rest } = props;
+  const { height, width } = useWindowDimensions()
+  const { children, minHeight, ...rest } = props
   return (
     <StyledWrapper {...rest} minHeight={minHeight} currentWidth={width}>
       {children}
     </StyledWrapper>
-  );
-};
+  )
+}
 
-export default Wrapper;
+export default Wrapper

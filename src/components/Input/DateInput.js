@@ -1,8 +1,10 @@
-import styled from 'styled-components';
-import BaseInputBox from './InputBox';
-import Icon from '../Icon';
-import DatePicker from 'sassy-datepicker';
-import { useState } from 'react';
+import { useState } from 'react'
+
+import DatePicker from 'sassy-datepicker'
+import styled from 'styled-components'
+
+import Icon from '../Icon'
+import BaseInputBox from './InputBox'
 
 const StyledDateInput = styled.input.attrs({
   type: 'date',
@@ -24,22 +26,22 @@ const StyledDateInput = styled.input.attrs({
     border: none;
     outline: none;
   }
-`;
+`
 
 const StyledDatePickerWrapper = styled.div`
   position: absolute;
   top: 110%;
   left: 50%;
   transform: translateX(-50%);
-`;
+`
 
 const DateInput = (props) => {
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [date, setDate] = useState(new Date())
 
   const onClick = (show = true) => {
-    setShowDatePicker(show);
-  };
+    setShowDatePicker(show)
+  }
 
   return (
     <BaseInputBox onClick={() => onClick(!showDatePicker)}>
@@ -53,7 +55,7 @@ const DateInput = (props) => {
         ''
       )}
     </BaseInputBox>
-  );
-};
+  )
+}
 
-export default DateInput;
+export default DateInput

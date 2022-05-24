@@ -1,5 +1,6 @@
-import styled from 'styled-components';
-import theme from './../../theme';
+import styled from 'styled-components'
+
+import theme from './../../theme'
 
 const StyledBaseButton = styled.button`
   display: flex;
@@ -19,11 +20,13 @@ const StyledBaseButton = styled.button`
   &:hover {
     opacity: 0.75;
   }
-`;
+`
 
-const BaseButton = (props) => {
-  const { children, ...rest } = props;
-  return <StyledBaseButton {...rest}>{children}</StyledBaseButton>;
-};
+const BaseButtonWrapper = (Component, props) => {
+  const { children, ...rest } = props
+  return <Component {...rest}>{children}</Component>
+}
 
-export default BaseButton;
+const BaseButton = (props) => BaseButtonWrapper(StyledBaseButton, props)
+
+export { BaseButton }

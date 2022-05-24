@@ -1,8 +1,9 @@
-import styled from 'styled-components';
-import theme from './../../theme';
-import BaseInputBox from './InputBox';
-import Label from './Label';
-import { StyledHeading } from './style';
+import styled from 'styled-components'
+
+import theme from './../../theme'
+import BaseInputBox from './InputBox'
+import Label from './Label'
+import { StyledHeading } from './style'
 
 const StyledTextArea = styled.textarea`
   width: 100%;
@@ -22,11 +23,11 @@ const StyledTextArea = styled.textarea`
   &::-webkit-input-placeholder {
     color: ${theme.slate4};
   }
-`;
+`
 
 const StyledWrapper = styled.div`
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
-`;
+`
 
 const TextArea = (props) => {
   return (
@@ -36,7 +37,7 @@ const TextArea = (props) => {
         <StyledTextArea placeholder={props.placeholder} />
       </BaseInputBox>
     </StyledWrapper>
-  );
-};
+  )
+}
 
-export default TextArea;
+export default TextArea

@@ -1,8 +1,10 @@
-import styled from 'styled-components';
-import BaseInputBox from './InputBox';
-import theme from '../../theme';
-import { useState } from 'react';
-import Label from './Label';
+import { useState } from 'react'
+
+import styled from 'styled-components'
+
+import theme from '../../theme'
+import BaseInputBox from './InputBox'
+import Label from './Label'
 
 const StyledTextInput = styled.input.attrs({
   type: 'text',
@@ -18,20 +20,20 @@ const StyledTextInput = styled.input.attrs({
   &::-webkit-input-placeholder {
     color: ${theme.slate4};
   }
-`;
+`
 
 const TextInput = (props) => {
-  const [isFocused, setFocused] = useState(false);
+  const [isFocused, setFocused] = useState(false)
 
   const onFocus = () => {
-    setFocused(true);
-  };
+    setFocused(true)
+  }
 
   const onBlur = () => {
-    setFocused(false);
-  };
+    setFocused(false)
+  }
 
-  const { children, ...rest } = props;
+  const { children, ...rest } = props
 
   return (
     <div>
@@ -46,7 +48,7 @@ const TextInput = (props) => {
         />
       </BaseInputBox>
     </div>
-  );
-};
+  )
+}
 
-export default TextInput;
+export default TextInput
