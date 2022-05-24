@@ -1,7 +1,7 @@
-import { Content } from "./style";
+import { Content } from './style'
 
 const Home = () => {
-  return <Content>Welcome home</Content>;
-};
+  return <Content>Welcome home</Content>
+}
 
-export default Home;
+export default Home
