@@ -1,11 +1,17 @@
-import { ThemeProvider } from "styled-components";
-import theme from "./theme";
+import React from 'react'
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+import ReactDOM from 'react-dom'
+import { ThemeProvider } from 'styled-components'
+
+import App from './App'
+import './index.css'
+import theme from './theme'
+
+ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider>
-  </React.StrictMode>
-);
+  </React.StrictMode>,
+  document.getElementById('root')
+)
