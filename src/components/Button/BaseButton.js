@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 import theme from './../../theme'
 
-const StyledBaseButton = styled.button`
+const StyledBaseButton = styled.a`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,6 +13,7 @@ const StyledBaseButton = styled.button`
   color: ${theme.low_contrast};
   border: none;
   border-radius: 10px;
+  text-decoration: none;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 1rem;
