@@ -1,15 +1,22 @@
 import { useState } from 'react'
 
-import Wrapper from '../../components/Wrapper'
+import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
+import Wrapper from './../../components/Wrapper'
 
-import theme from '../../theme'
+import Avatar from './../../asset/image/Avatar.png'
+import theme from './../../theme'
 import {
+  HeaderBrand,
   StyledEventDescription,
   StyledEventHeading,
   StyledEventIndicator,
   StyledEventStatus,
   StyledEventWrapper,
+  HeaderWrapper,
+  ProfileInformation,
+  Heading,
+  CreateButton,
 } from './style'
 
 const StatusEnum = {
@@ -50,12 +57,20 @@ const Event = (props) => {
             style={{ transform: 'translateY(4px)' }}
           ></StyledEventIndicator>
           <Flexbox flexDirection="column" gap="5px">
-            <EventHeading
-              color={StatusEnum[status].headingColor}
-              textDecoration={StatusEnum[status].textDecoration}
-            >
-              AWS Event
-            </EventHeading>
+            <Flexbox justifyContent="space-between">
+              <EventHeading
+                color={StatusEnum[status].headingColor}
+                textDecoration={StatusEnum[status].textDecoration}
+              >
+                AWS Event
+              </EventHeading>
+              <EventStatus
+                textDecoration={StatusEnum[status].textDecoration}
+                indicatorColor={StatusEnum[status].indicatorColor}
+              >
+                {StatusEnum[status].statusString}
+              </EventStatus>
+            </Flexbox>
             <Flexbox gap="10px">
               <EventDescription color={StatusEnum[status].headingColor}>
                 <strong>Time:</strong> 13:00 - 15:00
@@ -65,12 +80,6 @@ const Event = (props) => {
               </EventDescription>
             </Flexbox>
           </Flexbox>
-          <EventStatus
-            textDecoration={StatusEnum[status].textDecoration}
-            indicatorColor={StatusEnum[status].indicatorColor}
-          >
-            {StatusEnum[status].statusString}
-          </EventStatus>
         </Flexbox>
       </StyledEventWrapper>
     </Wrapper>
@@ -79,10 +88,19 @@ const Event = (props) => {
 
 const Home = (props) => {
   return (
-    <Flexbox flexDirection="column">
-      <Event />
-      <Event />
-    </Flexbox>
+    <Wrapper>
+      <HeaderWrapper justifyContent="space-between">
+        <HeaderBrand src={Avatar} size={50} />
+        <ProfileInformation name="Ly Tuan Kiet" rollNumber="SE160049" />
+      </HeaderWrapper>
+      <Heading title="Today" date={new Date()} />
+      <CreateButton>Create new event</CreateButton>
+      <Divider />
+      <Flexbox flexDirection="column">
+        <Event />
+        <Event />
+      </Flexbox>
+    </Wrapper>
   )
 }
 
