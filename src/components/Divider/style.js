@@ -14,6 +14,7 @@ const StyledDivider = styled.hr`
   );
   background-size: ${(props) => (props.variant === 'dashed' ? '0.5em' : '999em')} 1.25px;
   border: none;
+  margin: 15px 0;
 `
 
 export { StyledDivider }

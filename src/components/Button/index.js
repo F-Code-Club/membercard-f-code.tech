@@ -11,6 +11,5 @@ const Button = (props) => ButtonWrapper(BaseButton, props)
 const BlueButton = (props) => ButtonWrapper(StyledBlueButton, props)
 const RedButton = (props) => ButtonWrapper(StyledRedButton, props)
 const GreenButton = (props) => ButtonWrapper(StyledGreenButton, props)
-const CreateButton = (props) => ButtonWrapper(StyledCreateButton, props)
 
-export { Button, BlueButton, RedButton, GreenButton, CreateButton, CloseButton }
+export { Button, BlueButton, RedButton, GreenButton, CloseButton }
