@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import { BaseButton } from '../../components/Button/BaseButton'
 import Flexbox from '../../components/Flexbox'
+import Wrapper from '../../components/Wrapper'
 import Icon from './../../components/Icon'
 
 import { formatDate, useCSS } from '../../utils/helper'
@@ -9,16 +10,16 @@ import Profile from './../../asset/image/Security_Consultant.png'
 import theme from './../../theme'
 
 const StyledCreateButton = styled(BaseButton)`
+  margin-top: 10px;
   justify-content: flex-start;
   gap: 10px;
   padding: 1rem;
   color: ${theme.slate4};
-  background-color: transparent;
   transition: color 0.25s ease-in-out;
+  background-color: ${theme.slate1_10};
 
   &:hover {
-    background-color: ${theme.slate1_10};
-    opacity: 1;
+    color: ${theme.low_contrast};
   }
 `
 
@@ -35,7 +36,7 @@ export const CreateButton = (props) => {
 }
 
 export const HeaderWrapper = styled(Flexbox)`
-  margin: 40px 0;
+  margin-bottom: 40px;
 `
 
 const StyledHeaderBrand = styled.div`
@@ -96,13 +97,22 @@ const ProfileImage = (props) => {
 }
 
 export const ProfileInformation = (props) => {
+  let { user } = props
+  if (!user) {
+    user = {
+      name: 'N/A',
+      rollNumber: 'N/A',
+      imageUrl: Profile,
+    }
+  }
+
   return (
     <StyledProfileInformationWrapper alignItems="center" gap="10px">
       <Flexbox flexDirection="column" gap="2px">
-        <StyledProfileName>Hi, {props.name}</StyledProfileName>
-        <StyledProfileRollNumber>{props.rollNumber}</StyledProfileRollNumber>
+        <StyledProfileName>Hi, {user.name}</StyledProfileName>
+        <StyledProfileRollNumber>{user.rollNumber}</StyledProfileRollNumber>
       </Flexbox>
-      <ProfileImage src={Profile} size={50} />
+      <ProfileImage src={user.imageUrl} size={50} />
     </StyledProfileInformationWrapper>
   )
 }
@@ -164,11 +174,27 @@ const StyledHeadingDate = styled.div`
 `
 
 export const Heading = (props) => {
-  const { title, date } = props
+  const { title, date, dateOptions } = props
   return (
     <Flexbox justifyContent="space-between" alignItems="center">
       <StyledHeadingTitle>{title}</StyledHeadingTitle>
-      <StyledHeadingDate>{formatDate(date, { weekday: false })}</StyledHeadingDate>
+      <StyledHeadingDate>{formatDate(date, dateOptions)}</StyledHeadingDate>
     </Flexbox>
   )
 }
+
+export const ContentWrapper = (props) => {
+  return (
+    <Flexbox flexDirection="column" gap="20px">
+      {props.children}
+    </Flexbox>
+  )
+}
+
+export const Content = (props) => {
+  return <div>{props.children}</div>
+}
+
+export const HomeWrapper = styled(Wrapper)`
+  padding: 50px 0;
+`

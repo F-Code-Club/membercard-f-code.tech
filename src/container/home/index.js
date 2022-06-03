@@ -4,6 +4,7 @@ import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 import Wrapper from './../../components/Wrapper'
 
+import { formatUpcomingTime, leadingZero } from '../../utils/helper'
 import Avatar from './../../asset/image/Avatar.png'
 import theme from './../../theme'
 import {
@@ -17,6 +18,9 @@ import {
   ProfileInformation,
   Heading,
   CreateButton,
+  ContentWrapper,
+  Content,
+  HomeWrapper,
 } from './style'
 
 const StatusEnum = {
@@ -28,11 +32,16 @@ const StatusEnum = {
     indicatorColor: theme.red1,
     statusString: 'Canceled',
   },
-  ended: {
+  end: {
     headingColor: theme.slate4,
     indicatorColor: theme.slate4,
     textDecoration: 'line-through',
     statusString: 'Ended',
+  },
+  upcoming: {
+    headingColor: theme.low_contrast,
+    indicatorColor: theme.slate4,
+    statusString: 'Up-coming',
   },
 }
 
@@ -46,37 +55,56 @@ const EventDescription = (props) => ComponentWrapper(StyledEventDescription, pro
 const EventStatus = (props) => ComponentWrapper(StyledEventStatus, props)
 
 const Event = (props) => {
-  const [status, setStatus] = useState('ongoing')
+  let { event } = props
+  if (!event) {
+    const { name, place, start, end, status } = event
+    event = { name, place, start, end, status }
+  }
+
+  const [current] = useState({
+    name: event.name,
+    place: event.place,
+    start: event.start,
+    end: event.end,
+    status: event.status ? event.status : 'ongoing',
+  })
 
   return (
     <Wrapper>
       <StyledEventWrapper>
         <Flexbox gap="5px">
           <StyledEventIndicator
-            indicatorColor={StatusEnum[status].indicatorColor}
+            indicatorColor={StatusEnum[current.status].indicatorColor}
             style={{ transform: 'translateY(4px)' }}
           ></StyledEventIndicator>
           <Flexbox flexDirection="column" gap="5px">
             <Flexbox justifyContent="space-between">
               <EventHeading
-                color={StatusEnum[status].headingColor}
-                textDecoration={StatusEnum[status].textDecoration}
+                color={StatusEnum[current.status].headingColor}
+                textDecoration={StatusEnum[current.status].textDecoration}
               >
-                AWS Event
+                {current.name}
               </EventHeading>
               <EventStatus
-                textDecoration={StatusEnum[status].textDecoration}
-                indicatorColor={StatusEnum[status].indicatorColor}
+                textDecoration={StatusEnum[current.status].textDecoration}
+                indicatorColor={StatusEnum[current.status].indicatorColor}
               >
-                {StatusEnum[status].statusString}
+                {StatusEnum[current.status].statusString}
               </EventStatus>
             </Flexbox>
             <Flexbox gap="10px">
-              <EventDescription color={StatusEnum[status].headingColor}>
-                <strong>Time:</strong> 13:00 - 15:00
+              <EventDescription color={StatusEnum[current.status].headingColor}>
+                <strong>Time:</strong>{' '}
+                {current.status === 'upcoming'
+                  ? formatUpcomingTime(current.start, current.end)
+                  : `${leadingZero(current.start.getHours())}:${leadingZero(
+                      current.start.getMinutes()
+                    )} - ${leadingZero(current.end.getHours())}:${leadingZero(
+                      current.end.getMinutes()
+                    )}`}
               </EventDescription>
-              <EventDescription color={StatusEnum[status].headingColor}>
-                <strong>Location:</strong> Room 404 (FPT University)
+              <EventDescription color={StatusEnum[current.status].headingColor}>
+                <strong>Location:</strong> {current.place}
               </EventDescription>
             </Flexbox>
           </Flexbox>
@@ -86,21 +114,94 @@ const Event = (props) => {
   )
 }
 
-const Home = (props) => {
+const Home = () => {
+  const images = [
+    'https://images.unsplash.com/photo-1654252312924-b97fe8335258?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+  ]
+  const user = {
+    name: 'Ly Tuan Kiet',
+    rollNumber: 'SE160049',
+    imageUrl: images[0],
+  }
+
+  const events = [
+    {
+      name: 'AWS Event',
+      place: 'Room 404 (FPT University)',
+      start: new Date(2022, 4, 20, 15, 0, 0),
+      end: new Date(2022, 4, 20, 17, 0, 0),
+    },
+    {
+      name: 'Monthly Meeting',
+      place: 'FPT University',
+      start: new Date(2022, 4, 20, 15, 0, 0),
+      end: new Date(2022, 4, 20, 17, 0, 0),
+      status: 'cancel',
+    },
+    {
+      name: 'Monthly Meeting',
+      place: 'FPT University',
+      start: new Date(2022, 4, 20, 15, 0, 0),
+      end: new Date(2022, 4, 20, 17, 0, 0),
+      status: 'end',
+    },
+  ]
+  const upcomingEvents = [
+    {
+      name: 'AWS Event',
+      place: 'Room 404',
+      start: new Date(2022, 4, 20, 15, 0, 0),
+      end: new Date(2022, 4, 20, 17, 0, 0),
+      status: 'upcoming',
+    },
+    {
+      name: 'Monthly Meeting',
+      place: 'FPT University',
+      start: new Date(2022, 4, 20, 8, 0, 0),
+      end: new Date(2022, 4, 21, 11, 30, 0),
+      status: 'upcoming',
+    },
+    {
+      name: 'Monthly Meeting',
+      place: 'FPT University',
+      start: new Date(2022, 4, 20, 15, 30, 0),
+      end: new Date(2022, 4, 20, 17, 0, 0),
+      status: 'upcoming',
+    },
+  ]
+
   return (
-    <Wrapper>
+    <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
         <HeaderBrand src={Avatar} size={50} />
-        <ProfileInformation name="Ly Tuan Kiet" rollNumber="SE160049" />
+        <ProfileInformation user={user} />
       </HeaderWrapper>
-      <Heading title="Today" date={new Date()} />
-      <CreateButton>Create new event</CreateButton>
-      <Divider />
-      <Flexbox flexDirection="column">
-        <Event />
-        <Event />
-      </Flexbox>
-    </Wrapper>
+      <ContentWrapper>
+        <Content>
+          <Heading title="Today" date={new Date()} dateOptions={{ hasWeekday: false }} />
+          <CreateButton>Create new event</CreateButton>
+          <Divider />
+          <Flexbox flexDirection="column">
+            {events.map((event, index) => (
+              <Event key={index} event={event} />
+            ))}
+          </Flexbox>
+        </Content>
+        <Content>
+          <Heading
+            title="Up-coming Events"
+            date={new Date(2022, 6)}
+            dateOptions={{ hasWeekday: false, hasDate: false, hasMonth: false }}
+          />
+          <Divider />
+          <Flexbox flexDirection="column">
+            {upcomingEvents.map((event, index) => (
+              <Event key={index} event={event} />
+            ))}
+          </Flexbox>
+        </Content>
+      </ContentWrapper>
+    </HomeWrapper>
   )
 }
 
