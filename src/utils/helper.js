@@ -16,22 +16,22 @@ const MONTHS = [
 
 export const formatDate = (
   date,
-  { weekday = true, day = true, month = true, year = true } = {}
+  { hasWeekday = true, hasDate = true, hasMonth = true, hasYear = true } = {}
 ) => {
   if (!date) {
     return ''
   }
 
-  const formatDay = (day) => {
-    if (day < 1 || day > 32) return undefined
+  const formatDateOrdinal = (day) => {
+    if (day < 1 || day > 31) return undefined
 
     const lastDigit = day % 10
     switch (lastDigit) {
-      case '1':
+      case 1:
         return `${day}st`
-      case '2':
+      case 2:
         return `${day}nd`
-      case '3':
+      case 3:
         return `${day}rd`
       default:
         return `${day}th`
@@ -40,14 +40,42 @@ export const formatDate = (
 
   const dateTime = {
     weekDay: WEEKDAYS[date.getDay()],
-    day: formatDay(date.getDate()),
+    day: formatDateOrdinal(date.getDate()),
     month: MONTHS[date.getMonth()],
     year: date.getFullYear(),
   }
 
-  return `${weekday ? dateTime.weekDay + ', ' : ''}${month ? dateTime.month + ' ' : ''}${
-    day ? dateTime.day + ' ' : ''
-  }${year ? dateTime.year : ''}`
+  return `${hasWeekday ? dateTime.weekDay + ', ' : ''}${hasMonth ? dateTime.month + ' ' : ''}${
+    hasDate ? dateTime.day + ' ' : ''
+  }${hasYear ? dateTime.year : ''}`
+}
+
+export const formatUpcomingTime = (start, end) => {
+  const [startDate, startMonth, startYear, startHour, startMinute] = [
+    start.getDate(),
+    start.getMonth(),
+    start.getFullYear(),
+    start.getHours(),
+    start.getMinutes(),
+  ]
+  const [endDate, endMonth, endYear, endHour, endMinute] = [
+    end.getDate(),
+    end.getMonth(),
+    end.getFullYear(),
+    end.getHours(),
+    end.getMinutes(),
+  ]
+
+  if (startDate === endDate && startMonth === endMonth && startYear === endYear) {
+    return `${formatDate(start, { hasWeekday: false, hasYear: false })} (${leadingZero(
+      startHour
+    )}:${leadingZero(startMinute)} - ${leadingZero(endHour)}:${leadingZero(endMinute)})`
+  } else {
+    return `${formatDate(start, { hasWeekday: false, hasYear: false })} - ${formatDate(end, {
+      hasWeekday: false,
+      hasYear: false,
+    })}`
+  }
 }
 
 export const useCSS = (rules) => {
@@ -56,4 +84,8 @@ export const useCSS = (rules) => {
     result = result + key + ': ' + rules[key] + ';\n'
   }
   return result
+}
+
+export const leadingZero = (time) => {
+  return time < 10 ? '0' + time : time
 }
