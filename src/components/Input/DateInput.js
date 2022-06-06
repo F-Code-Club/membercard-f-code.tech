@@ -38,6 +38,7 @@ const StyledDatePickerWrapper = styled.div`
   top: 110%;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 9999;
 `
 
 // TODO: This component needs to be renamed
@@ -99,7 +100,7 @@ const DateInput = (props) => {
         onBlur={onBlur}
         onFocus={onFocus}
         isFocused={isFocused}
-        onClick={() => onClick(!showDatePicker)}
+        onClick={() => onClick(true)}
         fullWidth={fullWidth}
       >
         <DateInputBox value={currentDate.toLocaleDateString('en-CA')} />
