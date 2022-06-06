@@ -1,8 +1,5 @@
 import { useEffect } from 'react'
 
-import styled from 'styled-components'
-
-import theme from '../../theme'
 import { CloseButton } from '../Button'
 import Divider from '../Divider'
 import Wrapper from './../Wrapper'
@@ -40,7 +37,7 @@ const Modal = (props) => {
           <StyledModalHeader>
             <StyledModalTitle>{props.title}</StyledModalTitle>
           </StyledModalHeader>
-          <Divider />
+          <Divider margin={5} />
           <StyledModalBody>{props.children}</StyledModalBody>
         </StyledModalContent>
       </Wrapper>

@@ -26,12 +26,12 @@ const StyledModalHeader = styled.div`
   font-family: inherit;
 `
 const StyledModalTitle = styled.h4`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
 `
 const StyledModalBody = styled.div`
-  padding: 20px 0;
+  padding: 10px 0;
 `
 const StyledModalFooter = styled.div`
   padding-top: 10px;
