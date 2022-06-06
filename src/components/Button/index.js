@@ -1,6 +1,6 @@
 import { BaseButton } from './BaseButton'
 import { CloseButton } from './FixedButton'
-import { StyledBlueButton, StyledRedButton, StyledGreenButton, StyledCreateButton } from './style'
+import { StyledBlueButton, StyledRedButton, StyledGreenButton } from './style'
 
 const ButtonWrapper = (Component, props) => {
   const { children, ...rest } = props
