@@ -55,7 +55,7 @@ const StyledDateInputWrapper = styled.div`
 `
 
 const DateInput = (props) => {
-  const { title, date, fullWidth } = props
+  const { title, date, fullWidth, onChange } = props
   let defaultDate = date ? date : new Date()
 
   const [showDatePicker, setShowDatePicker] = useState(false)
@@ -68,9 +68,12 @@ const DateInput = (props) => {
     setShowDatePicker(show)
     setFocused(true)
   }
-  const onChange = (newDate) => {
+  const handleChange = (newDate) => {
     setFocused(false)
-    setCurrentDate(newDate)
+    const tempDate = new Date(date.getTime())
+    tempDate.setFullYear(newDate.getFullYear(), newDate.getMonth(), newDate.getDate())
+    setCurrentDate(tempDate)
+    onChange(tempDate)
   }
   const onFocus = () => {
     setFocused(true)
@@ -107,7 +110,7 @@ const DateInput = (props) => {
         <Icon name="calendar" size="15px" />
         {showDatePicker ? (
           <StyledDatePickerWrapper>
-            <DatePicker onChange={onChange} selected={currentDate} />
+            <DatePicker onChange={handleChange} selected={currentDate} />
           </StyledDatePickerWrapper>
         ) : (
           ''

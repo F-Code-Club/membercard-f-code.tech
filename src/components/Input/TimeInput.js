@@ -4,6 +4,7 @@ import TimeKeeper from 'react-timekeeper'
 import styled from 'styled-components'
 
 import theme from '../../theme'
+import { leadingZero } from '../../utils/helper'
 import Icon from '../Icon'
 import BaseInputBox from './InputBox'
 import Label from './Label'
@@ -52,9 +53,30 @@ const TimeInputBox = (props) => {
 const StyledTimeInputWrapper = styled.div`
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
 `
-/** */
+
+const formatTime = (date) => {
+  let [hours, minutes] = [date.getHours(), date.getMinutes()]
+  let meridiem = 'am'
+
+  if (hours == 0) {
+    hours == 12
+  } else if (hours == 12) {
+    meridiem = 'pm'
+  } else if (hours > 12) {
+    hours -= 12
+    meridiem = 'pm'
+  }
+
+  return `${hours}:${minutes}${meridiem}`
+}
+
+const formatTime24 = (date) => {
+  const [hours, minutes] = [date.getHours(), date.getMinutes()]
+  return `${leadingZero(hours)}:${leadingZero(minutes)}`
+}
+
 const TimeInput = (props) => {
-  const { title, fullWidth, time } = props
+  const { title, fullWidth, time, onChange } = props
 
   const [showTimePicker, setShowTimePicker] = useState(false)
   const [isFocused, setFocused] = useState(false)
@@ -66,9 +88,12 @@ const TimeInput = (props) => {
     setShowTimePicker(show)
     setFocused(true)
   }
-  const onChange = (newTime) => {
+  const handleChange = (newTime) => {
     setFocused(false)
-    setCurrentTime(newTime.formatted12)
+    const tempTime = new Date(time.getTime())
+    tempTime.setHours(newTime.hour, newTime.minute)
+    setCurrentTime(tempTime)
+    onChange(tempTime)
   }
 
   useEffect(() => {
@@ -94,11 +119,15 @@ const TimeInput = (props) => {
         onClick={() => onClick(true)}
         fullWidth={fullWidth}
       >
-        <TimeInputBox value={currentTime} />
+        <TimeInputBox value={formatTime24(currentTime)} />
         <Icon name="time" size="18px" />
         {showTimePicker ? (
           <StyledTimePickerWrapper>
-            <TimeKeeper time={currentTime} onChange={onChange} />
+            <TimeKeeper
+              hour24Mode={true}
+              time={formatTime24(currentTime)}
+              onChange={handleChange}
+            />
           </StyledTimePickerWrapper>
         ) : (
           ''
