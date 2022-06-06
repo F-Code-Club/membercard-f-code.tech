@@ -218,7 +218,10 @@ const Home = () => {
             <DateInput fullWidth={true} title="Start date" date={new Date(2022, 6, 9)} />
             <DateInput fullWidth={true} title="End date" date={new Date(2022, 6, 9)} />
           </Flexbox>
-          <TimeInput />
+          <Flexbox gap={10} justifyContent="space-between">
+            <TimeInput fullWidth={true} title="Start time" time="11:30 pm" />
+            <TimeInput fullWidth={true} title="End time" time="12:30 pm" />
+          </Flexbox>
         </Flexbox>
       </Modal>
     </HomeWrapper>
