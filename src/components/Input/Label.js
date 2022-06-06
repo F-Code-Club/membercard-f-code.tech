@@ -5,8 +5,8 @@ import theme from '../../theme'
 const StyledLabel = styled.label`
   display: block;
   margin-bottom: 10px;
-  font-weight: 500;
-  font-size: 1.25em;
+  font-weight: 600;
+  font-size: 1em;
   color: ${theme.low_contrast};
 `
 

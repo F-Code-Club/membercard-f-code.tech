@@ -23,6 +23,7 @@ const StyledTextInput = styled.input.attrs({
 `
 
 const TextInput = (props) => {
+  const { title, placeholder, ...rest } = props
   const [isFocused, setFocused] = useState(false)
 
   const onFocus = () => {
@@ -33,17 +34,15 @@ const TextInput = (props) => {
     setFocused(false)
   }
 
-  const { children, ...rest } = props
-
   return (
     <div>
-      <Label title={children} />
+      <Label title={title} />
       <BaseInputBox isFocused={isFocused}>
         <StyledTextInput
           onFocus={onFocus}
           onBlur={onBlur}
-          name={children}
-          placeholder={children}
+          name={title}
+          placeholder={placeholder}
           {...rest}
         />
       </BaseInputBox>
