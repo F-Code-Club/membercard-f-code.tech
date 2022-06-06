@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import DatePicker from 'sassy-datepicker'
 import styled from 'styled-components'
@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import theme from '../../theme'
 import Icon from '../Icon'
 import BaseInputBox from './InputBox'
+import Label from './Label'
 
 const StyledDateInput = styled.input.attrs({
   type: 'date',
@@ -13,11 +14,12 @@ const StyledDateInput = styled.input.attrs({
   font-family: 'Inter', sans-serif;
   font-weight: inherit;
   font-size: 1em;
-  color: ${theme.slate4};
+  color: ${theme.low_contrast};
   background-color: transparent;
   border: none;
   outline: none;
   text-transform: uppercase;
+  pointer-events: none;
 
   &::-webkit-inner-spin-button,
   &::-webkit-calendar-picker-indicator {
@@ -29,11 +31,6 @@ const StyledDateInput = styled.input.attrs({
     border: none;
     outline: none;
   }
-
-  &::-webkit-input-placeholder {
-    font-weight: 600;
-    color: ${theme.slate4};
-  }
 `
 
 const StyledDatePickerWrapper = styled.div`
@@ -43,7 +40,7 @@ const StyledDatePickerWrapper = styled.div`
   transform: translateX(-50%);
 `
 
-// need to be renamed
+// TODO: This component needs to be renamed
 const DateInputBox = (props) => {
   const { defaultValue, value, innerRef, ...rest } = props
   return (
@@ -51,70 +48,71 @@ const DateInputBox = (props) => {
   )
 }
 
+// TODO: This component needs to be renamed and refactored
+const StyledDateInputWrapper = styled.div`
+  width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
+`
+
 const DateInput = (props) => {
-  let defaultDate = new Date()
-  defaultDate.setDate(defaultDate.getDate() + 3)
+  const { title, date, fullWidth } = props
+  let defaultDate = date ? date : new Date()
 
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [isFocused, setFocused] = useState(false)
-  const [date, setDate] = useState(defaultDate)
+  const [currentDate, setCurrentDate] = useState(defaultDate)
+
   const boxRef = useRef(null)
-  const inputRef = useRef(null)
-
-  // const useOutsideAlerter = (ref) => {
-  //   useEffect(() => {
-  //     const handleClickOutside = (event) => {
-  //       if (ref.current && !ref.current.contains(event.target)) {
-  //         // setFocused(false)
-  //       }
-  //     }
-
-  //     document.addEventListener('mousedown', handleClickOutside)
-  //     return () => {
-  //       document.removeEventListener('mousedown', handleClickOutside)
-  //     }
-  //   }, [ref])
-  // }
-
-  // useOutsideAlerter(boxRef, setFocused(false))
 
   const onClick = (show = true) => {
     setShowDatePicker(show)
-    inputRef.current.focus()
-    console.log(boxRef.current)
-    console.log(inputRef.current)
+    setFocused(true)
   }
-
   const onChange = (newDate) => {
-    console.log(`New date selected - ${newDate.toString()}`)
-    setDate(newDate)
+    setFocused(false)
+    setCurrentDate(newDate)
   }
-
   const onFocus = () => {
-    // ref.current.focus()
     setFocused(true)
   }
   const onBlur = () => {
     setFocused(false)
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (boxRef.current && !boxRef.current.contains(event.target)) {
+        setShowDatePicker(false)
+        setFocused(false)
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside, true)
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true)
+    }
+  }, [])
+
   return (
-    <BaseInputBox
-      innerRef={boxRef}
-      onBlur={onBlur}
-      onFocus={onFocus}
-      isFocused={isFocused}
-      onClick={() => onClick(!showDatePicker)}
-    >
-      <DateInputBox value={date.toLocaleDateString('en-CA')} innerRef={inputRef} />
-      <Icon name="calendar" size="15px" />
-      {showDatePicker ? (
-        <StyledDatePickerWrapper>
-          <DatePicker onChange={onChange} selected={date} />
-        </StyledDatePickerWrapper>
-      ) : (
-        ''
-      )}
-    </BaseInputBox>
+    <StyledDateInputWrapper fullWidth={fullWidth} ref={boxRef}>
+      <Label title={title} />
+      <BaseInputBox
+        onBlur={onBlur}
+        onFocus={onFocus}
+        isFocused={isFocused}
+        onClick={() => onClick(!showDatePicker)}
+        fullWidth={fullWidth}
+      >
+        <DateInputBox value={currentDate.toLocaleDateString('en-CA')} />
+        <Icon name="calendar" size="15px" />
+        {showDatePicker ? (
+          <StyledDatePickerWrapper>
+            <DatePicker onChange={onChange} selected={currentDate} />
+          </StyledDatePickerWrapper>
+        ) : (
+          ''
+        )}
+      </BaseInputBox>
+    </StyledDateInputWrapper>
   )
 }
 

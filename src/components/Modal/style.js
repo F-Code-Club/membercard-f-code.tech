@@ -13,6 +13,7 @@ const StyledModal = styled.div`
   align-items: center;
   justify-content: center;
   font-family: 'Inter', sans-serif;
+  z-index: 999;
 `
 const StyledModalContent = styled.div`
   padding: 2rem;

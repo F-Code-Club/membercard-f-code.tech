@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import DateInput from '../../components/Input/DateInput'
 import TextInput from '../../components/Input/TextInput'
+import TimeInput from '../../components/Input/TimeInput'
 import Modal from '../../components/Modal'
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
@@ -211,8 +212,14 @@ const Home = () => {
         title="Create new event"
         onClose={() => toggleCreateModal(false)}
       >
-        <TextInput title="Title" placeholder="Insert title here..." />
-        <DateInput />
+        <Flexbox flexDirection="column" gap={10}>
+          <TextInput title="Title" placeholder="Insert title here..." />
+          <Flexbox gap={10} justifyContent="space-between">
+            <DateInput fullWidth={true} title="Start date" date={new Date(2022, 6, 9)} />
+            <DateInput fullWidth={true} title="End date" date={new Date(2022, 6, 9)} />
+          </Flexbox>
+          <TimeInput />
+        </Flexbox>
       </Modal>
     </HomeWrapper>
   )
