@@ -1,5 +1,8 @@
 import { useState } from 'react'
 
+import DateInput from '../../components/Input/DateInput'
+import TextInput from '../../components/Input/TextInput'
+import Modal from '../../components/Modal'
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 import Wrapper from './../../components/Wrapper'
@@ -170,6 +173,8 @@ const Home = () => {
     },
   ]
 
+  const [showCreateModal, toggleCreateModal] = useState(false)
+
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
@@ -179,7 +184,7 @@ const Home = () => {
       <ContentWrapper>
         <Content>
           <Heading title="Today" date={new Date()} dateOptions={{ hasWeekday: false }} />
-          <CreateButton>Create new event</CreateButton>
+          <CreateButton onClick={() => toggleCreateModal(true)}>Create new event</CreateButton>
           <Divider />
           <Flexbox flexDirection="column">
             {events.map((event, index) => (
@@ -201,6 +206,14 @@ const Home = () => {
           </Flexbox>
         </Content>
       </ContentWrapper>
+      <Modal
+        show={showCreateModal}
+        title="Create new event"
+        onClose={() => toggleCreateModal(false)}
+      >
+        <TextInput title="Title" placeholder="Insert title here..." />
+        <DateInput />
+      </Modal>
     </HomeWrapper>
   )
 }

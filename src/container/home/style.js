@@ -24,9 +24,10 @@ const StyledCreateButton = styled(BaseButton)`
 `
 
 export const CreateButton = (props) => {
-  const { children, ...rest } = props
+  const { children, onClick, ...rest } = props
+
   return (
-    <StyledCreateButton {...rest}>
+    <StyledCreateButton {...rest} onClick={onClick}>
       <Flexbox gap="10px">
         <Icon name="add-circle" />
         {children}
