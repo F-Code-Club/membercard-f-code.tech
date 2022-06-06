@@ -8,7 +8,7 @@ import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 import Wrapper from './../../components/Wrapper'
 
-import { formatUpcomingTime, leadingZero } from '../../utils/helper'
+import { formatUpcomingTime, leadingZero, MONTHS, WEEKDAYS } from '../../utils/helper'
 import Avatar from './../../asset/image/Avatar.png'
 import theme from './../../theme'
 import {
@@ -118,6 +118,71 @@ const Event = (props) => {
   )
 }
 
+const CreateEventModal = (props) => {
+  const { show, onClick, onClose } = props
+
+  const [title, setTitle] = useState('')
+  const handleTitleChange = (newTitle) => {
+    setTitle(newTitle)
+  }
+
+  const [startDate, setStartDate] = useState(new Date())
+  const handleStartDateChange = (newDate) => {
+    setStartDate(newDate)
+  }
+
+  const [endDate, setEndDate] = useState(new Date())
+  const handleEndDateChange = (newDate) => {
+    setEndDate(newDate)
+  }
+
+  const [location, setLocation] = useState('')
+  const handleLocationChange = (newLocation) => {
+    setLocation(newLocation)
+  }
+
+  return (
+    <Modal show={show} title="Create new event" onClose={onClose}>
+      <Flexbox flexDirection="column" gap={10}>
+        <TextInput title="Title" placeholder="Insert title here..." />
+        <Flexbox gap={10} justifyContent="space-between">
+          <DateInput
+            fullWidth={true}
+            title="Start date"
+            date={startDate}
+            onChange={handleStartDateChange}
+          />
+          <DateInput
+            fullWidth={true}
+            title="End date"
+            date={endDate}
+            onChange={handleEndDateChange}
+          />
+        </Flexbox>
+        <Flexbox gap={10} justifyContent="space-between">
+          <TimeInput
+            fullWidth={true}
+            title="Start time"
+            time={startDate}
+            onChange={handleStartDateChange}
+          />
+          <TimeInput
+            fullWidth={true}
+            title="End time"
+            time={endDate}
+            onChange={handleEndDateChange}
+          />
+        </Flexbox>
+        <p>{`This event will take place from ${WEEKDAYS[startDate.getDay()]}, ${
+          MONTHS[startDate.getMonth()]
+        } ${startDate.getDate()} ${startDate.getFullYear()} ${leadingZero(
+          startDate.getHours()
+        )}:${leadingZero(startDate.getMinutes())}`}</p>
+      </Flexbox>
+    </Modal>
+  )
+}
+
 const Home = () => {
   const images = [
     'https://images.unsplash.com/photo-1654252312924-b97fe8335258?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
@@ -207,23 +272,11 @@ const Home = () => {
           </Flexbox>
         </Content>
       </ContentWrapper>
-      <Modal
+      <CreateEventModal
         show={showCreateModal}
-        title="Create new event"
+        onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
-      >
-        <Flexbox flexDirection="column" gap={10}>
-          <TextInput title="Title" placeholder="Insert title here..." />
-          <Flexbox gap={10} justifyContent="space-between">
-            <DateInput fullWidth={true} title="Start date" date={new Date(2022, 6, 9)} />
-            <DateInput fullWidth={true} title="End date" date={new Date(2022, 6, 9)} />
-          </Flexbox>
-          <Flexbox gap={10} justifyContent="space-between">
-            <TimeInput fullWidth={true} title="Start time" time="11:30 pm" />
-            <TimeInput fullWidth={true} title="End time" time="12:30 pm" />
-          </Flexbox>
-        </Flexbox>
-      </Modal>
+      />
     </HomeWrapper>
   )
 }
