@@ -123,8 +123,10 @@ export const StyledEventWrapper = styled.div`
   padding: 15px 15px;
   border-radius: 10px;
   font-size: 10px;
-
-  &:active {
+  cursor: pointer;
+  transition-duration: 0.4s;
+  &:active,
+  :hover {
     background-color: ${theme.slate1_10};
   }
 `

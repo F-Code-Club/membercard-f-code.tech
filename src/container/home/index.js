@@ -11,6 +11,7 @@ import Wrapper from './../../components/Wrapper'
 import { formatUpcomingTime, leadingZero, MONTHS, WEEKDAYS } from '../../utils/helper'
 import Avatar from './../../asset/image/Avatar.png'
 import theme from './../../theme'
+import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
   StyledEventDescription,
@@ -59,7 +60,7 @@ const EventDescription = (props) => ComponentWrapper(StyledEventDescription, pro
 const EventStatus = (props) => ComponentWrapper(StyledEventStatus, props)
 
 const Event = (props) => {
-  let { event } = props
+  let { event, onClick } = props
   if (!event) {
     const { name, place, start, end, status } = event
     event = { name, place, start, end, status }
@@ -72,10 +73,9 @@ const Event = (props) => {
     end: event.end,
     status: event.status ? event.status : 'ongoing',
   })
-
   return (
     <Wrapper>
-      <StyledEventWrapper>
+      <StyledEventWrapper onClick={onClick}>
         <Flexbox gap="5px">
           <StyledEventIndicator
             indicatorColor={StatusEnum[current.status].indicatorColor}
@@ -240,7 +240,7 @@ const Home = () => {
   ]
 
   const [showCreateModal, toggleCreateModal] = useState(false)
-
+  const [showViewModal, toggleViewModal] = useState(false)
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
@@ -254,7 +254,7 @@ const Home = () => {
           <Divider />
           <Flexbox flexDirection="column">
             {events.map((event, index) => (
-              <Event key={index} event={event} />
+              <Event key={index} event={event} onClick={() => toggleViewModal(true)} />
             ))}
           </Flexbox>
         </Content>
@@ -267,7 +267,7 @@ const Home = () => {
           <Divider />
           <Flexbox flexDirection="column">
             {upcomingEvents.map((event, index) => (
-              <Event key={index} event={event} />
+              <Event key={index} event={event} onClick={() => toggleViewModal(true)} />
             ))}
           </Flexbox>
         </Content>
@@ -276,6 +276,11 @@ const Home = () => {
         show={showCreateModal}
         onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
+      />
+      <ViewEventModal
+        show={showViewModal}
+        onClick={() => toggleViewModal(true)}
+        onClose={() => toggleViewModal(false)}
       />
     </HomeWrapper>
   )
