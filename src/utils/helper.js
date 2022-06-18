@@ -22,6 +22,14 @@ export const MONTHS = [
   'December',
 ]
 
+export const convertStringToTime = (time) => {
+  const splitter = time.split(':')
+  let result = new Date()
+  result.setHours(splitter[0])
+  result.setMinutes(splitter[1])
+  result.setSeconds(splitter[2])
+  return result
+}
 export const formatDate = (
   date,
   { hasWeekday = true, hasDate = true, hasMonth = true, hasYear = true } = {}
@@ -96,4 +104,11 @@ export const useCSS = (rules) => {
 
 export const leadingZero = (time) => {
   return time < 10 ? '0' + time : time
+}
+
+export const formatTime = (time) => {
+  const hours = leadingZero(convertStringToTime(time).getHours())
+  const minutes = leadingZero(convertStringToTime(time).getMinutes())
+
+  return hours + ':' + minutes
 }

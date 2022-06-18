@@ -11,10 +11,11 @@ import Flexbox from './../../components/Flexbox'
 import Wrapper from './../../components/Wrapper'
 
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
-import { formatUpcomingTime, leadingZero, MONTHS, WEEKDAYS } from '../../utils/helper'
+import { formatTime, formatUpcomingTime, leadingZero, MONTHS, WEEKDAYS } from '../../utils/helper'
 import Avatar from './../../asset/image/Avatar.png'
 import theme from './../../theme'
 import { get } from './../../utils/ApiCaller'
+import { convertStringToTime } from './../../utils/helper'
 import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
@@ -68,23 +69,14 @@ const Event = (props) => {
   if (!event) {
     event = { name, place, start, end, status }
   }
-
-  const convertStringToTime = (time) => {
-    const splitter = time.split(':')
-    let result = new Date()
-    result.setHours(splitter[0])
-    result.setMinutes(splitter[1])
-    result.setSeconds(splitter[2])
-    return result
-  }
   // console.log(event)
   const [current] = useState({
     name: event.name,
     place: event.location,
     start: new Date(event.start_date),
     end: new Date(event.end_date),
-    start_time: convertStringToTime(event.start_time),
-    end_time: convertStringToTime(event.end_time),
+    start_time: event.start_time,
+    end_time: event.end_time,
     status: event.status ? event.status : 'ongoing',
   })
   return (
@@ -115,12 +107,7 @@ const Event = (props) => {
                 <strong>Time:</strong>{' '}
                 {current.status === 'upcoming'
                   ? formatUpcomingTime(current.start, current.end)
-                  : `${leadingZero(current.start_time.getHours())} : ${leadingZero(
-                      current.start_time.getMinutes()
-                    )}
-                - ${leadingZero(current.end_time.getHours())} : ${leadingZero(
-                      current.end_time.getMinutes()
-                    )}`}
+                  : `${formatTime(current.start_time)} - ${formatTime(current.end_time)}`}
               </EventDescription>
               <EventDescription color={StatusEnum[current.status].headingColor}>
                 <strong>Location:</strong> {current.place}
