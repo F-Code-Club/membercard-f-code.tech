@@ -15,7 +15,6 @@ import { formatTime, formatUpcomingTime, leadingZero, MONTHS, WEEKDAYS } from '.
 import Avatar from './../../asset/image/Avatar.png'
 import theme from './../../theme'
 import { get } from './../../utils/ApiCaller'
-import { convertStringToTime } from './../../utils/helper'
 import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
