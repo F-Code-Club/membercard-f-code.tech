@@ -37,6 +37,14 @@ export const MONTHS_SHORT = [
   'Dec',
 ]
 
+export const convertStringToTime = (time) => {
+  const splitter = time.split(':')
+  let result = new Date()
+  result.setHours(splitter[0])
+  result.setMinutes(splitter[1])
+  result.setSeconds(splitter[2])
+  return result
+}
 export const formatDate = (
   date,
   { useShortDate = false, hasWeekday = true, hasDate = true, hasMonth = true, hasYear = true } = {}
@@ -144,4 +152,11 @@ export const compareDate = (first, second) => {
   } else {
     return 1
   }
+}
+
+export const formatTime = (time) => {
+  const hours = leadingZero(convertStringToTime(time).getHours())
+  const minutes = leadingZero(convertStringToTime(time).getMinutes())
+
+  return hours + ':' + minutes
 }

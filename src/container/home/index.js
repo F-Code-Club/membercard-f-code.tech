@@ -1,11 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+import { useNavigate } from 'react-router-dom'
 
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
+import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import Avatar from './../../asset/image/Avatar.png'
+import { get } from './../../utils/ApiCaller'
 import CreateEventModal from './CreateEventModal'
 import Event, { EventEntity } from './Event'
+import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
   HeaderWrapper,
@@ -26,94 +31,45 @@ const Home = () => {
     rollNumber: 'SE160049',
     imageUrl: images[0],
   }
-
-  const dataList = [
-    {
-      id: '1653886444980',
-      name: 'test',
-      start_date: '2022-12-10T17:00:00.000Z',
-      end_date: null,
-      description: 'an wonderful event',
-      start_time: '21:00:00',
-      end_time: '22:00:00',
-      semester: 'SP2022',
-      location: '202',
-    },
-    {
-      id: '1653886444981',
-      name: 'test',
-      start_date: '2022-12-10T17:00:00.000Z',
-      end_date: null,
-      description: 'an wonderful event',
-      start_time: '21:00:00',
-      end_time: '22:00:00',
-      semester: 'SP2022',
-      location: '202',
-    },
-    {
-      id: '1653886481',
-      name: 'Now',
-      start_date: '2022-6-12T17:00:00.000Z',
-      end_date: null,
-      description: 'an wonderful event',
-      start_time: '21:00:00',
-      end_time: '22:00:00',
-      semester: 'SP2022',
-      location: '202',
-    },
-  ]
-
-  const eventList = dataList.map((data) => new EventEntity(data))
-  console.log(eventList)
-
-  const events = [
-    {
-      name: 'AWS Event',
-      place: 'Room 404 (FPT University)',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'cancel',
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'end',
-    },
-  ]
-  const upcomingEvents = [
-    {
-      name: 'AWS Event',
-      place: 'Room 404',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'upcoming',
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 8, 0, 0),
-      end: new Date(2022, 4, 21, 11, 30, 0),
-      status: 'upcoming',
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 15, 30, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'upcoming',
-    },
-  ]
-
+  const token = LocalStorageUtils.getItem('token')
   const [showCreateModal, toggleCreateModal] = useState(false)
-  const [data, setDataList] = useState(eventList)
+  const [showViewModal, toggleViewModal] = useState({
+    show: false,
+    event: {},
+    status: {},
+  })
+  const [events, setEvents] = useState([])
+  const [upcomingEvents, setUpcomingEvents] = useState([])
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      const eventsReceiver = await get('/api/events', {}, { token: token }).then((response) => {
+        if (response.data.status === 403) {
+          LocalStorageUtils.removeItem('token')
+          navigate('/')
+          return []
+        }
+        return response.data.data
+      })
+      setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
+      setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
+    }
+    fetchEvent()
+  }, [navigate, token])
+  const displayEventModal = (data) => {
+    toggleViewModal({
+      show: true,
+      event: data,
+      status: StatusEnum[data.status],
+    })
+  }
+  const closeEventModal = () =>
+    toggleViewModal({
+      show: false,
+      event: {},
+      status: {},
+    })
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
@@ -130,19 +86,24 @@ const Home = () => {
               <Event key={index} event={event} />
             ))} */}
             {/* <Event data={data} /> */}
-            {data
+            {
+              {
+                /* data
               .filter((d) => {
-                {
-                  /* const { start_date: startDateStr } = d
+                const { start_date: startDateStr } = d
                 const startDate = new Date(startDateStr)
                 const today = new Date()
-                return compareDate(startDate, today) === 0 */
-                }
+                return compareDate(startDate, today) === 0
                 return d.status === EventEntity.ONGOING
               })
               .map((d) => (
                 <Event key={d.id} data={d} />
-              ))}
+              )) */
+              }
+            }
+            {events.map((event, index) => (
+              <Event key={index} event={event} onClick={() => displayEventModal(event)} />
+            ))}
           </Flexbox>
         </Content>
         <Content>
@@ -157,19 +118,20 @@ const Home = () => {
               <Event key={index} event={event} />
             ))} */}
             {/* <Event data={anotherData} /> */}
-            {data
+            {/* data
               .filter((d) => {
-                {
-                  /* const { start_date: startDateStr } = d
+                const { start_date: startDateStr } = d
                 const startDate = new Date(startDateStr)
                 const today = new Date()
-                return compareDate(startDate, today) === 1 */
-                }
+                return compareDate(startDate, today) === 1
                 return d.status === EventEntity.UPCOMING
               })
               .map((d) => (
                 <Event key={d.id} data={d} />
-              ))}
+              )) */}
+            {upcomingEvents.map((event, index) => (
+              <Event key={index} event={event} onClick={() => displayEventModal(event)} />
+            ))}
           </Flexbox>
         </Content>
       </ContentWrapper>
@@ -178,6 +140,11 @@ const Home = () => {
         onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
         onSubmit={(newEvent) => setDataList([...data, new EventEntity(newEvent)])}
+      />
+      <ViewEventModal
+        data={showViewModal}
+        // onClick={() => toggleViewModal(true)}
+        onClose={closeEventModal}
       />
     </HomeWrapper>
   )
