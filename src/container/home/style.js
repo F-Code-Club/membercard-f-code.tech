@@ -132,8 +132,8 @@ export const StyledEventWrapper = styled.div`
 `
 
 export const StyledEventIndicator = styled.div`
-  width: 6px;
-  height: 6px;
+  width: ${(props) => (props.size ? props.size + 'px' : '6px')};
+  height: ${(props) => (props.size ? props.size + 'px' : '6px')};
   border-radius: 50%;
   flex-shrink: 0;
   ${(props) => useCSS(props.style)}

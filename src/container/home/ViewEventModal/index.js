@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { BlueButton, Button, GreenButton, RedButton } from '../../../components/Button'
 import Flexbox from '../../../components/Flexbox'
@@ -10,30 +10,57 @@ import TextArea from './../../../components/Input/TextArea'
 import Modal from './../../../components/Modal/index'
 
 const ViewEvent = (props) => {
-  const { show, onClick, onClose } = props
-  const event = {
-    name: 'Monthly Meeting',
-    place: 'FPT University',
-    start: new Date(2022, 4, 20, 15, 0, 0),
-    end: new Date(2022, 4, 20, 17, 0, 0),
-    status: 'cancel',
-    description:
-      '- Students must have member card to check attendance \n- The event may start 5 minutes earlier',
-  }
+  const { data, onClose } = props
+  const { show, event, indicator } = data
+  const [current, setCurrent] = useState({
+    name: event.name,
+    place: event.location,
+    start: new Date(event.start_date),
+    end: new Date(event.end_date),
+    start_time: new Date(event.start_time),
+    end_time: new Date(event.end_time),
+    description: event.description,
+    status: event.status,
+  })
 
+  useEffect(() => {
+    const tmp = {
+      name: event.name,
+      place: event.location,
+      start: new Date(),
+      end: new Date(),
+      start_time: new Date(),
+      end_time: new Date(event.end_time),
+      description: event.description,
+      status: event.status || 'ongoing',
+    }
+    setCurrent(tmp)
+  }, [event])
+  console.log(current.status)
   const checkAttendance = () => {
     console.log('checked')
   }
-
   return (
-    <Modal show={show} title={event.name} onClose={onClose}>
+    <Modal show={show} title={current.name} onClose={onClose} indicator={current.status}>
       <Flexbox flexDirection="column" gap={10}>
         <Flexbox gap={10}>
-          <DateInput fullWidth={true} title="Start" date={event.start} readonly={true} />
-          <DateInput fullWidth={true} title="End" date={event.end} readonly={true} />
+          <DateInput
+            fullWidth={true}
+            title="Start"
+            date={current.start}
+            readonly={true}
+            onChange={() => current.start}
+          />
+          <DateInput
+            fullWidth={true}
+            title="End"
+            date={current.end}
+            readonly={true}
+            onChange={() => current.start}
+          />
         </Flexbox>
-        <TextInput title="Location" value={event.place} readonly />
-        <TextArea title="Description" value={event.description} readonly />
+        <TextInput title="Location" value={current.place} readOnly />
+        <TextArea title="Description" value={current.description} readOnly />
       </Flexbox>
       <Divider variant="dashed" margin={20} />
       <Flexbox flexDirection="column" gap={10}>

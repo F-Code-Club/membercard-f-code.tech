@@ -81,7 +81,6 @@ const DateInput = (props) => {
   const onBlur = () => {
     setFocused(false)
   }
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (boxRef.current && !boxRef.current.contains(event.target)) {
