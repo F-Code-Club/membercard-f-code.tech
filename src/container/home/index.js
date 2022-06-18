@@ -70,11 +70,11 @@ const Event = (props) => {
   }
 
   const convertStringToTime = (time) => {
-    const spliter = time.split(':')
+    const splitter = time.split(':')
     let result = new Date()
-    result.setHours(spliter[0])
-    result.setMinutes(spliter[1])
-    result.setSeconds(spliter[2])
+    result.setHours(splitter[0])
+    result.setMinutes(splitter[1])
+    result.setSeconds(splitter[2])
     return result
   }
   // console.log(event)
@@ -134,12 +134,12 @@ const Event = (props) => {
 }
 
 const CreateEventModal = (props) => {
-  const { show, onClick, onClose } = props
+  const { show, onClose } = props
 
-  const [title, setTitle] = useState('')
-  const handleTitleChange = (newTitle) => {
-    setTitle(newTitle)
-  }
+  // const [title, setTitle] = useState('')
+  // const handleTitleChange = (newTitle) => {
+  //   setTitle(newTitle)
+  // }
 
   const [startDate, setStartDate] = useState(new Date())
   const handleStartDateChange = (newDate) => {
@@ -151,10 +151,10 @@ const CreateEventModal = (props) => {
     setEndDate(newDate)
   }
 
-  const [location, setLocation] = useState('')
-  const handleLocationChange = (newLocation) => {
-    setLocation(newLocation)
-  }
+  // const [location, setLocation] = useState('')
+  // const handleLocationChange = (newLocation) => {
+  //   setLocation(newLocation)
+  // }
 
   return (
     <Modal show={show} title="Create new event" onClose={onClose}>
@@ -207,59 +207,6 @@ const Home = () => {
     rollNumber: 'SE160049',
     imageUrl: images[0],
   }
-
-  // const events = [
-  //   {
-  //     name: 'AWS Event',
-  //     place: 'Room 404 (FPT University)',
-  //     start: new Date(2022, 4, 20, 15, 0, 0),
-  //     end: new Date(2022, 4, 20, 17, 0, 0),
-  //     status: 'ongoing',
-  //     description: 'hello world',
-  //   },
-  //   {
-  //     name: 'Monthly Meeting',
-  //     place: 'FPT University',
-  //     start: new Date(2022, 4, 20, 15, 0, 0),
-  //     end: new Date(2022, 4, 20, 17, 0, 0),
-  //     status: 'cancel',
-  //     description: 'hello world',
-  //   },
-  //   {
-  //     name: 'Monthly Meeting',
-  //     place: 'FPT University',
-  //     start: new Date(2022, 4, 20, 15, 0, 0),
-  //     end: new Date(2022, 4, 20, 17, 0, 0),
-  //     status: 'end',
-  //     description: 'hello world',
-  //   },
-  // ]
-  // const upcomingEvents = [
-  //   {
-  //     name: 'AWS Event',
-  //     place: 'Room 404',
-  //     start: new Date(2022, 4, 20, 15, 0, 0),
-  //     end: new Date(2022, 4, 20, 17, 0, 0),
-  //     status: 'upcoming',
-  //     description: 'hello world',
-  //   },
-  //   {
-  //     name: 'Monthly Meeting',
-  //     place: 'FPT University',
-  //     start: new Date(2022, 4, 20, 8, 0, 0),
-  //     end: new Date(2022, 4, 21, 11, 30, 0),
-  //     status: 'upcoming',
-  //     description: 'hello world',
-  //   },
-  //   {
-  //     name: 'Monthly Meeting',
-  //     place: 'FPT University',
-  //     start: new Date(2022, 4, 20, 15, 30, 0),
-  //     end: new Date(2022, 4, 20, 17, 0, 0),
-  //     status: 'upcoming',
-  //     description: 'hello world',
-  //   },
-  // ]
   const token = LocalStorageUtils.getItem('token')
   const [showCreateModal, toggleCreateModal] = useState(false)
   const [showViewModal, toggleViewModal] = useState({
@@ -281,7 +228,8 @@ const Home = () => {
         }
         return response.data.data
       })
-      setEvents(eventsReceiver || [])
+      setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
+      setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
     }
     fetchEvent()
   }, [navigate, token])
