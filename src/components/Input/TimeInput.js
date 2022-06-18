@@ -75,6 +75,16 @@ const formatTime24 = (date) => {
   return `${leadingZero(hours)}:${leadingZero(minutes)}`
 }
 
+/**
+ *
+ * @component
+ * @example
+ * const title = ''
+ * const time = new Date()
+ * return (
+ * `<TimeInput title={title} time={time} />
+ * )
+ */
 const TimeInput = (props) => {
   const { title, fullWidth, time, onChange } = props
 
@@ -120,12 +130,13 @@ const TimeInput = (props) => {
         fullWidth={fullWidth}
       >
         <TimeInputBox value={formatTime24(currentTime)} />
-        <Icon name="time" size="18px" />
+        <Icon name="time" size="18" />
         {showTimePicker ? (
           <StyledTimePickerWrapper>
             <TimeKeeper
               hour24Mode={true}
               time={formatTime24(currentTime)}
+              coarseMinutes={5}
               onChange={handleChange}
             />
           </StyledTimePickerWrapper>
