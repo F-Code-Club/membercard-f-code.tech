@@ -9,7 +9,7 @@ import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import Avatar from './../../asset/image/Avatar.png'
 import { get } from './../../utils/ApiCaller'
 import CreateEventModal from './CreateEventModal'
-import Event, { EventEntity } from './Event'
+import Event, { EventEntity, StatusEnum } from './Event'
 import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
@@ -82,27 +82,15 @@ const Home = () => {
           <CreateButton onClick={() => toggleCreateModal(true)}>Create new event</CreateButton>
           <Divider />
           <Flexbox flexDirection="column">
-            {/* {events.map((event, index) => (
-              <Event key={index} event={event} />
-            ))} */}
-            {/* <Event data={data} /> */}
-            {
-              {
-                /* data
-              .filter((d) => {
-                const { start_date: startDateStr } = d
-                const startDate = new Date(startDateStr)
-                const today = new Date()
-                return compareDate(startDate, today) === 0
-                return d.status === EventEntity.ONGOING
-              })
-              .map((d) => (
-                <Event key={d.id} data={d} />
-              )) */
-              }
-            }
             {events.map((event, index) => (
-              <Event key={index} event={event} onClick={() => displayEventModal(event)} />
+              <Event
+                key={index}
+                event={event}
+                onClick={() => {
+                  displayEventModal(event)
+                  console.log(event)
+                }}
+              />
             ))}
           </Flexbox>
         </Content>
@@ -114,21 +102,6 @@ const Home = () => {
           />
           <Divider />
           <Flexbox flexDirection="column">
-            {/* {upcomingEvents.map((event, index) => (
-              <Event key={index} event={event} />
-            ))} */}
-            {/* <Event data={anotherData} /> */}
-            {/* data
-              .filter((d) => {
-                const { start_date: startDateStr } = d
-                const startDate = new Date(startDateStr)
-                const today = new Date()
-                return compareDate(startDate, today) === 1
-                return d.status === EventEntity.UPCOMING
-              })
-              .map((d) => (
-                <Event key={d.id} data={d} />
-              )) */}
             {upcomingEvents.map((event, index) => (
               <Event key={index} event={event} onClick={() => displayEventModal(event)} />
             ))}
@@ -139,7 +112,7 @@ const Home = () => {
         show={showCreateModal}
         onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
-        onSubmit={(newEvent) => setDataList([...data, new EventEntity(newEvent)])}
+        onSubmit={(newItem) => console.log(new EventEntity(newItem))}
       />
       <ViewEventModal
         data={showViewModal}

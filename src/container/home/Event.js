@@ -13,7 +13,7 @@ import {
   StyledEventWrapper,
 } from './style'
 
-const StatusEnum = {
+export const StatusEnum = {
   ongoing: {
     indicatorColor: theme.teal,
     statusString: 'On-going',
@@ -93,8 +93,11 @@ export class EventEntity {
 }
 
 const Event = (props) => {
-  let { data } = props
-  const { id, name, startDate, endDate, location, description, status, semester } = data
+  let { event, onClick } = props
+  let { id, name, startDate, endDate, location, description, status, semester } = new EventEntity(
+    event
+  )
+  endDate = endDate == null ? startDate : endDate
 
   const [eventId, setEventId] = useState(id)
   const [eventName, setEventName] = useState(name)
@@ -105,7 +108,7 @@ const Event = (props) => {
   const [eventSemester, setEventSemester] = useState(semester)
 
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       <StyledEventWrapper>
         <Flexbox gap="5">
           <StyledEventIndicator
