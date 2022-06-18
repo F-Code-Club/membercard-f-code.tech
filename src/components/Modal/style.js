@@ -22,12 +22,14 @@ const StyledModalContent = styled.div`
 `
 const StyledModalHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${(props) => props.justify || 'space-between'};
+  align-items: center;
   padding-bottom: 10px;
   font-family: inherit;
+  gap: ${(props) => props.gap + 'px' || 'auto'};
 `
 const StyledModalTitle = styled.h4`
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 600;
   margin: 0;
 `

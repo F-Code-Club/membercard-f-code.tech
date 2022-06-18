@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+import { useNavigate } from 'react-router-dom'
 
 import DateInput from '../../components/Input/DateInput'
 import TextInput from '../../components/Input/TextInput'
@@ -8,9 +10,12 @@ import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 import Wrapper from './../../components/Wrapper'
 
-import { formatUpcomingTime, leadingZero, MONTHS, WEEKDAYS } from '../../utils/helper'
+import LocalStorageUtils from '../../utils/LocalStorageUtils'
+import { formatTime, formatUpcomingTime, leadingZero, MONTHS, WEEKDAYS } from '../../utils/helper'
 import Avatar from './../../asset/image/Avatar.png'
 import theme from './../../theme'
+import { get } from './../../utils/ApiCaller'
+import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
   StyledEventDescription,
@@ -59,23 +64,23 @@ const EventDescription = (props) => ComponentWrapper(StyledEventDescription, pro
 const EventStatus = (props) => ComponentWrapper(StyledEventStatus, props)
 
 const Event = (props) => {
-  let { event } = props
+  let { event, onClick } = props
   if (!event) {
-    const { name, place, start, end, status } = event
     event = { name, place, start, end, status }
   }
-
+  // console.log(event)
   const [current] = useState({
     name: event.name,
-    place: event.place,
-    start: event.start,
-    end: event.end,
+    place: event.location,
+    start: new Date(event.start_date),
+    end: new Date(event.end_date),
+    start_time: event.start_time,
+    end_time: event.end_time,
     status: event.status ? event.status : 'ongoing',
   })
-
   return (
     <Wrapper>
-      <StyledEventWrapper>
+      <StyledEventWrapper onClick={onClick}>
         <Flexbox gap="5px">
           <StyledEventIndicator
             indicatorColor={StatusEnum[current.status].indicatorColor}
@@ -101,11 +106,7 @@ const Event = (props) => {
                 <strong>Time:</strong>{' '}
                 {current.status === 'upcoming'
                   ? formatUpcomingTime(current.start, current.end)
-                  : `${leadingZero(current.start.getHours())}:${leadingZero(
-                      current.start.getMinutes()
-                    )} - ${leadingZero(current.end.getHours())}:${leadingZero(
-                      current.end.getMinutes()
-                    )}`}
+                  : `${formatTime(current.start_time)} - ${formatTime(current.end_time)}`}
               </EventDescription>
               <EventDescription color={StatusEnum[current.status].headingColor}>
                 <strong>Location:</strong> {current.place}
@@ -119,12 +120,12 @@ const Event = (props) => {
 }
 
 const CreateEventModal = (props) => {
-  const { show, onClick, onClose } = props
+  const { show, onClose } = props
 
-  const [title, setTitle] = useState('')
-  const handleTitleChange = (newTitle) => {
-    setTitle(newTitle)
-  }
+  // const [title, setTitle] = useState('')
+  // const handleTitleChange = (newTitle) => {
+  //   setTitle(newTitle)
+  // }
 
   const [startDate, setStartDate] = useState(new Date())
   const handleStartDateChange = (newDate) => {
@@ -136,10 +137,10 @@ const CreateEventModal = (props) => {
     setEndDate(newDate)
   }
 
-  const [location, setLocation] = useState('')
-  const handleLocationChange = (newLocation) => {
-    setLocation(newLocation)
-  }
+  // const [location, setLocation] = useState('')
+  // const handleLocationChange = (newLocation) => {
+  //   setLocation(newLocation)
+  // }
 
   return (
     <Modal show={show} title="Create new event" onClose={onClose}>
@@ -192,55 +193,45 @@ const Home = () => {
     rollNumber: 'SE160049',
     imageUrl: images[0],
   }
-
-  const events = [
-    {
-      name: 'AWS Event',
-      place: 'Room 404 (FPT University)',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'cancel',
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'end',
-    },
-  ]
-  const upcomingEvents = [
-    {
-      name: 'AWS Event',
-      place: 'Room 404',
-      start: new Date(2022, 4, 20, 15, 0, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'upcoming',
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 8, 0, 0),
-      end: new Date(2022, 4, 21, 11, 30, 0),
-      status: 'upcoming',
-    },
-    {
-      name: 'Monthly Meeting',
-      place: 'FPT University',
-      start: new Date(2022, 4, 20, 15, 30, 0),
-      end: new Date(2022, 4, 20, 17, 0, 0),
-      status: 'upcoming',
-    },
-  ]
-
+  const token = LocalStorageUtils.getItem('token')
   const [showCreateModal, toggleCreateModal] = useState(false)
+  const [showViewModal, toggleViewModal] = useState({
+    show: false,
+    event: {},
+    status: {},
+  })
+  const [events, setEvents] = useState([])
+  const [upcomingEvents, setUpcomingEvents] = useState([])
+  const navigate = useNavigate()
 
+  useEffect(() => {
+    const fetchEvent = async () => {
+      const eventsReceiver = await get('/api/events', {}, { token: token }).then((response) => {
+        if (response.data.status === 403) {
+          LocalStorageUtils.removeItem('token')
+          navigate('/')
+          return []
+        }
+        return response.data.data
+      })
+      setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
+      setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
+    }
+    fetchEvent()
+  }, [navigate, token])
+  const displayEventModal = (data) => {
+    toggleViewModal({
+      show: true,
+      event: data,
+      status: StatusEnum[data.status],
+    })
+  }
+  const closeEventModal = () =>
+    toggleViewModal({
+      show: false,
+      event: {},
+      status: {},
+    })
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
@@ -254,7 +245,7 @@ const Home = () => {
           <Divider />
           <Flexbox flexDirection="column">
             {events.map((event, index) => (
-              <Event key={index} event={event} />
+              <Event key={index} event={event} onClick={() => displayEventModal(event)} />
             ))}
           </Flexbox>
         </Content>
@@ -267,7 +258,7 @@ const Home = () => {
           <Divider />
           <Flexbox flexDirection="column">
             {upcomingEvents.map((event, index) => (
-              <Event key={index} event={event} />
+              <Event key={index} event={event} onClick={() => displayEventModal(event)} />
             ))}
           </Flexbox>
         </Content>
@@ -276,6 +267,11 @@ const Home = () => {
         show={showCreateModal}
         onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
+      />
+      <ViewEventModal
+        data={showViewModal}
+        // onClick={() => toggleViewModal(true)}
+        onClose={closeEventModal}
       />
     </HomeWrapper>
   )

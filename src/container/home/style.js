@@ -123,15 +123,17 @@ export const StyledEventWrapper = styled.div`
   padding: 15px 15px;
   border-radius: 10px;
   font-size: 10px;
-
-  &:active {
+  cursor: pointer;
+  transition-duration: 0.4s;
+  &:active,
+  :hover {
     background-color: ${theme.slate1_10};
   }
 `
 
 export const StyledEventIndicator = styled.div`
-  width: 6px;
-  height: 6px;
+  width: ${(props) => (props.size ? props.size + 'px' : '6px')};
+  height: ${(props) => (props.size ? props.size + 'px' : '6px')};
   border-radius: 50%;
   flex-shrink: 0;
   ${(props) => useCSS(props.style)}

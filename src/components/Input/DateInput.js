@@ -55,7 +55,7 @@ const StyledDateInputWrapper = styled.div`
 `
 
 const DateInput = (props) => {
-  const { title, date, fullWidth, onChange } = props
+  const { title, date, fullWidth, onChange, readonly } = props
   let defaultDate = date ? date : new Date()
 
   const [showDatePicker, setShowDatePicker] = useState(false)
@@ -81,7 +81,6 @@ const DateInput = (props) => {
   const onBlur = () => {
     setFocused(false)
   }
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (boxRef.current && !boxRef.current.contains(event.target)) {
@@ -108,7 +107,7 @@ const DateInput = (props) => {
       >
         <DateInputBox value={currentDate.toLocaleDateString('en-CA')} />
         <Icon name="calendar" size="15px" />
-        {showDatePicker ? (
+        {showDatePicker && !readonly ? (
           <StyledDatePickerWrapper>
             <DatePicker onChange={handleChange} selected={currentDate} />
           </StyledDatePickerWrapper>
