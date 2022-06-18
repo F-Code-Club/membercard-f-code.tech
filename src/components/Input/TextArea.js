@@ -1,9 +1,10 @@
+import { useState } from 'react'
+
 import styled from 'styled-components'
 
 import theme from './../../theme'
 import BaseInputBox from './InputBox'
 import Label from './Label'
-import { StyledHeading } from './style'
 
 const StyledTextArea = styled.textarea`
   width: 100%;
@@ -12,6 +13,7 @@ const StyledTextArea = styled.textarea`
   outline: none;
   font-family: inherit;
   font-size: inherit;
+  font-weight: inherit;
   color: inherit;
   resize: none;
   box-sizing: border-box;
@@ -30,11 +32,29 @@ const StyledWrapper = styled.div`
 `
 
 const TextArea = (props) => {
+  const { fullWidth, title, value, onChange, placeholder } = props
+  const handleChange = (event) => {
+    onChange(event.target.value)
+  }
+  const [isFocused, setFocused] = useState(false)
+  const onFocus = () => {
+    setFocused(true)
+  }
+  const onBlur = () => {
+    setFocused(false)
+  }
   return (
     <StyledWrapper fullWidth={props.fullWidth}>
-      <StyledHeading>{props.title}</StyledHeading>
-      <BaseInputBox fullWidth={props.fullWidth}>
-        <StyledTextArea placeholder={props.placeholder} />
+      <Label title={title} />
+      <BaseInputBox isFocused={isFocused} fullWidth={fullWidth}>
+        <StyledTextArea
+          onFocus={onFocus}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          rows={5}
+        />
       </BaseInputBox>
     </StyledWrapper>
   )
