@@ -5,9 +5,9 @@ import Flexbox from '../../../components/Flexbox'
 // import DateInput from '../../../components/Input/DateInput'
 import TextInput from '../../../components/Input/TextInput'
 // import TextBox from './../../../components/TextBox/index'
-import Divider from './../../../components/Divider/index'
+import Divider from './../../../components/Divider'
 import TextArea from './../../../components/Input/TextArea'
-import Modal from './../../../components/Modal/index'
+import Modal from './../../../components/Modal'
 
 import { formatDate, formatTime } from './../../../utils/helper'
 

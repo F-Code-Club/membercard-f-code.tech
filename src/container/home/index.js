@@ -206,14 +206,22 @@ const Home = () => {
 
   useEffect(() => {
     const fetchEvent = async () => {
-      const eventsReceiver = await get('/api/events', {}, { token: token }).then((response) => {
-        if (response.data.status === 403) {
+      const eventsReceiver = await get('/api/events', {}, { token: token })
+        .then((response) => {
+          if (response.data?.status !== 200) {
+            LocalStorageUtils.removeItem('token')
+            navigate('/')
+            return []
+          }
+          return response.data.data
+        })
+        .catch((e) => {
+          if (e.code === 'ERR_NETWORK') {
+          }
           LocalStorageUtils.removeItem('token')
           navigate('/')
           return []
-        }
-        return response.data.data
-      })
+        })
       setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
       setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
     }
