@@ -9,12 +9,14 @@ import Divider from './../../../components/Divider'
 import TextArea from './../../../components/Input/TextArea'
 import Modal from './../../../components/Modal'
 
+import AttendanceCard from '../AttendanceCard'
 import { formatDate, formatTime } from './../../../utils/helper'
 
 const ViewEvent = (props) => {
   const { data, onClose } = props
   const { show, event, status } = data
   const [current, setCurrent] = useState({
+    id: event.id,
     name: event.name,
     place: event.location,
     start: new Date(event.start_date || '2002-12-12'),
@@ -24,12 +26,19 @@ const ViewEvent = (props) => {
     description: event.description,
     status: event.status,
   })
-
+  const [showAttendanceCard, toggleAttendanceCard] = useState({
+    show: false,
+    eventId: current.id,
+  })
+  const [showListAttendance, toggleListAttendance] = useState({
+    show: false,
+  })
   const onEventChange = (event) => {
     if (!event) {
       return
     }
     const tmp = {
+      id: event.id,
       name: event.name,
       place: event.location,
       start: new Date(event.start_date),
@@ -45,10 +54,17 @@ const ViewEvent = (props) => {
     onEventChange(event)
   }, [event])
 
-  const checkAttendance = () => {
-    // console.log('checked')
+  const openAttendanceCard = () => {
+    toggleAttendanceCard({
+      show: true,
+      eventId: current.id,
+    })
   }
-
+  const closeAttendanceCard = () => {
+    toggleAttendanceCard({
+      show: false,
+    })
+  }
   return (
     <Modal show={show} title={event.name} onClose={onClose} indicator={status}>
       <Flexbox flexDirection="column" gap={10}>
@@ -94,18 +110,19 @@ const ViewEvent = (props) => {
       </Flexbox>
       <Divider variant="dashed" margin={20} />
       <Flexbox flexDirection="column" gap={10}>
-        <GreenButton onClick={checkAttendance}>Check attendance</GreenButton>
+        <GreenButton onClick={openAttendanceCard}>Check attendance</GreenButton>
         <Flexbox gap={10}>
-          <BlueButton fullWidth={true} onClick={checkAttendance}>
+          <BlueButton fullWidth={true} onClick={openAttendanceCard}>
             Start
           </BlueButton>
-          <RedButton fullWidth={true} onClick={checkAttendance}>
+          <RedButton fullWidth={true} onClick={openAttendanceCard}>
             End
           </RedButton>
         </Flexbox>
-        <Button onClick={checkAttendance}>View List</Button>
-        <Button onClick={checkAttendance}>Edit Event</Button>
+        <Button onClick={openAttendanceCard}>View List</Button>
+        <Button onClick={openAttendanceCard}>Edit Event</Button>
       </Flexbox>
+      <AttendanceCard data={showAttendanceCard} onClose={closeAttendanceCard} />
     </Modal>
   )
 }
