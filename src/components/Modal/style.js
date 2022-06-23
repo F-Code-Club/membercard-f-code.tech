@@ -29,7 +29,7 @@ const StyledModalHeader = styled.div`
   gap: ${(props) => props.gap + 'px' || 'auto'};
 `
 const StyledModalTitle = styled.h4`
-  font-size: 1.35rem;
+  font-size: 1.6rem;
   font-weight: 600;
   margin: 0;
 `

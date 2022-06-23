@@ -11,6 +11,7 @@ import Modal from './../../../components/Modal'
 
 import AttendanceCard from '../AttendanceCard'
 import { formatDate, formatTime } from './../../../utils/helper'
+import AttendanceStatusModal from './../AttendanceStatusModal/index'
 
 const ViewEvent = (props) => {
   const { data, onClose } = props
@@ -65,6 +66,18 @@ const ViewEvent = (props) => {
       show: false,
     })
   }
+
+  const openViewList = () => {
+    toggleListAttendance({
+      show: true,
+    })
+  }
+  const closeViewList = () => {
+    toggleListAttendance({
+      show: false,
+    })
+  }
+
   return (
     <Modal show={show} title={event.name} onClose={onClose} indicator={status}>
       <Flexbox flexDirection="column" gap={10}>
@@ -119,10 +132,14 @@ const ViewEvent = (props) => {
             End
           </RedButton>
         </Flexbox>
-        <Button onClick={openAttendanceCard}>View List</Button>
+        <Button onClick={openViewList}>View List</Button>
         <Button onClick={openAttendanceCard}>Edit Event</Button>
       </Flexbox>
       <AttendanceCard data={showAttendanceCard} onClose={closeAttendanceCard} />
+      <AttendanceStatusModal
+        show={showListAttendance.show}
+        onClose={closeViewList}
+      ></AttendanceStatusModal>
     </Modal>
   )
 }
