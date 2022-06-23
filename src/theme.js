@@ -12,6 +12,7 @@ const theme = {
   teal: '#067A6F',
   cyan1: '#00B1C4',
   cyan2: '#A9DDE5',
+  yellow2: '#FAEDC9',
   indigo1: '#E6EDFE',
   indigo2: '#E6EDFE',
   indigo3: '#3451B2',
