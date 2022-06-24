@@ -139,6 +139,7 @@ const ViewEvent = (props) => {
       <AttendanceStatusModal
         show={showListAttendance.show}
         onClose={closeViewList}
+        eventId={current.id}
       ></AttendanceStatusModal>
     </Modal>
   )

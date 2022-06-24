@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import Flexbox from '../../../components/Flexbox'
 import Modal from '../../../components/Modal'
 
+import { get } from '../../../utils/ApiCaller'
+import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import theme from './../../../theme'
 import { SubHeading, Heading, StyledWrapper, StatusBadge } from './style'
 
@@ -25,10 +27,46 @@ const MemberStatus = (props) => {
 }
 
 const AttendanceStatusModal = (props) => {
-  const { show, onClose } = props
+  const { show, onClose, eventId } = props
+  const token = LocalStorageUtils.getItem('token')
+  const [data, setData] = useState([
+    {
+      name: 'Nguyen Nghiax',
+      member_id: 'SE123213',
+      status: 'not yet',
+    },
+  ])
 
+  useEffect(() => {
+    const getAllMembers = async () => {
+      const result = await get(
+        '/api/check-attendance/members',
+        { event_id: eventId },
+        {
+          token: token,
+        }
+      )
+        .then((response) => {
+          if (response.data.status === 200) {
+            return response.data.data
+          }
+          return response.data.message
+        })
+        .catch((error) => {
+          console.log(error)
+          return null
+        })
+      if (result === null || !(result instanceof Array)) {
+        setData([{ name: 'Unknown error', member_id: 'Unknown error', status: 'not yet' }])
+        return
+      }
+      setData(result)
+    }
+
+    getAllMembers()
+  }, [eventId, token])
   const enumStatus = {
-    present: {
+    attended: {
       color: theme.cyan2,
       textColor: theme.cyan1,
       statusString: 'present',
@@ -49,33 +87,11 @@ const AttendanceStatusModal = (props) => {
       statusString: 'not yet',
     },
   }
-  const fakeData = [
-    {
-      name: 'Nguyen Nghiax',
-      member_id: 'SE123213',
-      status: 'not yet',
-    },
-    {
-      name: 'Nguyen Nghiax',
-      member_id: 'SE123213',
-      status: 'not yet',
-    },
-    {
-      name: 'Nguyen Nghiax',
-      member_id: 'SE123213',
-      status: 'not yet',
-    },
-    {
-      name: 'Nguyen Nghiax',
-      member_id: 'SE123213',
-      status: 'present',
-    },
-  ]
-  console.log(enumStatus['not yet'])
+
   return (
     <Modal show={show} title="Attendance Status" onClose={onClose}>
       <Flexbox justifyContent="center" flexDirection="column">
-        {fakeData.map((member, index) => (
+        {data.map((member, index) => (
           <MemberStatus
             key={index + 'member'}
             data={member}
