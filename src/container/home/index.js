@@ -119,6 +119,7 @@ const Event = (props) => {
 }
 
 const Home = () => {
+  //data get from BE
   const [data, setData] = useState({})
 
   useEffect(() => {
@@ -131,9 +132,8 @@ const Home = () => {
     getData()
   }, [])
 
-  console.log(data)
   if (data?.status === 403) {
-    // LocalStorageUtils.removeItem('token')
+    LocalStorageUtils.removeItem('token')
     return <Navigate to="/login" replace />
   }
   const images = [
