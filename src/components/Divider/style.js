@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import theme from './../../theme'
 
 const StyledDivider = styled.hr`
-  height: 1.25px;
+  height: 1px;
   width: ${(props) => (props.width ? props.width + 'px' : '100%')};
   background-image: linear-gradient(
     90deg,
@@ -14,7 +14,7 @@ const StyledDivider = styled.hr`
   );
   background-size: ${(props) => (props.variant === 'dashed' ? '0.5em' : '999em')} 1.25px;
   border: none;
-  margin: 15px 0;
+  margin: ${(props) => (props.margin ? props.margin : 10)}px 0;
 `
 
 export { StyledDivider }

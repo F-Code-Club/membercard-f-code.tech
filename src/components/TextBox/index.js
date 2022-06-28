@@ -1,18 +1,18 @@
+import React from 'react'
+
 import styled from 'styled-components'
 
 import theme from './../../theme'
+import Label from './../Input/Label'
 import Wrapper from './../Wrapper/index'
-import BaseInputBox from './InputBox'
-import Label from './Label'
 
-const StyledTextArea = styled.textarea`
+const StyledTextBox = styled.div`
   width: 100%;
   background-color: transparent;
   border: none;
   outline: none;
   font-family: inherit;
   font-size: inherit;
-  font-weight: inherit;
   color: inherit;
   resize: none;
   box-sizing: border-box;
@@ -22,7 +22,7 @@ const StyledTextArea = styled.textarea`
   }
 
   &::-webkit-input-placeholder {
-    color: ${theme.slate4};
+    background-color: ${theme.slate4};
   }
 `
 
@@ -30,18 +30,16 @@ const StyledWrapper = styled.div`
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
 `
 
-const TextArea = (props) => {
-  const { title, ...rest } = props
+const TextBox = (props) => {
+  const { title, content, ...rest } = props
+
   return (
     <Wrapper>
       <Label title={title} />
-      <StyledWrapper fullWidth={props.fullWidth}>
-        <BaseInputBox fullWidth={props.fullWidth}>
-          <StyledTextArea placeholder={props.placeholder} {...rest} />
-        </BaseInputBox>
+      <StyledWrapper>
+        <StyledTextBox>{content}</StyledTextBox>
       </StyledWrapper>
     </Wrapper>
   )
 }
-
-export default TextArea
+export default TextBox

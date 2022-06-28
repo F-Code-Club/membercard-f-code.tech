@@ -1,8 +1,6 @@
 import { useEffect } from 'react'
 
-import styled from 'styled-components'
-
-import theme from '../../theme'
+import { StyledEventIndicator } from '../../container/home/style'
 import { CloseButton } from '../Button'
 import Divider from '../Divider'
 import Wrapper from './../Wrapper'
@@ -37,10 +35,17 @@ const Modal = (props) => {
       <Wrapper>
         <StyledModalContent onClick={(e) => e.stopPropagation()}>
           <CloseButton size={1} onClick={props.onClose} position="top-right" positionOffset={2} />
-          <StyledModalHeader>
+          <StyledModalHeader justify="left" gap={4}>
+            {props.indicator !== undefined && (
+              <StyledEventIndicator
+                size={12}
+                indicatorColor={props.indicator.indicatorColor}
+                style={{ borderRadius: '2px' }}
+              />
+            )}
             <StyledModalTitle>{props.title}</StyledModalTitle>
           </StyledModalHeader>
-          <Divider />
+          <Divider margin={5} />
           <StyledModalBody>{props.children}</StyledModalBody>
         </StyledModalContent>
       </Wrapper>

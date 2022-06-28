@@ -14,7 +14,7 @@ const StyledIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: ${(props) => props.size || 'inherit'};
+  font-size: ${(props) => props.size || 'inherit'}px;
   ${(props) => (props.style ? parseCSS(props.style) : '')}
 
   & > ion-icon {

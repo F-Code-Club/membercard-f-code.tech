@@ -18,8 +18,12 @@ const StyledInputWrapper = styled.div`
 `
 
 const BaseInputBox = (props) => {
-  const { children, ...rest } = props
-  return <StyledInputWrapper {...rest}>{children}</StyledInputWrapper>
+  const { children, innerRef, ...rest } = props
+  return (
+    <StyledInputWrapper ref={innerRef} {...rest}>
+      {children}
+    </StyledInputWrapper>
+  )
 }
 
 export default BaseInputBox

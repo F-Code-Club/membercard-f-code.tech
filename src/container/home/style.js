@@ -5,7 +5,7 @@ import Flexbox from '../../components/Flexbox'
 import Wrapper from '../../components/Wrapper'
 import Icon from './../../components/Icon'
 
-import { formatDate, useCSS } from '../../utils/helper'
+import { leadingZero, WEEKDAYS_SHORT, MONTHS_SHORT, formatDate, useCSS } from '../../utils/helper'
 import Profile from './../../asset/image/Security_Consultant.png'
 import theme from './../../theme'
 
@@ -24,9 +24,10 @@ const StyledCreateButton = styled(BaseButton)`
 `
 
 export const CreateButton = (props) => {
-  const { children, ...rest } = props
+  const { children, onClick, ...rest } = props
+
   return (
-    <StyledCreateButton {...rest}>
+    <StyledCreateButton {...rest} onClick={onClick}>
       <Flexbox gap="10px">
         <Icon name="add-circle" />
         {children}
@@ -122,15 +123,17 @@ export const StyledEventWrapper = styled.div`
   padding: 15px 15px;
   border-radius: 10px;
   font-size: 10px;
-
-  &:active {
+  cursor: pointer;
+  transition-duration: 0.4s;
+  &:active,
+  :hover {
     background-color: ${theme.slate1_10};
   }
 `
 
 export const StyledEventIndicator = styled.div`
-  width: 6px;
-  height: 6px;
+  width: ${(props) => (props.size ? props.size + 'px' : '6px')};
+  height: ${(props) => (props.size ? props.size + 'px' : '6px')};
   border-radius: 50%;
   flex-shrink: 0;
   ${(props) => useCSS(props.style)}
@@ -198,3 +201,58 @@ export const Content = (props) => {
 export const HomeWrapper = styled(Wrapper)`
   padding: 50px 0;
 `
+const StyledParagraph = styled.p`
+  color: ${theme.low_contrast};
+  font-size: 12px;
+  font-weight: 500;
+`
+const StyledParagraphWrapper = styled(Flexbox)`
+  padding: 0 10px;
+`
+const StyledCheckmarkWrapper = styled.div`
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
+  background-color: ${(props) => props.color};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999rem;
+  flex-shrink: 0;
+`
+const CheckmarkIcon = (props) => {
+  const { size } = props
+  return (
+    <StyledCheckmarkWrapper color={theme.cyan2} size={size + size}>
+      <Icon name="checkmark" weight={6} size={size + 2} style={{ color: theme.cyan1 }} />
+    </StyledCheckmarkWrapper>
+  )
+}
+export const Paragraph = (props) => {
+  const { startDate, endDate } = props
+  return (
+    <StyledParagraphWrapper gap={10} alignItems="center">
+      <CheckmarkIcon size={10} />
+      <StyledParagraph>
+        {startDate.getDate() === endDate.getDate() &&
+        startDate.getMonth() === endDate.getMonth() &&
+        startDate.getFullYear() === endDate.getFullYear()
+          ? `This event will take place at ${WEEKDAYS_SHORT[startDate.getDay()]}, ${
+              MONTHS_SHORT[startDate.getMonth()]
+            } ${startDate.getDate()} ${startDate.getFullYear()} from ${leadingZero(
+              startDate.getHours()
+            )}:${leadingZero(startDate.getMinutes())} to ${leadingZero(
+              endDate.getHours()
+            )}:${leadingZero(endDate.getMinutes())}`
+          : `This event will take place from ${WEEKDAYS_SHORT[startDate.getDay()]}, ${
+              MONTHS_SHORT[startDate.getMonth()]
+            } ${startDate.getDate()} ${startDate.getFullYear()} ${leadingZero(
+              startDate.getHours()
+            )}:${leadingZero(startDate.getMinutes())} to ${WEEKDAYS_SHORT[endDate.getDay()]}, ${
+              MONTHS_SHORT[endDate.getMonth()]
+            } ${endDate.getDate()} ${endDate.getFullYear()} ${leadingZero(
+              endDate.getHours()
+            )}:${leadingZero(endDate.getMinutes())}`}
+      </StyledParagraph>
+    </StyledParagraphWrapper>
+  )
+}
