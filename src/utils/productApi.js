@@ -41,7 +41,7 @@ class productApi {
   setAttendance(userId, eventId, token) {
     return post(
       '/api/check-attendance',
-      { memeber_id: userID, event_id: eventId },
+      { memeber_id: userId, event_id: eventId },
       {},
       { token: token }
     ).catch((err) => console.log(err))
