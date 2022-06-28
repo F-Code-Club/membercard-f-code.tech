@@ -123,7 +123,9 @@ const ViewEvent = (props) => {
       </Flexbox>
       <Divider variant="dashed" margin={20} />
       <Flexbox flexDirection="column" gap={10}>
-        <GreenButton onClick={openAttendanceCard}>Check attendance</GreenButton>
+        <GreenButton onClick={openAttendanceCard} D>
+          Check attendance
+        </GreenButton>
         <Flexbox gap={10}>
           <BlueButton fullWidth={true} onClick={openAttendanceCard}>
             Start
@@ -135,7 +137,11 @@ const ViewEvent = (props) => {
         <Button onClick={openViewList}>View List</Button>
         <Button onClick={openAttendanceCard}>Edit Event</Button>
       </Flexbox>
-      <AttendanceCard data={showAttendanceCard} onClose={closeAttendanceCard} />
+      <AttendanceCard
+        data={showAttendanceCard}
+        openViewList={openViewList}
+        onClose={closeAttendanceCard}
+      />
       <AttendanceStatusModal
         show={showListAttendance.show}
         onClose={closeViewList}

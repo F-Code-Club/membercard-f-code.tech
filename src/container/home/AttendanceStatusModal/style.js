@@ -18,7 +18,7 @@ export const Heading = styled.p`
   font-family: 'Inter';
   font-style: normal;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   color: ${theme.high_contrast};
   line-height: 24px;
 `
@@ -26,7 +26,7 @@ export const SubHeading = styled.p`
   font-family: 'Inter';
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   color: ${theme.low_contrast};
   line-height: 17px;
 `
