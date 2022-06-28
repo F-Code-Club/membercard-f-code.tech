@@ -119,6 +119,7 @@ const Event = (props) => {
 }
 
 const Home = () => {
+  //data get from BE
   const [data, setData] = useState({})
   const userId = LocalStorageUtils.getUser().id
   const token = LocalStorageUtils.getToken()
@@ -128,9 +129,10 @@ const Home = () => {
       setData(response?.data.data)
     }
     getData()
-  }, [token, userId])
+  }, [])
+
   if (data?.status === 403) {
-    // LocalStorageUtils.removeItem('token')
+    LocalStorageUtils.removeItem('token')
     return <Navigate to="/login" replace />
   }
   const images = [
