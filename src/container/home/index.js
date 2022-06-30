@@ -26,7 +26,6 @@ import {
 const Home = () => {
   //data get from BE
   const [data, setData] = useState({})
-  const token = LocalStorageUtils.getItem('token')
   const [showCreateModal, toggleCreateModal] = useState(false)
   const [showViewModal, toggleViewModal] = useState({
     show: false,
@@ -37,15 +36,21 @@ const Home = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([])
   const navigate = useNavigate()
   useEffect(() => {
+    const token = LocalStorageUtils.getItem('token')
     const userId = LocalStorageUtils.getUser().id
-    const token = LocalStorageUtils.getToken()
     const getData = async () => {
       const response = await productApi.getUser(userId, token)
-      setData(response?.data)
+      setData(response?.data.data)
+      if (response?.status === 403) {
+        LocalStorageUtils.removeItem('token')
+        return <Navigate to="/login" replace />
+      }
     }
     getData()
   }, [])
+
   useEffect(() => {
+    const token = LocalStorageUtils.getItem('token')
     const fetchEvent = async () => {
       const eventsReceiver = await get('/api/events', {}, { token: token }).then((response) => {
         if (response.data.status === 403) {
@@ -59,19 +64,11 @@ const Home = () => {
       setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
     }
     fetchEvent()
-  }, [navigate, token])
-  if (data?.status === 403) {
-    LocalStorageUtils.removeItem('token')
-    return <Navigate to="/login" replace />
-  }
+  }, [navigate])
+
   const images = [
     'https://images.unsplash.com/photo-1654252312924-b97fe8335258?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
   ]
-  const user = {
-    name: 'Ly Tuan Kiet',
-    rollNumber: 'SE160049',
-    imageUrl: images[0],
-  }
 
   const displayEventModal = (data) => {
     toggleViewModal({
@@ -90,7 +87,7 @@ const Home = () => {
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
         <HeaderBrand src={Avatar} size={50} />
-        <ProfileInformation user={user} />
+        <ProfileInformation user={data} />
       </HeaderWrapper>
       <ContentWrapper>
         <Content>
@@ -104,7 +101,6 @@ const Home = () => {
                 event={event}
                 onClick={() => {
                   displayEventModal(event)
-                  console.log(event)
                 }}
               />
             ))}
