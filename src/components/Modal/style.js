@@ -13,6 +13,7 @@ const StyledModal = styled.div`
   align-items: center;
   justify-content: center;
   font-family: 'Inter', sans-serif;
+  z-index: 999;
 `
 const StyledModalContent = styled.div`
   padding: 2rem;
@@ -21,17 +22,19 @@ const StyledModalContent = styled.div`
 `
 const StyledModalHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${(props) => props.justify || 'space-between'};
+  align-items: center;
   padding-bottom: 10px;
   font-family: inherit;
+  gap: ${(props) => props.gap + 'px' || 'auto'};
 `
 const StyledModalTitle = styled.h4`
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 600;
   margin: 0;
 `
 const StyledModalBody = styled.div`
-  padding: 20px 0;
+  padding: 10px 0;
 `
 const StyledModalFooter = styled.div`
   padding-top: 10px;

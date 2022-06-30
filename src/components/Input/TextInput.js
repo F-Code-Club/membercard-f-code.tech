@@ -16,13 +16,17 @@ const StyledTextInput = styled.input.attrs({
   outline: none;
   background-color: transparent;
   width: 100%;
-
+  white-space: wrap;
   &::-webkit-input-placeholder {
     color: ${theme.slate4};
+  }
+  &:-webkit-disabled {
+    color: ${theme.low_contrast};
   }
 `
 
 const TextInput = (props) => {
+  const { title, placeholder, value, onChange, ...rest } = props
   const [isFocused, setFocused] = useState(false)
 
   const onFocus = () => {
@@ -33,17 +37,21 @@ const TextInput = (props) => {
     setFocused(false)
   }
 
-  const { children, ...rest } = props
+  const handleChange = (event) => {
+    onChange(event.target.value)
+  }
 
   return (
     <div>
-      <Label title={children} />
+      <Label title={title} />
       <BaseInputBox isFocused={isFocused}>
         <StyledTextInput
           onFocus={onFocus}
           onBlur={onBlur}
-          name={children}
-          placeholder={children}
+          name={title}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
           {...rest}
         />
       </BaseInputBox>
