@@ -12,6 +12,7 @@ const StyledTextArea = styled.textarea`
   outline: none;
   font-family: inherit;
   font-size: inherit;
+  font-weight: inherit;
   color: inherit;
   resize: none;
   box-sizing: border-box;

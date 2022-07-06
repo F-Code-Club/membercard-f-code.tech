@@ -1,6 +1,6 @@
 import simpleDateFormat from './SimpleDateFormat'
 
-export const WEEKDAYS = [
+export const WEEKDAYS_LONG = [
   'Sunday',
   'Monday',
   'Tuesday',
@@ -9,7 +9,8 @@ export const WEEKDAYS = [
   'Friday',
   'Saturday',
 ]
-export const MONTHS = [
+export const WEEKDAYS_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+export const MONTHS_LONG = [
   'January',
   'February',
   'March',
@@ -23,6 +24,20 @@ export const MONTHS = [
   'November',
   'December',
 ]
+export const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
 
 export const convertStringToTime = (time) => {
   const splitter = time.split(':')
@@ -34,7 +49,7 @@ export const convertStringToTime = (time) => {
 }
 export const formatDate = (
   date,
-  { hasWeekday = true, hasDate = true, hasMonth = true, hasYear = true } = {}
+  { useShortDate = false, hasWeekday = true, hasDate = true, hasMonth = true, hasYear = true } = {}
 ) => {
   if (!date) {
     return ''
@@ -56,10 +71,13 @@ export const formatDate = (
     }
   }
 
+  const weekdays = useShortDate ? WEEKDAYS_SHORT : WEEKDAYS_LONG
+  const months = useShortDate ? MONTHS_SHORT : MONTHS_LONG
+
   const dateTime = {
-    weekDay: WEEKDAYS[date.getDay()],
+    weekDay: weekdays[date.getDay()],
     day: formatDateOrdinal(date.getDate()),
-    month: MONTHS[date.getMonth()],
+    month: months[date.getMonth()],
     year: date.getFullYear(),
   }
 
@@ -85,11 +103,20 @@ export const formatUpcomingTime = (start, end) => {
   ]
 
   if (startDate === endDate && startMonth === endMonth && startYear === endYear) {
-    return `${formatDate(start, { hasWeekday: false, hasYear: false })} (${leadingZero(
-      startHour
-    )}:${leadingZero(startMinute)} - ${leadingZero(endHour)}:${leadingZero(endMinute)})`
+    return `${formatDate(start, {
+      useShortDate: true,
+      hasWeekday: false,
+      hasYear: false,
+    })} (${leadingZero(startHour)}:${leadingZero(startMinute)} - ${leadingZero(
+      endHour
+    )}:${leadingZero(endMinute)})`
   } else {
-    return `${formatDate(start, { hasWeekday: false, hasYear: false })} - ${formatDate(end, {
+    return `${formatDate(start, {
+      useShortDate: true,
+      hasWeekday: false,
+      hasYear: false,
+    })} - ${formatDate(end, {
+      useShortDate: true,
       hasWeekday: false,
       hasYear: false,
     })}`
@@ -106,6 +133,27 @@ export const useCSS = (rules) => {
 
 export const leadingZero = (time) => {
   return time < 10 ? '0' + time : time
+}
+
+/**
+ * Compare two dates. If arguments are illegal, return NaN
+ * @param {Date} first the first date to be compared
+ * @param {Date} second the second date to be compared
+ * @returns a number (-1, 0, 1) represents for less than, equal and greater than, respectively
+ */
+export const compareDate = (first, second) => {
+  if (first == null || second == null) return NaN
+
+  first.setHours(0, 0, 0, 0)
+  second.setHours(0, 0, 0, 0)
+
+  if (first.getTime() === second.getTime()) {
+    return 0
+  } else if (first.getTime() < second.getTime()) {
+    return -1
+  } else {
+    return 1
+  }
 }
 
 export const formatTime = (time) => {

@@ -24,8 +24,12 @@ const StyledBaseButton = styled.a`
 `
 
 const BaseButtonWrapper = (Component, props) => {
-  const { children, ...rest } = props
-  return <Component {...rest}>{children}</Component>
+  const { children, onClick, ...rest } = props
+  return (
+    <Component onClick={onClick} {...rest}>
+      {children}
+    </Component>
+  )
 }
 
 const BaseButton = (props) => BaseButtonWrapper(StyledBaseButton, props)

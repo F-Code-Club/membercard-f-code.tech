@@ -106,8 +106,8 @@ const DateInput = (props) => {
         fullWidth={fullWidth}
       >
         <DateInputBox value={currentDate.toLocaleDateString('en-CA')} />
-        <Icon name="calendar" size="15px" />
-        {showDatePicker && !readonly ? (
+        <Icon name="calendar" size="15" />
+        {showDatePicker ? (
           <StyledDatePickerWrapper>
             <DatePicker onChange={handleChange} selected={currentDate} />
           </StyledDatePickerWrapper>
