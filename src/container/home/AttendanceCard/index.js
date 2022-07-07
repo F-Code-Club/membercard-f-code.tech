@@ -5,8 +5,8 @@ import Divider from '../../../components/Divider'
 import Modal from '../../../components/Modal'
 import Wrapper from '../../../components/Wrapper'
 import Flexbox from './../../../components/Flexbox'
-import TextArea from './../../../components/Input/TextArea'
 
+// import TextArea from './../../../components/Input/TextArea'
 import CardSvg from './../../../asset/image/Card.svg'
 // import { cardReader } from './../../../utils/CardReader'
 import { StyledCardTitle, StyledImage } from './style'
@@ -79,7 +79,7 @@ const AttendanceCard = (props) => {
         </Flexbox>
       </Wrapper>
       <Divider variant="dashed" />
-      <TextArea value={cardReader.log}></TextArea>
+      {/* <TextArea value={cardReader.log}></TextArea> */}
       <Button onClick={openViewList}>View List</Button>
     </Modal>
   )
