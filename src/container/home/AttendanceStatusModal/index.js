@@ -6,13 +6,14 @@ import Modal from '../../../components/Modal'
 import { get } from '../../../utils/ApiCaller'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import theme from './../../../theme'
+import StatusUpdater from './StatusUpdater/index'
 import { SubHeading, Heading, StyledWrapper, StatusBadge } from './style'
 
 const MemberStatus = (props) => {
-  const { data, status } = props
+  const { data, status, onClick } = props
 
   return (
-    <StyledWrapper>
+    <StyledWrapper onClick={onClick}>
       <Flexbox justifyContent="space-between" alignItems="center">
         <Flexbox gap={5} justifyContent="center" flexDirection="column">
           <Heading>{data.name}</Heading>
@@ -88,6 +89,17 @@ const AttendanceStatusModal = (props) => {
     },
   }
 
+  const [statusUpdater, toggleStatusUpdater] = useState(false)
+  const [currentUser, setCurrentUser] = useState({
+    name: 'Unknown',
+    member_id: 'Unknown',
+    status: 'not yet',
+  })
+  const openStatusUpdater = (member) => {
+    setCurrentUser(member)
+    console.log(member)
+    toggleStatusUpdater(true)
+  }
   return (
     <Modal show={show} title="Attendance Status" onClose={onClose}>
       <Flexbox justifyContent="center" flexDirection="column">
@@ -96,9 +108,15 @@ const AttendanceStatusModal = (props) => {
             key={index + 'member'}
             data={member}
             status={enumStatus[member.status]}
+            onClick={() => openStatusUpdater(member)}
           ></MemberStatus>
         ))}
       </Flexbox>
+      <StatusUpdater
+        show={statusUpdater}
+        user={currentUser}
+        onClose={() => toggleStatusUpdater(false)}
+      />
     </Modal>
   )
 }

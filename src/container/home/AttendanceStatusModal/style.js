@@ -26,7 +26,7 @@ export const SubHeading = styled.p`
   font-family: 'Inter';
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
+  font-size: ${(props) => props.fontSize || 12}px;
   color: ${theme.low_contrast};
   line-height: 17px;
 `
