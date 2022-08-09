@@ -22,8 +22,9 @@ const StyledModalContent = styled.div`
 `
 const StyledModalHeader = styled.div`
   display: flex;
+  flex-direction: ${(props) => props.direction || 'row'};
   justify-content: ${(props) => props.justify || 'space-between'};
-  align-items: center;
+  align-items: ${(props) => props.align || 'center'};
   padding-bottom: 10px;
   font-family: inherit;
   gap: ${(props) => props.gap + 'px' || 'auto'};

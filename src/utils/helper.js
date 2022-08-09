@@ -1,3 +1,5 @@
+import simpleDateFormat from './SimpleDateFormat'
+
 export const WEEKDAYS_LONG = [
   'Sunday',
   'Monday',
@@ -159,4 +161,10 @@ export const formatTime = (time) => {
   const minutes = leadingZero(convertStringToTime(time).getMinutes())
 
   return hours + ':' + minutes
+}
+
+export const formatTimeByPattern = (date, pattern) => {
+  let dateFormatter = new simpleDateFormat()
+  dateFormatter.applyPattern(pattern)
+  return dateFormatter.format(date)
 }
