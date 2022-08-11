@@ -1,3 +1,4 @@
+import Buffer from 'buffer/'
 import styled from 'styled-components'
 
 import { BaseButton } from '../../components/Button/BaseButton'
@@ -99,21 +100,29 @@ const ProfileImage = (props) => {
 
 export const ProfileInformation = (props) => {
   let { user } = props
-  if (!user) {
+
+  if (user.first_name === undefined) {
     user = {
       name: 'N/A',
       rollNumber: 'N/A',
       imageUrl: Profile,
+      avatar: {
+        data: [],
+      },
     }
   }
-
+  const convertAvatar = (avatar) => {
+    let buffer = Buffer.Buffer
+    let result = buffer.from(avatar).toString('base64')
+    return `data:image/png;base64,${result}`
+  }
   return (
     <StyledProfileInformationWrapper alignItems="center" gap="10px">
       <Flexbox flexDirection="column" gap="2px">
-        <StyledProfileName>Hi, {user.name}</StyledProfileName>
-        <StyledProfileRollNumber>{user.rollNumber}</StyledProfileRollNumber>
+        <StyledProfileName>Hi, {user.first_name + ' ' + user.last_name} </StyledProfileName>
+        <StyledProfileRollNumber>{user.member_id}</StyledProfileRollNumber>
       </Flexbox>
-      <ProfileImage src={user.imageUrl} size={50} />
+      <ProfileImage src={convertAvatar(user.avatar.data)} size={50} />
     </StyledProfileInformationWrapper>
   )
 }

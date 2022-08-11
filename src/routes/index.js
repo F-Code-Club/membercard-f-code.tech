@@ -30,7 +30,7 @@ export const Switch = () => {
           <Route key={route.name} exact={true} path={route.path} element={route.element} />
         ))}
       </Route>
-      <Route path="/login" element={<PublicRoute />}>
+      <Route element={<PublicRoute />}>
         {publicRoute.map((route) => (
           <Route key={route.name} exact={true} path={route.path} element={route.element} />
         ))}
