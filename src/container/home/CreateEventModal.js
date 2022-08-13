@@ -9,7 +9,7 @@ import Modal from '../../components/Modal'
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
-import { Paragraph } from './style'
+import { ConfirmationParagraph } from './style'
 
 const CreateEventModal = (props) => {
   const { show, onClose, onSubmit } = props
@@ -36,7 +36,7 @@ const CreateEventModal = (props) => {
 
   const [description, setDescription] = useState('')
   const handleDescriptionChange = (newDescription) => {
-    setDescription(newDescription)
+    setDescription(newDescription?.target?.value)
   }
 
   const handleSubmit = () => {
@@ -64,16 +64,18 @@ const CreateEventModal = (props) => {
         />
         <Flexbox gap={10} justifyContent="space-between">
           <DateInput
-            fullWidth={true}
+            // fullWidth={true}
             title="Start date"
             date={startDate}
             onChange={handleStartDateChange}
+            flexBasis="50%"
           />
           <DateInput
-            fullWidth={true}
+            // fullWidth={true}
             title="End date"
             date={endDate}
             onChange={handleEndDateChange}
+            flexBasis="50%"
           />
         </Flexbox>
         <Flexbox gap={10} justifyContent="space-between">
@@ -90,7 +92,7 @@ const CreateEventModal = (props) => {
             onChange={handleEndDateChange}
           />
         </Flexbox>
-        <Paragraph startDate={startDate} endDate={endDate} />
+        <ConfirmationParagraph startDate={startDate} endDate={endDate} />
         <TextInput
           title="Location"
           placeholder="Location"
