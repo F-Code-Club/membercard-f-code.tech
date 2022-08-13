@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import Buffer from 'buffer/'
+import Buffer from 'buffer'
 import styled from 'styled-components'
 
 import { BaseButton } from '../../components/Button/BaseButton'
@@ -129,11 +129,15 @@ const StyledProfileMenu = styled.div`
 
 export const ProfileInformation = (props) => {
   let { user } = props
-  if (!user) {
+
+  if (user.first_name === undefined) {
     user = {
       name: 'N/A',
       rollNumber: 'N/A',
       imageUrl: Profile,
+      avatar: {
+        data: [],
+      },
     }
   }
 
