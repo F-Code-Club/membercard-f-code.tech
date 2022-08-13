@@ -14,7 +14,8 @@ const StyledInputWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
+  position: ${(props) =>
+    props.position || props.position === 'none' ? props.position : 'relative'};
 `
 
 const BaseInputBox = (props) => {
