@@ -40,11 +40,15 @@ export const MONTHS_SHORT = [
 ]
 
 export const convertStringToTime = (time) => {
+  let result = null
+  if (!time) return result
+
+  result = new Date()
   const splitter = time.split(':')
-  let result = new Date()
   result.setHours(splitter[0])
   result.setMinutes(splitter[1])
   result.setSeconds(splitter[2])
+
   return result
 }
 export const formatDate = (
@@ -86,6 +90,12 @@ export const formatDate = (
   }${hasYear ? dateTime.year : ''}`
 }
 
+/**
+ * Format upcoming date time
+ * @param {Date} start the start date
+ * @param {Date} end the end date
+ * @returns {string} a string representing the date time
+ */
 export const formatUpcomingTime = (start, end) => {
   const [startDate, startMonth, startYear, startHour, startMinute] = [
     start.getDate(),
@@ -131,6 +141,11 @@ export const useCSS = (rules) => {
   return result
 }
 
+/**
+ * Add leading zero to time value if needed.
+ * @param {number} time the time value
+ * @returns {string} a string representing the time value
+ */
 export const leadingZero = (time) => {
   return time < 10 ? '0' + time : time
 }
@@ -139,7 +154,7 @@ export const leadingZero = (time) => {
  * Compare two dates. If arguments are illegal, return NaN
  * @param {Date} first the first date to be compared
  * @param {Date} second the second date to be compared
- * @returns a number (-1, 0, 1) represents for less than, equal and greater than, respectively
+ * @returns {number} a number (-1, 0, 1) represents for less than, equal and greater than, respectively
  */
 export const compareDate = (first, second) => {
   if (first == null || second == null) return NaN
@@ -156,11 +171,19 @@ export const compareDate = (first, second) => {
   }
 }
 
+/**
+ * Generate String-type time value.
+ * @param {Date} time object containing time value
+ * @returns formatted time according to the pattern 'HH:MM:SS'
+ */
 export const formatTime = (time) => {
+  if (!time) return '00:00:00'
+
   const hours = leadingZero(convertStringToTime(time).getHours())
   const minutes = leadingZero(convertStringToTime(time).getMinutes())
+  const seconds = leadingZero(convertStringToTime(time).getSeconds())
 
-  return hours + ':' + minutes
+  return `${hours}:${minutes}:${seconds}`
 }
 
 export const formatTimeByPattern = (date, pattern) => {
