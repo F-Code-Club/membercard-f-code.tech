@@ -1,3 +1,6 @@
+import { useState } from 'react'
+
+import Buffer from 'buffer/'
 import styled from 'styled-components'
 
 import { BaseButton } from '../../components/Button/BaseButton'
@@ -97,6 +100,33 @@ const ProfileImage = (props) => {
   )
 }
 
+const StyledProfileMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  transform: translateY(20%);
+  display: ${(props) => (props.isHidden ? 'none' : 'block')};
+  padding: 0.25rem 0.5rem;
+  background-color: blue;
+  border-radius: 0.5rem;
+
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  ${
+    '' /* border-radius: 0.5rem;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px); */
+  }
+
+  & > a {
+    background-color: transparent;
+    font-weight: 700;
+    padding: 1rem 2rem;
+  }
+`
+
 export const ProfileInformation = (props) => {
   let { user } = props
   if (!user) {
@@ -107,13 +137,28 @@ export const ProfileInformation = (props) => {
     }
   }
 
+  const [isMenuHidden, setIsMenuHidden] = useState(true)
+
+  const convertAvatar = (avatar) => {
+    let buffer = Buffer.Buffer
+    let result = buffer.from(avatar).toString('base64')
+    return `data:image/png;base64,${result}`
+  }
+
   return (
-    <StyledProfileInformationWrapper alignItems="center" gap="10px">
+    <StyledProfileInformationWrapper alignItems="center" gap="10px" position="relative">
       <Flexbox flexDirection="column" gap="2px">
-        <StyledProfileName>Hi, {user.name}</StyledProfileName>
-        <StyledProfileRollNumber>{user.rollNumber}</StyledProfileRollNumber>
+        <StyledProfileName>Hi, {`${user.first_name} ${user.last_name}`}</StyledProfileName>
+        <StyledProfileRollNumber>{user.member_id}</StyledProfileRollNumber>
       </Flexbox>
-      <ProfileImage src={user.imageUrl} size={50} />
+      <ProfileImage
+        src={convertAvatar(user?.avartar?.data)}
+        size={50}
+        onClick={() => setIsMenuHidden((prev) => !prev)}
+      />
+      <StyledProfileMenu isHidden={isMenuHidden}>
+        <BaseButton>Log out</BaseButton>
+      </StyledProfileMenu>
     </StyledProfileInformationWrapper>
   )
 }
@@ -227,7 +272,7 @@ const CheckmarkIcon = (props) => {
     </StyledCheckmarkWrapper>
   )
 }
-export const Paragraph = (props) => {
+export const ConfirmationParagraph = (props) => {
   const { startDate, endDate } = props
   return (
     <StyledParagraphWrapper gap={10} alignItems="center">

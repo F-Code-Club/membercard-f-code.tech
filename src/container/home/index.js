@@ -9,6 +9,7 @@ import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import Avatar from './../../asset/image/Avatar.png'
 import { get } from './../../utils/ApiCaller'
 import CreateEventModal from './CreateEventModal'
+import EditEventModal from './EditEventModal'
 import Event, { EventEntity, StatusEnum } from './Event'
 import ViewEventModal from './ViewEventModal'
 import {
@@ -32,14 +33,22 @@ const Home = () => {
     imageUrl: images[0],
   }
   const token = LocalStorageUtils.getItem('token')
+  const [currentUser, setCurrentUser] = useState(null)
+  console.log('Current user', currentUser)
+
   const [showCreateModal, toggleCreateModal] = useState(false)
   const [showViewModal, toggleViewModal] = useState({
     show: false,
     event: {},
     status: {},
   })
+  const [showEditModal, toggleEditModal] = useState({
+    show: false,
+    event: {},
+  })
   const [events, setEvents] = useState([])
   const [upcomingEvents, setUpcomingEvents] = useState([])
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -63,13 +72,27 @@ const Home = () => {
       setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
       setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
     }
+    const fetchUser = async () => {
+      const fetchedUser = await LocalStorageUtils.getUser()
+      setCurrentUser(fetchedUser)
+    }
     fetchEvent()
-  }, [navigate, token])
+    if (!currentUser) {
+      fetchUser()
+    }
+  }, [navigate, token, currentUser])
+
   const displayEventModal = (data) => {
     toggleViewModal({
       show: true,
       event: data,
       status: StatusEnum[data.status],
+    })
+  }
+  const displayEditModal = (data) => {
+    toggleEditModal({
+      show: true,
+      event: data,
     })
   }
   const closeEventModal = () =>
@@ -78,11 +101,17 @@ const Home = () => {
       event: {},
       status: {},
     })
+  const closeEditModal = () =>
+    toggleEditModal({
+      show: false,
+      event: {},
+    })
+
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
         <HeaderBrand src={Avatar} size={50} />
-        <ProfileInformation user={user} />
+        <ProfileInformation user={currentUser} />
       </HeaderWrapper>
       <ContentWrapper>
         <Content>
@@ -94,10 +123,8 @@ const Home = () => {
               <Event
                 key={index}
                 event={event}
-                onClick={() => {
-                  displayEventModal(event)
-                  console.log(event)
-                }}
+                onClick={() => displayEventModal(event)}
+                onEditToggle={() => displayEditModal(event)}
               />
             ))}
           </Flexbox>
@@ -111,7 +138,12 @@ const Home = () => {
           <Divider />
           <Flexbox flexDirection="column">
             {upcomingEvents.map((event, index) => (
-              <Event key={index} event={event} onClick={() => displayEventModal(event)} />
+              <Event
+                key={index}
+                event={event}
+                onClick={() => displayEventModal(event)}
+                onEditToggle={() => displayEditModal(event)}
+              />
             ))}
           </Flexbox>
         </Content>
@@ -126,7 +158,12 @@ const Home = () => {
         data={showViewModal}
         // onClick={() => toggleViewModal(true)}
         onClose={closeEventModal}
+        onToggleEdit={() => {
+          console.log(showViewModal.event)
+          displayEditModal(showViewModal.event)
+        }}
       />
+      <EditEventModal data={showEditModal} onClose={closeEditModal} />
     </HomeWrapper>
   )
 }

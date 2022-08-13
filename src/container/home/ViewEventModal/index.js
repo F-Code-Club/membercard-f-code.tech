@@ -14,7 +14,7 @@ import { formatDate, formatTime } from './../../../utils/helper'
 import AttendanceStatusModal from './../AttendanceStatusModal/index'
 
 const ViewEvent = (props) => {
-  const { data, onClose } = props
+  const { data, onClose, onEditToggle } = props
   const { show, event, status } = data
   const [current, setCurrent] = useState({
     id: event.id,
@@ -134,8 +134,10 @@ const ViewEvent = (props) => {
             End
           </RedButton>
         </Flexbox>
-        <Button onClick={openViewList}>View List</Button>
-        <Button onClick={openAttendanceCard}>Edit Event</Button>
+        {/* <Button onClick={openViewList}>View List</Button>
+        <Button onClick={openAttendanceCard}>Edit Event</Button> */}
+        <Button onClick={checkAttendance}>View List</Button>
+        <Button onClick={onEditToggle}>Edit Event</Button>
       </Flexbox>
       <AttendanceCard
         data={showAttendanceCard}

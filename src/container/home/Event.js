@@ -67,6 +67,7 @@ export class EventEntity {
     if (!data.status) {
       if (compareDate(this.startDate, this.endDate) === 0) {
         const compare = compareDate(this.startDate, today)
+
         if (compare === 0) {
           this.status = EventEntity.ONGOING
         } else if (compare > 0) {
@@ -94,18 +95,15 @@ export class EventEntity {
 
 const Event = (props) => {
   let { event, onClick } = props
-  let { id, name, startDate, endDate, location, description, status, semester } = new EventEntity(
-    event
-  )
+  let { name, startDate, endDate, location, status, semester } = new EventEntity(event)
   endDate = endDate == null ? startDate : endDate
 
-  const [eventId, setEventId] = useState(id)
-  const [eventName, setEventName] = useState(name)
-  const [eventStartDate, setEventStartDate] = useState(new Date(startDate.getTime()))
-  const [eventEndDate, setEventEndDate] = useState(new Date(endDate.getTime()))
-  const [eventStatus, setEventStatus] = useState(status)
-  const [eventLocation, setEventLocation] = useState(location)
-  const [eventSemester, setEventSemester] = useState(semester)
+  const [eventName] = useState(name)
+  const [eventStartDate] = useState(new Date(startDate.getTime()))
+  const [eventEndDate] = useState(new Date(endDate.getTime()))
+  const [eventStatus] = useState(status)
+  const [eventLocation] = useState(location)
+  const [eventSemester] = useState(semester)
 
   return (
     <Wrapper onClick={onClick}>
