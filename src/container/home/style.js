@@ -64,6 +64,7 @@ export const HeaderBrand = (props) => {
 }
 
 const StyledProfileImage = styled.div`
+  position: relative;
   width: ${(props) => props.size || '100'}px;
   height: ${(props) => props.size || '100'}px;
   overflow: hidden;
@@ -71,8 +72,10 @@ const StyledProfileImage = styled.div`
   flex-shrink: 0;
 
   & > img {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 `
 
@@ -95,7 +98,7 @@ const StyledProfileInformationWrapper = styled(Flexbox)`
 const ProfileImage = (props) => {
   return (
     <StyledProfileImage {...props}>
-      <img src={props.src} />
+      <img src={props.src} alt="Avatar" title="Avatar" />
     </StyledProfileImage>
   )
 }
@@ -128,22 +131,30 @@ const StyledProfileMenu = styled.div`
 `
 
 export const ProfileInformation = (props) => {
-  let { user } = props
+  let { user, avatar, onLogout } = props
 
-  if (user.first_name === undefined) {
+  if (user === null || user === undefined || user.first_name === undefined) {
     user = {
-      name: 'N/A',
-      rollNumber: 'N/A',
+      first_name: 'N/A',
+      last_name: 'N/A',
+      member_id: 'N/A',
       imageUrl: Profile,
-      avatar: {
-        data: [],
-      },
+    }
+  }
+
+  if (avatar === null || avatar === undefined) {
+    avatar = {
+      data: [],
     }
   }
 
   const [isMenuHidden, setIsMenuHidden] = useState(true)
 
   const convertAvatar = (avatar) => {
+    if (avatar.length === 0) {
+      return Profile
+    }
+
     let buffer = Buffer.Buffer
     let result = buffer.from(avatar).toString('base64')
     return `data:image/png;base64,${result}`
@@ -152,16 +163,12 @@ export const ProfileInformation = (props) => {
   return (
     <StyledProfileInformationWrapper alignItems="center" gap="10px" position="relative">
       <Flexbox flexDirection="column" gap="2px">
-        <StyledProfileName>Hi, {`${user.first_name} ${user.last_name}`}</StyledProfileName>
-        <StyledProfileRollNumber>{user.member_id}</StyledProfileRollNumber>
+        <StyledProfileName>Hi, {`${user?.first_name} ${user?.last_name}`}</StyledProfileName>
+        <StyledProfileRollNumber>{user?.member_id}</StyledProfileRollNumber>
       </Flexbox>
-      <ProfileImage
-        src={convertAvatar(user?.avartar?.data)}
-        size={50}
-        onClick={() => setIsMenuHidden((prev) => !prev)}
-      />
+      <ProfileImage src={avatar} size={50} onClick={() => setIsMenuHidden((prev) => !prev)} />
       <StyledProfileMenu isHidden={isMenuHidden}>
-        <BaseButton>Log out</BaseButton>
+        <BaseButton onClick={onLogout}>Log out</BaseButton>
       </StyledProfileMenu>
     </StyledProfileInformationWrapper>
   )

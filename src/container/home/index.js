@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
@@ -8,7 +8,7 @@ import Flexbox from './../../components/Flexbox'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import Avatar from './../../asset/image/Avatar.png'
 import { get } from './../../utils/ApiCaller'
-import productApi from './../../utils/productApi'
+// import productApi from './../../utils/productApi'
 import CreateEventModal from './CreateEventModal'
 import EditEventModal from './EditEventModal'
 import Event, { EventEntity, StatusEnum } from './Event'
@@ -25,15 +25,8 @@ import {
 } from './style'
 
 const Home = () => {
-  // const images = [
-  //   'https://images.unsplash.com/photo-1654252312924-b97fe8335258?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-  // ]
-  // const user = {
-  //   name: 'Ly Tuan Kiet',
-  //   rollNumber: 'SE160049',
-  //   imageUrl: images[0],
-  // }
   const token = LocalStorageUtils.getItem('token')
+
   const [showCreateModal, toggleCreateModal] = useState(false)
   const [showViewModal, toggleViewModal] = useState({
     show: false,
@@ -47,30 +40,34 @@ const Home = () => {
   const [events, setEvents] = useState([])
   const [upcomingEvents, setUpcomingEvents] = useState([])
   const [currentUser, setCurrentUser] = useState(null)
+  const [currentAvatar, setCurrentAvatar] = useState(null)
+
   useEffect(() => {
     const fetchUser = async () => {
-      const localUser = await LocalStorageUtils.getUser()
-      setCurrentUser(localUser)
+      const result = await LocalStorageUtils.getUser()
+      setCurrentUser(result.user)
+      setCurrentAvatar(result.avatar)
     }
-    if (!currentUser) {
+    if (!currentUser || !currentAvatar) {
       fetchUser()
     }
-  }, [currentUser])
+  }, [currentUser, currentAvatar])
 
   const navigate = useNavigate()
-  useEffect(() => {
-    const token = LocalStorageUtils.getItem('token')
-    const userId = LocalStorageUtils.getUser().id
-    const getData = async () => {
-      const response = await productApi.getUser(userId, token)
-      setData(response?.data.data)
-      if (response?.status === 403) {
-        LocalStorageUtils.removeItem('token')
-        return <Navigate to="/login" replace />
-      }
-    }
-    getData()
-  }, [])
+  // useEffect(() => {
+  //   const token = LocalStorageUtils.getItem('token')
+  //   const userId = LocalStorageUtils.getJWTUser().id
+  //   const getData = async () => {
+  //     const response = await productApi.getUser(userId, token)
+  //     console.log('Response', response)
+  //     setCurrentUser(response?.data.data)
+  //     if (response?.status === 403) {
+  //       LocalStorageUtils.removeItem('token')
+  //       return <Navigate to="/login" replace />
+  //     }
+  //   }
+  //   getData()
+  // }, [])
 
   useEffect(() => {
     const token = LocalStorageUtils.getItem('token')
@@ -94,12 +91,8 @@ const Home = () => {
       setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
       setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
     }
-    const fetchUser = async () => {
-      const fetchedUser = await LocalStorageUtils.getUser()
-      setCurrentUser(fetchedUser)
-    }
     fetchEvent()
-  }, [navigate, token])
+  }, [token, navigate])
   const displayEventModal = (data) => {
     toggleViewModal({
       show: true,
@@ -124,12 +117,16 @@ const Home = () => {
       show: false,
       event: {},
     })
+  const onLogout = () => {
+    LocalStorageUtils.deleteUser()
+    navigate('/login')
+  }
 
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between">
         <HeaderBrand src={Avatar} size={50} />
-        <ProfileInformation user={currentUser} />
+        <ProfileInformation user={currentUser} avatar={currentAvatar} onLogout={onLogout} />
       </HeaderWrapper>
       <ContentWrapper>
         <Content>

@@ -4,6 +4,7 @@ const publicRuntimeConfig = {
   LOCALSTORAGE_TOKEN_NAME: 'token',
   LOCALSTORAGE_USER_NAME: 'user',
   LOCALSTORAGE_JWT_USER_NAME: 'jwt_user',
+  LOCALSTORAGE_AVATAR_NAME: 'user_avatar',
 }
 
 export const {
@@ -12,6 +13,7 @@ export const {
   LOCALSTORAGE_TOKEN_NAME,
   LOCALSTORAGE_USER_NAME,
   LOCALSTORAGE_JWT_USER_NAME,
+  LOCALSTORAGE_AVATAR_NAME,
 } = publicRuntimeConfig
 
 export default publicRuntimeConfig.NODE_ENV
