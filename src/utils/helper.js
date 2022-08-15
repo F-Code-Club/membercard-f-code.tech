@@ -80,7 +80,7 @@ export const formatDate = (
 
   const dateTime = {
     weekDay: weekdays[date.getDay()],
-    day: formatDateOrdinal(date.getDate()),
+    day: date.getDate(),
     month: months[date.getMonth()],
     year: date.getFullYear(),
   }
