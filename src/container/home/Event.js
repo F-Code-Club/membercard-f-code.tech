@@ -142,9 +142,9 @@ const Event = (props) => {
               <EventDescription color={StatusEnum[eventStatus].headingColor}>
                 <strong>Location:</strong> {eventLocation}
               </EventDescription>
-              <EventDescription color={StatusEnum[eventStatus].headingColor}>
+              {/* <EventDescription color={StatusEnum[eventStatus].headingColor}>
                 <strong>Semester:</strong> {eventSemester}
-              </EventDescription>
+              </EventDescription> */}
             </Flexbox>
           </Flexbox>
         </Flexbox>
