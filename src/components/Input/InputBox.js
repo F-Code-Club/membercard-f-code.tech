@@ -4,7 +4,7 @@ import theme from './../../theme'
 
 const StyledInputWrapper = styled.div`
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
-  padding: 10px 20px;
+  padding: 10px 12px;
   border-radius: 10px;
   background-color: ${theme.slate1_10};
   border: 1px solid ${(props) => (props.isFocused ? theme.high_contrast : theme.high_contrast_10)};

@@ -37,6 +37,7 @@ export const StatusBadge = styled.div`
   font-size: 12px;
   color: ${(props) => props.textColor};
   line-height: 15px;
+  text-transform: capitalize;
 
   display: flex;
   flex-direction: column;
@@ -46,4 +47,5 @@ export const StatusBadge = styled.div`
   height: 25px;
   border-radius: 5px;
   background-color: ${(props) => props.color};
+  padding: 0.25rem 0.5rem;
 `

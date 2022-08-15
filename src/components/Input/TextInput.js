@@ -17,11 +17,13 @@ const StyledTextInput = styled.input.attrs({
   background-color: transparent;
   width: 100%;
   white-space: wrap;
+  color: ${theme.low_contrast};
+
   &::-webkit-input-placeholder {
     color: ${theme.slate4};
   }
   &:-webkit-disabled {
-    color: ${theme.low_contrast};
+    color: ${theme.low_contrast_20};
   }
 `
 

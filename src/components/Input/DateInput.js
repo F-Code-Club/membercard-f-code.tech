@@ -56,6 +56,7 @@ const DateInputBox = (props) => {
 // TODO: This component needs to be renamed and refactored
 const StyledDateInputWrapper = styled.div`
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
+  max-width: 48%;
   flex-basis: ${(props) => (props.flexBasis ? props.flexBasis : 'auto')};
 `
 

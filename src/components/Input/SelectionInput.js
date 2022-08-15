@@ -17,23 +17,23 @@ const StyledControl = styled(components.Control)`
 const styledIndicatorSeparator = styled(components.IndicatorSeparator)`
   display: none;
 `
-const SelectionInput = (props) => {
+const SelectionInput = ({}) => {
   const options = [
     {
       value: 'late',
-      label: 'late',
+      label: 'Late',
     },
     {
       value: 'absent',
-      label: 'absent',
+      label: 'Absent',
     },
     {
       value: 'attended',
-      label: 'attended',
+      label: 'Attended',
     },
     {
       value: 'not yet',
-      label: 'not yet',
+      label: 'Not yet',
     },
   ]
   return (
@@ -47,7 +47,7 @@ const SelectionInput = (props) => {
             borderRadius: 10,
           }
         }}
-      ></StyledSelectionBox>
+      />
     </Wrapper>
   )
 }
