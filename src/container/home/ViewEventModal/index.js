@@ -10,6 +10,7 @@ import TextArea from './../../../components/Input/TextArea'
 import Modal from './../../../components/Modal'
 
 import AttendanceCard from '../AttendanceCard'
+import EditEventModal from '../EditEventModal'
 import { formatDate, formatTime } from './../../../utils/helper'
 import AttendanceStatusModal from './../AttendanceStatusModal/index'
 
@@ -33,6 +34,10 @@ const ViewEvent = (props) => {
   })
   const [showListAttendance, toggleListAttendance] = useState({
     show: false,
+  })
+  const [showEditModal, toggleEditModal] = useState({
+    show: false,
+    event: {},
   })
   const onEventChange = (event) => {
     if (!event) {
@@ -77,6 +82,16 @@ const ViewEvent = (props) => {
       show: false,
     })
   }
+  const openEditModal = () => {
+    toggleEditModal((prev) => ({
+      ...prev,
+      show: true,
+      event: current,
+    }))
+  }
+  const closeEditModal = () => {
+    toggleEditModal((prev) => ({ ...prev, show: false, event: {} }))
+  }
 
   return (
     <Modal show={show} title={event.name} onClose={onClose} indicator={status}>
@@ -85,14 +100,14 @@ const ViewEvent = (props) => {
           <TextInput
             fullWidth={true}
             title="Start date"
-            value={formatDate(current.start, { hasWeekday: false })}
+            value={formatDate(current.start, { hasWeekday: false, useShortDate: true })}
             readOnly
             onChange={() => onEventChange(event)}
           />
           <TextInput
             fullWidth={true}
             title="End date"
-            value={formatDate(current.end, { hasWeekday: false })}
+            value={formatDate(current.end, { hasWeekday: false, useShortDate: true })}
             readOnly
             onChange={() => onEventChange(event)}
           />
@@ -134,10 +149,8 @@ const ViewEvent = (props) => {
             End
           </RedButton>
         </Flexbox>
-        {/* <Button onClick={openViewList}>View List</Button>
-        <Button onClick={openAttendanceCard}>Edit Event</Button> */}
-        <Button onClick={checkAttendance}>View List</Button>
-        <Button onClick={onEditToggle}>Edit Event</Button>
+        <Button onClick={openViewList}>View List</Button>
+        <Button onClick={openEditModal}>Edit Event</Button>
       </Flexbox>
       <AttendanceCard
         data={showAttendanceCard}
@@ -148,7 +161,8 @@ const ViewEvent = (props) => {
         show={showListAttendance.show}
         onClose={closeViewList}
         eventId={current.id}
-      ></AttendanceStatusModal>
+      />
+      <EditEventModal data={showEditModal} onClose={closeEditModal} onSubmit={onEditToggle} />
     </Modal>
   )
 }
