@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import Buffer from 'buffer'
 import styled from 'styled-components'
 
 import { BaseButton } from '../../components/Button/BaseButton'
@@ -138,27 +137,12 @@ export const ProfileInformation = (props) => {
       first_name: 'N/A',
       last_name: 'N/A',
       member_id: 'N/A',
-      imageUrl: Profile,
     }
   }
 
-  if (avatar === null || avatar === undefined) {
-    avatar = {
-      data: [],
-    }
-  }
+  if (avatar === null || avatar === undefined) avatar = Profile
 
   const [isMenuHidden, setIsMenuHidden] = useState(true)
-
-  const convertAvatar = (avatar) => {
-    if (avatar.length === 0) {
-      return Profile
-    }
-
-    let buffer = Buffer.Buffer
-    let result = buffer.from(avatar).toString('base64')
-    return `data:image/png;base64,${result}`
-  }
 
   return (
     <StyledProfileInformationWrapper alignItems="center" gap="10px" position="relative">
