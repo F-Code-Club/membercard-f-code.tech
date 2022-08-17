@@ -160,12 +160,14 @@ export const leadingZero = (time) => {
 export const compareDate = (first, second) => {
   if (first == null || second == null) return NaN
 
-  first.setHours(0, 0, 0, 0)
-  second.setHours(0, 0, 0, 0)
+  const tempFirst = new Date(first)
+  const tempSecond = new Date(second)
+  tempFirst.setHours(0, 0, 0, 0)
+  tempSecond.setHours(0, 0, 0, 0)
 
-  if (first.getTime() === second.getTime()) {
+  if (tempFirst.getTime() === tempSecond.getTime()) {
     return 0
-  } else if (first.getTime() < second.getTime()) {
+  } else if (tempFirst.getTime() < tempSecond.getTime()) {
     return -1
   } else {
     return 1
