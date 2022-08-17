@@ -28,19 +28,20 @@ const StyledTextInput = styled.input.attrs({
 `
 
 const TextInput = (props) => {
+  // States
   const { title, placeholder, value, onChange, ...rest } = props
   const [isFocused, setFocused] = useState(false)
 
+  // Change handlers
   const onFocus = () => {
     setFocused(true)
   }
-
   const onBlur = () => {
     setFocused(false)
   }
-
-  const handleChange = (event) => {
-    onChange(event.target.value)
+  const onTextChange = (event) => {
+    const data = event.target.value
+    onChange(data)
   }
 
   return (
@@ -53,7 +54,7 @@ const TextInput = (props) => {
           name={title}
           placeholder={placeholder}
           value={value}
-          onChange={handleChange}
+          onChange={onTextChange}
           {...rest}
         />
       </BaseInputBox>
