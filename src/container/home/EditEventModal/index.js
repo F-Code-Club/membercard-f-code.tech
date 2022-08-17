@@ -46,7 +46,6 @@ const EditEventModal = (props) => {
     standardizeStartDate.setHours(0, 0, 0)
     const standardizeEndDate = new Date(eventEndDate)
     standardizeEndDate.setHours(0, 0, 0)
-    console.log(standardizeStartDate, standardizeEndDate)
     onSubmit({
       name: eventTitle,
       start_date: standardizeStartDate.toISOString(),

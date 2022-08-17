@@ -147,11 +147,6 @@ const ViewEvent = (props) => {
         onClose={closeViewList}
         eventId={current.id}
       />
-      {/* {showEditModal.show ? (
-        <EditEventModal data={showEditModal} onClose={closeEditModal} onSubmit={onSubmitEdit} />
-      ) : (
-        ''
-      )} */}
     </Modal>
   )
 }
