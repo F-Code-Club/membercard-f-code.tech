@@ -39,11 +39,11 @@ export const MONTHS_SHORT = [
   'Dec',
 ]
 
-export const convertStringToTime = (time) => {
+export const convertStringToTime = (time, date) => {
   let result = null
   if (!time) return result
 
-  result = new Date()
+  result = date || new Date()
   const splitter = time.split(':')
   result.setHours(splitter[0])
   result.setMinutes(splitter[1])
@@ -51,6 +51,7 @@ export const convertStringToTime = (time) => {
 
   return result
 }
+
 export const formatDate = (
   date,
   { useShortDate = false, hasWeekday = true, hasDate = true, hasMonth = true, hasYear = true } = {}
