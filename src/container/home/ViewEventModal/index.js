@@ -2,21 +2,20 @@ import React, { useState, useEffect } from 'react'
 
 import { BlueButton, Button, GreenButton, RedButton } from '../../../components/Button'
 import Flexbox from '../../../components/Flexbox'
-// import DateInput from '../../../components/Input/DateInput'
 import TextInput from '../../../components/Input/TextInput'
-// import TextBox from './../../../components/TextBox/index'
 import Divider from './../../../components/Divider'
 import TextArea from './../../../components/Input/TextArea'
 import Modal from './../../../components/Modal'
 
 import AttendanceCard from '../AttendanceCard'
-import EditEventModal from '../EditEventModal'
 import { formatDate, formatTime } from './../../../utils/helper'
 import AttendanceStatusModal from './../AttendanceStatusModal/index'
 
 const ViewEvent = (props) => {
-  const { data, onClose, onEditToggle } = props
+  // States
+  const { data, onClose, onToggleEdit } = props
   const { show, event, status } = data
+  if (event.end_date === null) event.end_date = event.start_date // If the end date is null, automatically set it to the start date
   const [current, setCurrent] = useState({
     id: event.id,
     name: event.name,
@@ -35,10 +34,8 @@ const ViewEvent = (props) => {
   const [showListAttendance, toggleListAttendance] = useState({
     show: false,
   })
-  const [showEditModal, toggleEditModal] = useState({
-    show: false,
-    event: {},
-  })
+
+  // Change handlers
   const onEventChange = (event) => {
     if (!event) {
       return
@@ -59,7 +56,6 @@ const ViewEvent = (props) => {
   useEffect(() => {
     onEventChange(event)
   }, [event])
-
   const openAttendanceCard = () => {
     toggleAttendanceCard({
       show: true,
@@ -71,7 +67,6 @@ const ViewEvent = (props) => {
       show: false,
     })
   }
-
   const openViewList = () => {
     toggleListAttendance({
       show: true,
@@ -81,16 +76,6 @@ const ViewEvent = (props) => {
     toggleListAttendance({
       show: false,
     })
-  }
-  const openEditModal = () => {
-    toggleEditModal((prev) => ({
-      ...prev,
-      show: true,
-      event: current,
-    }))
-  }
-  const closeEditModal = () => {
-    toggleEditModal((prev) => ({ ...prev, show: false, event: {} }))
   }
 
   return (
@@ -150,7 +135,7 @@ const ViewEvent = (props) => {
           </RedButton>
         </Flexbox>
         <Button onClick={openViewList}>View List</Button>
-        <Button onClick={openEditModal}>Edit Event</Button>
+        <Button onClick={() => onToggleEdit(current)}>Edit Event</Button>
       </Flexbox>
       <AttendanceCard
         data={showAttendanceCard}
@@ -162,7 +147,11 @@ const ViewEvent = (props) => {
         onClose={closeViewList}
         eventId={current.id}
       />
-      <EditEventModal data={showEditModal} onClose={closeEditModal} onSubmit={onEditToggle} />
+      {/* {showEditModal.show ? (
+        <EditEventModal data={showEditModal} onClose={closeEditModal} onSubmit={onSubmitEdit} />
+      ) : (
+        ''
+      )} */}
     </Modal>
   )
 }

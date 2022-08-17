@@ -9,66 +9,74 @@ import TextInput from '../../../components/Input/TextInput'
 import TimeInput from '../../../components/Input/TimeInput'
 import Modal from '../../../components/Modal'
 
-// import { convertStringToTime } from '../../../utils/helper'
+import { convertStringToTime, leadingZero } from '../../../utils/helper'
 import { ConfirmationParagraph } from '../style'
 
 const EditEventModal = (props) => {
+  // States
   const { data, onClose, onSubmit } = props
   const { show, event } = data
-  let { name, location, start_date, end_date, start_time, end_time, description } = event
-
+  let { name, place, start, end, start_time, end_time, description } = event
   const [eventTitle, setEventTitle] = useState(name)
-  const handleTitleChange = (newTitle) => {
-    setEventTitle(newTitle)
-  }
-
-  const initialDate = new Date()
-  const [eventStartDate, setEventStartDate] = useState(initialDate)
-  const handleStartDateChange = (newDate) => {
-    setEventStartDate(newDate)
-  }
-
-  // const tempStart = convertStringToTime(start_time)
-  // setEventStartDate((prev) => {
-  //   prev = prev.setHours(0, 0, 0)
-  //   return prev
-  // })
-
-  const [eventEndDate, setEventEndDate] = useState(initialDate)
-  const handleEndDateChange = (newDate) => {
-    setEventEndDate(newDate)
-  }
-  // const tempEnd = convertStringToTime(end_time)
-  // setEventStartDate((prev) => {
-  //   console.log(prev)
-  //   prev = prev.setHours(0, 0, 0)
-  //   return prev
-  // })
-
-  const [eventLocation, setEventLocation] = useState('')
-  const handleLocationChange = (newLocation) => {
-    setEventLocation(newLocation)
-  }
-
-  const [eventDescription, setEventDescription] = useState('')
-  const handleDescriptionChange = (newDescription) => {
-    setEventDescription(newDescription)
-  }
+  const tempStart = convertStringToTime(start_time, new Date(start))
+  const tempEnd = convertStringToTime(end_time, new Date(end))
+  const [eventStartDate, setEventStartDate] = useState(tempStart || new Date())
+  const [eventEndDate, setEventEndDate] = useState(tempEnd || new Date())
+  const [eventLocation, setEventLocation] = useState(place)
+  const [eventDescription, setEventDescription] = useState(description)
+  // useEffect(() => {
+  //   setEventStartDate((prev) => {
+  //     prev.setHours(0)
+  //     prev.setMinutes(0)
+  //     prev.setSeconds(0)
+  //     return prev
+  //   })
+  //   setEventEndDate((prev) => {
+  //     prev.setHours(0)
+  //     prev.setMinutes(0)
+  //     prev.setSeconds(0)
+  //     return prev
+  //   })
+  // }, [])
 
   if (Object.keys(event).length === 0) return <></>
-
+  // Change handlers
   const handleSubmit = () => {
+    const standardizeStartDate = new Date(eventStartDate)
+    standardizeStartDate.setHours(0, 0, 0)
+    const standardizeEndDate = new Date(eventEndDate)
+    standardizeEndDate.setHours(0, 0, 0)
+    console.log(standardizeStartDate, standardizeEndDate)
     onSubmit({
       name: eventTitle,
-      start_date: eventStartDate.toISOString(),
-      end_date: eventEndDate.toISOString(),
-      start_time: `${eventStartDate.getHours()}:${eventStartDate.getMinutes()}:${eventStartDate.getSeconds()}`,
-      end_time: `${eventEndDate.getHours()}:${eventEndDate.getMinutes()}:${eventEndDate.getSeconds()}`,
-      location: location,
-      description: description,
+      start_date: standardizeStartDate.toISOString(),
+      end_date: standardizeEndDate.toISOString(),
+      start_time: `${leadingZero(eventStartDate.getHours())}:${leadingZero(
+        eventStartDate.getMinutes()
+      )}:${leadingZero(eventStartDate.getSeconds())}`,
+      end_time: `${leadingZero(eventEndDate.getHours())}:${leadingZero(
+        eventEndDate.getMinutes()
+      )}:${leadingZero(eventEndDate.getSeconds())}`,
+      location: eventLocation,
+      description: eventDescription,
       semester: 'SU2022',
     })
     onClose()
+  }
+  const handleTitleChange = (newTitle) => {
+    setEventTitle(newTitle)
+  }
+  const handleEndDateChange = (newDate) => {
+    setEventEndDate(newDate)
+  }
+  const handleStartDateChange = (newDate) => {
+    setEventStartDate(newDate)
+  }
+  const handleLocationChange = (newLocation) => {
+    setEventLocation(newLocation)
+  }
+  const handleDescriptionChange = (newDescription) => {
+    setEventDescription(newDescription)
   }
 
   return (
@@ -78,7 +86,7 @@ const EditEventModal = (props) => {
           title="Title"
           placeholder="Insert title here..."
           onChange={handleTitleChange}
-          value={eventTitle}
+          value={eventTitle || ''}
         />
         <Flexbox gap={10} justifyContent="space-between">
           <DateInput

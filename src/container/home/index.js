@@ -93,6 +93,7 @@ const Home = () => {
     }
     fetchEvent()
   }, [token, navigate])
+
   const displayEventModal = (data) => {
     toggleViewModal({
       show: true,
@@ -113,10 +114,17 @@ const Home = () => {
       status: {},
     })
   const closeEditModal = () =>
-    toggleEditModal({
+    toggleEditModal((prev) => ({
+      ...prev,
       show: false,
       event: {},
-    })
+    }))
+  const onSubmitEdit = (newEvent) => {
+    console.log('Receive', newEvent)
+  }
+  const onToggleEdit = (event) => {
+    displayEditModal(event)
+  }
   const onLogout = () => {
     LocalStorageUtils.deleteUser()
     navigate('/login')
@@ -175,12 +183,13 @@ const Home = () => {
         data={showViewModal}
         // onClick={() => toggleViewModal(true)}
         onClose={closeEventModal}
-        onToggleEdit={() => {
-          console.log(showViewModal.event)
-          displayEditModal(showViewModal.event)
-        }}
+        onToggleEdit={onToggleEdit}
       />
-      <EditEventModal data={showEditModal} onClose={closeEditModal} />
+      {showEditModal.show ? (
+        <EditEventModal data={showEditModal} onClose={closeEditModal} onSubmit={onSubmitEdit} />
+      ) : (
+        <></>
+      )}
     </HomeWrapper>
   )
 }
