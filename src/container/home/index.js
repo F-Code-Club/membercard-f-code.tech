@@ -8,7 +8,7 @@ import Flexbox from './../../components/Flexbox'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import { compareDate } from '../../utils/helper'
 import Avatar from './../../asset/image/Avatar.png'
-import { get } from './../../utils/ApiCaller'
+import { get, put } from './../../utils/ApiCaller'
 // import productApi from './../../utils/productApi'
 import CreateEventModal from './CreateEventModal'
 import EditEventModal from './EditEventModal'
@@ -89,13 +89,25 @@ const Home = () => {
           navigate('/')
           return []
         })
+
+      const eventDateComparator = (a, b) => {
+        const startDateCompare = compareDate(new Date(a.start_date), new Date(b.start_date))
+        if (startDateCompare === 0) {
+          const endDateCompare = compareDate(new Date(a.end_date), new Date(b.end_date))
+          return endDateCompare
+        } else {
+          return startDateCompare
+        }
+      }
       setEvents(
-        eventsReceiver.filter((item) => compareDate(new Date(item.start_date), new Date()) === 0) ||
-          []
+        eventsReceiver
+          .filter((item) => compareDate(new Date(item.start_date), new Date()) === 0)
+          .sort(eventDateComparator) || []
       )
       setUpcomingEvents(
-        eventsReceiver.filter((item) => compareDate(new Date(item.start_date), new Date()) === 1) ||
-          []
+        eventsReceiver
+          .filter((item) => compareDate(new Date(item.start_date), new Date()) === 1)
+          .sort(eventDateComparator) || []
       )
     }
     fetchEvent()
@@ -126,8 +138,10 @@ const Home = () => {
       show: false,
       event: {},
     }))
-  const onSubmitEdit = (newEvent) => {
-    console.log('Receive', newEvent)
+  const onSubmitEdit = async (newEvent) => {
+    const token = LocalStorageUtils.getToken()
+    await put(`/api/events/${newEvent.id}`, { ...newEvent }, {}, { token: token })
+    navigate('/login', { replace: true })
   }
   const onToggleEdit = (event) => {
     displayEditModal(event)
@@ -155,7 +169,6 @@ const Home = () => {
                 event={event}
                 onClick={() => {
                   displayEventModal(event)
-                  console.log(event)
                 }}
               />
             ))}
