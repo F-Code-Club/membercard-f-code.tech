@@ -9,6 +9,9 @@ import Modal from '../../components/Modal'
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
+import { post } from '../../utils/ApiCaller'
+import LocalStorageUtils from '../../utils/LocalStorageUtils'
+import { leadingZero } from '../../utils/helper'
 import { ConfirmationParagraph } from './style'
 
 const CreateEventModal = (props) => {
@@ -36,20 +39,44 @@ const CreateEventModal = (props) => {
 
   const [description, setDescription] = useState('')
   const handleDescriptionChange = (newDescription) => {
-    setDescription(newDescription?.target?.value)
+    setDescription(newDescription)
   }
 
-  const handleSubmit = () => {
-    onSubmit({
+  const handleSubmit = async () => {
+    const generateSemester = (startDate) => {
+      const SEMESTERS = {
+        SP: [1, 2, 3, 4],
+        SU: [5, 6, 7, 8],
+        FA: [9, 10, 11, 12],
+      }
+      for (let semester in SEMESTERS) {
+        console.log(semester, startDate.getMonth())
+        if (SEMESTERS[semester].includes(startDate.getMonth() + 1)) {
+          return `${semester}${startDate.getFullYear()}`
+        }
+      }
+      return 'SP2022'
+    }
+    const event = {
       name: title,
-      start_date: startDate.toISOString(),
-      end_date: endDate.toISOString(),
-      start_time: `${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}`,
-      end_time: `${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}`,
+      start_date: `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`,
+      end_date: `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`,
+      start_time: `${leadingZero(startDate.getHours())}:${leadingZero(startDate.getMinutes())}:00`,
+      end_time: `${leadingZero(endDate.getHours())}:${leadingZero(endDate.getMinutes())}:00`,
       location: location,
       description: description,
-      semester: 'SU2022',
-    })
+      semester: generateSemester(startDate),
+      status: 'ongoing',
+    }
+    const token = LocalStorageUtils.getToken()
+
+    const response = await post('/api/events', { ...event }, {}, { token: token }).catch((err) =>
+      // eslint-disable-next-line no-console
+      console.error(err)
+    )
+    if (response.status === 200 && response.data.status === 200) {
+      onSubmit()
+    }
     onClose()
   }
 
