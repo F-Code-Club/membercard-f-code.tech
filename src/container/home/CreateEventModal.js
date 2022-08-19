@@ -11,7 +11,7 @@ import Flexbox from './../../components/Flexbox'
 
 import { post } from '../../utils/ApiCaller'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
-import { leadingZero } from '../../utils/helper'
+import { generateSemester, leadingZero } from '../../utils/helper'
 import { ConfirmationParagraph } from './style'
 
 const CreateEventModal = (props) => {
@@ -43,20 +43,6 @@ const CreateEventModal = (props) => {
   }
 
   const handleSubmit = async () => {
-    const generateSemester = (startDate) => {
-      const SEMESTERS = {
-        SP: [1, 2, 3, 4],
-        SU: [5, 6, 7, 8],
-        FA: [9, 10, 11, 12],
-      }
-      for (let semester in SEMESTERS) {
-        console.log(semester, startDate.getMonth())
-        if (SEMESTERS[semester].includes(startDate.getMonth() + 1)) {
-          return `${semester}${startDate.getFullYear()}`
-        }
-      }
-      return 'SP2022'
-    }
     const event = {
       name: title,
       start_date: `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`,

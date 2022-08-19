@@ -194,3 +194,22 @@ export const formatTimeByPattern = (date, pattern) => {
   dateFormatter.applyPattern(pattern)
   return dateFormatter.format(date)
 }
+
+/**
+ * Generate the semester of an event according to the start date
+ * @param {Date} startDate the start date of the event
+ * @returns {string} the generated semester of the event
+ */
+export const generateSemester = (startDate) => {
+  const SEMESTERS = {
+    SP: [1, 2, 3, 4],
+    SU: [5, 6, 7, 8],
+    FA: [9, 10, 11, 12],
+  }
+  for (let semester in SEMESTERS) {
+    if (SEMESTERS[semester].includes(startDate.getMonth() + 1)) {
+      return `${semester}${startDate.getFullYear()}`
+    }
+  }
+  return 'SP2022'
+}
