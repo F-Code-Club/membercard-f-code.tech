@@ -171,6 +171,13 @@ export const StyledEventWrapper = styled.div`
   }
 `
 
+export const StyledEventSemester = styled.span`
+  font-size: 10px;
+  font-weight: 500;
+  color: ${theme.slate4};
+  margin-left: 0.5rem;
+`
+
 export const StyledEventIndicator = styled.div`
   width: ${(props) => (props.size ? props.size + 'px' : '6px')};
   height: ${(props) => (props.size ? props.size + 'px' : '6px')};
