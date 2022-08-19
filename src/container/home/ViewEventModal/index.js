@@ -119,7 +119,7 @@ const ViewEvent = (props) => {
           onChange={(e) => onEventChange(e, event)}
           readOnly
         />
-        <TextArea title="Description" value={current.description} readOnly />
+        <TextArea title="Description" value={current.description || ''} readOnly />
       </Flexbox>
       <Divider variant="dashed" margin={20} />
       <Flexbox flexDirection="column" gap={10}>

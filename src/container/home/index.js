@@ -6,12 +6,13 @@ import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
+import { compareDate } from '../../utils/helper'
 import Avatar from './../../asset/image/Avatar.png'
 import { get } from './../../utils/ApiCaller'
 // import productApi from './../../utils/productApi'
 import CreateEventModal from './CreateEventModal'
 import EditEventModal from './EditEventModal'
-import Event, { EventEntity, StatusEnum } from './Event'
+import Event, { StatusEnum } from './Event'
 import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
@@ -88,8 +89,14 @@ const Home = () => {
           navigate('/')
           return []
         })
-      setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
-      setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
+      setEvents(
+        eventsReceiver.filter((item) => compareDate(new Date(item.start_date), new Date()) === 0) ||
+          []
+      )
+      setUpcomingEvents(
+        eventsReceiver.filter((item) => compareDate(new Date(item.start_date), new Date()) === 1) ||
+          []
+      )
     }
     fetchEvent()
   }, [token, navigate])
@@ -177,7 +184,7 @@ const Home = () => {
         show={showCreateModal}
         onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
-        onSubmit={(newItem) => console.log(new EventEntity(newItem))}
+        onSubmit={() => navigate('/login', { replace: true })}
       />
       <ViewEventModal
         data={showViewModal}
