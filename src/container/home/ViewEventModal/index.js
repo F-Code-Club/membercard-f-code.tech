@@ -26,6 +26,7 @@ const ViewEvent = (props) => {
     end_time: event.end_time || '',
     description: event.description,
     status: event.status,
+    semester: event.semester,
   })
   const [showAttendanceCard, toggleAttendanceCard] = useState({
     show: false,
@@ -50,6 +51,7 @@ const ViewEvent = (props) => {
       end_time: event.end_time || '',
       description: event.description,
       status: event.status || {},
+      semester: event.semester,
     }
     setCurrent(tmp)
   }

@@ -9,14 +9,14 @@ import TextInput from '../../../components/Input/TextInput'
 import TimeInput from '../../../components/Input/TimeInput'
 import Modal from '../../../components/Modal'
 
-import { convertStringToTime, leadingZero } from '../../../utils/helper'
+import { convertStringToTime, formatTimeByPattern, leadingZero } from '../../../utils/helper'
 import { ConfirmationParagraph } from '../style'
 
 const EditEventModal = (props) => {
   // States
   const { data, onClose, onSubmit } = props
   const { show, event } = data
-  let { name, place, start, end, start_time, end_time, description } = event
+  let { id, name, place, start, end, start_time, end_time, status, description, semester } = event
   const [eventTitle, setEventTitle] = useState(name)
   const tempStart = convertStringToTime(start_time, new Date(start))
   const tempEnd = convertStringToTime(end_time, new Date(end))
@@ -24,20 +24,6 @@ const EditEventModal = (props) => {
   const [eventEndDate, setEventEndDate] = useState(tempEnd || new Date())
   const [eventLocation, setEventLocation] = useState(place)
   const [eventDescription, setEventDescription] = useState(description)
-  // useEffect(() => {
-  //   setEventStartDate((prev) => {
-  //     prev.setHours(0)
-  //     prev.setMinutes(0)
-  //     prev.setSeconds(0)
-  //     return prev
-  //   })
-  //   setEventEndDate((prev) => {
-  //     prev.setHours(0)
-  //     prev.setMinutes(0)
-  //     prev.setSeconds(0)
-  //     return prev
-  //   })
-  // }, [])
 
   if (Object.keys(event).length === 0) return <></>
   // Change handlers
@@ -46,19 +32,25 @@ const EditEventModal = (props) => {
     standardizeStartDate.setHours(0, 0, 0)
     const standardizeEndDate = new Date(eventEndDate)
     standardizeEndDate.setHours(0, 0, 0)
+    const formatDateAsSQLDate = (date) => {
+      if (!date) return ''
+      return formatTimeByPattern(date, 'yyyy-MM-dd')
+    }
     onSubmit({
+      id: id,
       name: eventTitle,
-      start_date: standardizeStartDate.toISOString(),
-      end_date: standardizeEndDate.toISOString(),
+      start_date: formatDateAsSQLDate(standardizeStartDate),
+      end_date: formatDateAsSQLDate(standardizeEndDate),
       start_time: `${leadingZero(eventStartDate.getHours())}:${leadingZero(
         eventStartDate.getMinutes()
       )}:${leadingZero(eventStartDate.getSeconds())}`,
       end_time: `${leadingZero(eventEndDate.getHours())}:${leadingZero(
         eventEndDate.getMinutes()
       )}:${leadingZero(eventEndDate.getSeconds())}`,
+      status: status,
       location: eventLocation,
       description: eventDescription,
-      semester: 'SU2022',
+      semester: semester,
     })
     onClose()
   }
