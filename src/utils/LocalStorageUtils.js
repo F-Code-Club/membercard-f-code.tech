@@ -7,16 +7,21 @@ import {
   LOCALSTORAGE_TOKEN_NAME,
   LOCALSTORAGE_USER_NAME,
 } from '../config'
+import Profile from './../asset/image/Avatar.png'
 import { get } from './ApiCaller'
 
 const convertAvatar = (avatar) => {
-  if (avatar.length === 0) {
+  if (!avatar || avatar.length === 0) {
     return Profile
   }
-
-  let buffer = Buffer.Buffer
-  let result = buffer.from(avatar).toString('base64')
-  return `data:image/png;base64,${result}`
+  try {
+    let buffer = Buffer.Buffer
+    let result = buffer.from(avatar || []).toString('base64')
+    return `data:image/png;base64,${result}`
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error)
+  }
 }
 
 class LocalStorageUtils {
