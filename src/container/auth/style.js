@@ -4,8 +4,10 @@ import { Button } from '../../components/Button'
 import Divider from '../../components/Divider'
 import Wrapper from '../../components/Wrapper'
 
+import FCodeLogo from '../../asset/logo/F-Code.png'
 import theme from '../../theme'
-import Avatar from './../../asset/image/Avatar.png'
+
+// import Avatar from './../../asset/image/Avatar.png'
 
 // export const Button = styled.a``
 
@@ -26,7 +28,7 @@ const StyledLogo = styled.div`
 const Logo = (props) => {
   return (
     <StyledLogo size={props.size}>
-      <img src={Avatar}></img>
+      <img src={FCodeLogo} alt="F-Code logo" />
     </StyledLogo>
   )
 }
@@ -44,7 +46,6 @@ const StyledHeading = styled.h1`
   font-size: ${18 / 14}rem;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
-
   & strong {
     font-weight: 900;
   }

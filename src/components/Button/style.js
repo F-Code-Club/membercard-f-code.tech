@@ -14,8 +14,9 @@ const StyledRedButton = styled(BaseButton)`
 const StyledGreenButton = styled(BaseButton)`
   color: ${theme.plum};
   background-color: ${theme.cyan1};
-  box-shadow: 1.6px 1.3px 3.7px rgba(0, 0, 0, 0.012), 5.4px 4.5px 12.5px rgba(0, 0, 0, 0.018),
-    24px 20px 56px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
 `
 
 export { StyledBlueButton, StyledGreenButton, StyledRedButton }

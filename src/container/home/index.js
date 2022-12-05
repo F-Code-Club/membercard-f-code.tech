@@ -5,8 +5,9 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
+import FCodeLogo from '../../asset/logo/F-Code.png'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
-import Avatar from './../../asset/image/Avatar.png'
+// import Avatar from './../../asset/image/Avatar.png'
 import { get } from './../../utils/ApiCaller'
 import productApi from './../../utils/productApi'
 import CreateEventModal from './CreateEventModal'
@@ -40,6 +41,7 @@ const Home = () => {
     const userId = LocalStorageUtils.getUser().id
     const getData = async () => {
       const response = await productApi.getUser(userId, token)
+
       setData(response?.data.data)
       if (response?.status === 403) {
         LocalStorageUtils.removeItem('token')
@@ -85,8 +87,8 @@ const Home = () => {
     })
   return (
     <HomeWrapper>
-      <HeaderWrapper justifyContent="space-between">
-        <HeaderBrand src={Avatar} size={50} />
+      <HeaderWrapper justifyContent="space-between" alignItems="center">
+        <HeaderBrand src={FCodeLogo} size={120} />
         <ProfileInformation user={data} />
       </HeaderWrapper>
       <ContentWrapper>

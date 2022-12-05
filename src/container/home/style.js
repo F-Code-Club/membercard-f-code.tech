@@ -6,6 +6,7 @@ import Flexbox from '../../components/Flexbox'
 import Wrapper from '../../components/Wrapper'
 import Icon from './../../components/Icon'
 
+import AvaUnknown from '../../asset/noAvaUnknow/Avaunknow.jpg'
 import { leadingZero, WEEKDAYS_SHORT, MONTHS_SHORT, formatDate, useCSS } from '../../utils/helper'
 import Profile from './../../asset/image/Security_Consultant.png'
 import theme from './../../theme'
@@ -38,7 +39,7 @@ export const CreateButton = (props) => {
 }
 
 export const HeaderWrapper = styled(Flexbox)`
-  margin-bottom: 40px;
+  // margin-bottom: 10px;
 `
 
 const StyledHeaderBrand = styled.div`
@@ -56,7 +57,7 @@ const StyledHeaderBrand = styled.div`
 export const HeaderBrand = (props) => {
   return (
     <StyledHeaderBrand {...props}>
-      <img src={props.src} />
+      <img src={props.src} alt="F-CodeLogo" />
     </StyledHeaderBrand>
   )
 }
@@ -122,7 +123,10 @@ export const ProfileInformation = (props) => {
         <StyledProfileName>Hi, {user.first_name + ' ' + user.last_name} </StyledProfileName>
         <StyledProfileRollNumber>{user.member_id}</StyledProfileRollNumber>
       </Flexbox>
-      <ProfileImage src={convertAvatar(user.avatar.data)} size={50} />
+      <ProfileImage
+        src={user.avatar === null ? AvaUnknown : convertAvatar(user.avatar.data)}
+        size={50}
+      />
     </StyledProfileInformationWrapper>
   )
 }
@@ -204,11 +208,19 @@ export const ContentWrapper = (props) => {
 }
 
 export const Content = (props) => {
-  return <div>{props.children}</div>
+  return <BoxContent>{props.children}</BoxContent>
 }
 
+export const BoxContent = styled.div`
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 2px rgb(0 0 0 / 14%), 0px 3px 1px rgb(0 0 0 / 12%),
+    0px 1px 5px rgb(0 0 0 / 20%);
+`
 export const HomeWrapper = styled(Wrapper)`
   padding: 50px 0;
+  min-height: 100vh;
 `
 const StyledParagraph = styled.p`
   color: ${theme.low_contrast};

@@ -32,7 +32,7 @@ const Auth = () => {
     //   <LoginButton href={ApiUrl + 'google'}>Sign in</LoginButton>
     // </div>
     <LoginWrapper minHeight="100vh">
-      <Logo size={60} />
+      <Logo size={120} />
       <LoginHeading>
         Welcome to <strong>F-Code.</strong>
       </LoginHeading>
