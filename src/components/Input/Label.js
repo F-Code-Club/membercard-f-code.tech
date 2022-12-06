@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import theme from '../../theme'
 
 const StyledLabel = styled.label`
-  display: block;
+  display: inline-block;
   margin-bottom: 10px;
   font-weight: 600;
   font-size: 1em;

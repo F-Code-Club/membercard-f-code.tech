@@ -1,4 +1,5 @@
-import Buffer from 'buffer/'
+import { useState } from 'react'
+
 import styled from 'styled-components'
 
 import { BaseButton } from '../../components/Button/BaseButton'
@@ -63,6 +64,7 @@ export const HeaderBrand = (props) => {
 }
 
 const StyledProfileImage = styled.div`
+  position: relative;
   width: ${(props) => props.size || '100'}px;
   height: ${(props) => props.size || '100'}px;
   overflow: hidden;
@@ -70,8 +72,10 @@ const StyledProfileImage = styled.div`
   flex-shrink: 0;
 
   & > img {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 `
 
@@ -94,39 +98,63 @@ const StyledProfileInformationWrapper = styled(Flexbox)`
 const ProfileImage = (props) => {
   return (
     <StyledProfileImage {...props}>
-      <img src={props.src} />
+      <img src={props.src} alt="Avatar" title="Avatar" />
     </StyledProfileImage>
   )
 }
 
-export const ProfileInformation = (props) => {
-  let { user } = props
+const StyledProfileMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  transform: translateY(20%);
+  display: ${(props) => (props.isHidden ? 'none' : 'block')};
+  padding: 0.25rem 0.5rem;
+  background-color: blue;
+  border-radius: 0.5rem;
 
-  if (user.first_name === undefined) {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  ${
+    '' /* border-radius: 0.5rem;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px); */
+  }
+
+  & > a {
+    background-color: transparent;
+    font-weight: 700;
+    padding: 1rem 2rem;
+  }
+`
+
+export const ProfileInformation = (props) => {
+  let { user, avatar, onLogout } = props
+
+  if (user === null || user === undefined || user.first_name === undefined) {
     user = {
-      name: 'N/A',
-      rollNumber: 'N/A',
-      imageUrl: Profile,
-      avatar: {
-        data: [],
-      },
+      first_name: 'N/A',
+      last_name: 'N/A',
+      member_id: 'N/A',
     }
   }
-  const convertAvatar = (avatar) => {
-    let buffer = Buffer.Buffer
-    let result = buffer.from(avatar).toString('base64')
-    return `data:image/png;base64,${result}`
-  }
+
+  if (avatar === null || avatar === undefined) avatar = Profile
+
+  const [isMenuHidden, setIsMenuHidden] = useState(true)
+
   return (
-    <StyledProfileInformationWrapper alignItems="center" gap="10px">
+    <StyledProfileInformationWrapper alignItems="center" gap="10px" position="relative">
       <Flexbox flexDirection="column" gap="2px">
-        <StyledProfileName>Hi, {user.first_name + ' ' + user.last_name} </StyledProfileName>
-        <StyledProfileRollNumber>{user.member_id}</StyledProfileRollNumber>
+        <StyledProfileName>Hi, {`${user?.first_name} ${user?.last_name}`}</StyledProfileName>
+        <StyledProfileRollNumber>{user?.member_id}</StyledProfileRollNumber>
       </Flexbox>
-      <ProfileImage
-        src={user.avatar === null ? AvaUnknown : convertAvatar(user.avatar.data)}
-        size={50}
-      />
+      <ProfileImage src={avatar} size={50} onClick={() => setIsMenuHidden((prev) => !prev)} />
+      <StyledProfileMenu isHidden={isMenuHidden}>
+        <BaseButton onClick={onLogout}>Log out</BaseButton>
+      </StyledProfileMenu>
     </StyledProfileInformationWrapper>
   )
 }
@@ -142,6 +170,13 @@ export const StyledEventWrapper = styled.div`
   :hover {
     background-color: ${theme.slate1_10};
   }
+`
+
+export const StyledEventSemester = styled.span`
+  font-size: 10px;
+  font-weight: 500;
+  color: ${theme.slate4};
+  margin-left: 0.5rem;
 `
 
 export const StyledEventIndicator = styled.div`
@@ -248,7 +283,7 @@ const CheckmarkIcon = (props) => {
     </StyledCheckmarkWrapper>
   )
 }
-export const Paragraph = (props) => {
+export const ConfirmationParagraph = (props) => {
   const { startDate, endDate } = props
   return (
     <StyledParagraphWrapper gap={10} alignItems="center">

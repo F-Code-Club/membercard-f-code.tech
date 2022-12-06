@@ -9,7 +9,10 @@ import Modal from '../../components/Modal'
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
-import { Paragraph } from './style'
+import { post } from '../../utils/ApiCaller'
+import LocalStorageUtils from '../../utils/LocalStorageUtils'
+import { generateSemester, leadingZero } from '../../utils/helper'
+import { ConfirmationParagraph } from './style'
 
 const CreateEventModal = (props) => {
   const { show, onClose, onSubmit } = props
@@ -39,17 +42,27 @@ const CreateEventModal = (props) => {
     setDescription(newDescription)
   }
 
-  const handleSubmit = () => {
-    onSubmit({
+  const handleSubmit = async () => {
+    const event = {
       name: title,
-      start_date: startDate.toISOString(),
-      end_date: endDate.toISOString(),
-      start_time: `${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}`,
-      end_time: `${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}`,
+      start_date: `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`,
+      end_date: `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`,
+      start_time: `${leadingZero(startDate.getHours())}:${leadingZero(startDate.getMinutes())}:00`,
+      end_time: `${leadingZero(endDate.getHours())}:${leadingZero(endDate.getMinutes())}:00`,
       location: location,
       description: description,
-      semester: 'SU2022',
-    })
+      semester: generateSemester(startDate),
+      status: 'ongoing',
+    }
+    const token = LocalStorageUtils.getToken()
+
+    const response = await post('/api/events', { ...event }, {}, { token: token }).catch((err) =>
+      // eslint-disable-next-line no-console
+      console.error(err)
+    )
+    if (response.status === 200 && response.data.status === 200) {
+      onSubmit()
+    }
     onClose()
   }
 
@@ -64,16 +77,18 @@ const CreateEventModal = (props) => {
         />
         <Flexbox gap={10} justifyContent="space-between">
           <DateInput
-            fullWidth={true}
+            // fullWidth={true}
             title="Start date"
             date={startDate}
             onChange={handleStartDateChange}
+            flexBasis="50%"
           />
           <DateInput
-            fullWidth={true}
+            // fullWidth={true}
             title="End date"
             date={endDate}
             onChange={handleEndDateChange}
+            flexBasis="50%"
           />
         </Flexbox>
         <Flexbox gap={10} justifyContent="space-between">
@@ -90,7 +105,7 @@ const CreateEventModal = (props) => {
             onChange={handleEndDateChange}
           />
         </Flexbox>
-        <Paragraph startDate={startDate} endDate={endDate} />
+        <ConfirmationParagraph startDate={startDate} endDate={endDate} />
         <TextInput
           title="Location"
           placeholder="Location"

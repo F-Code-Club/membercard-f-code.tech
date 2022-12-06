@@ -21,8 +21,12 @@ const StyledDateInput = styled.input.attrs({
   text-transform: uppercase;
   pointer-events: none;
 
+  -webkit-appearance: none;
+
   &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button,
   &::-webkit-calendar-picker-indicator {
+    visibility: hidden,
     display: none;
     -webkit-appearance: none;
   }
@@ -52,10 +56,12 @@ const DateInputBox = (props) => {
 // TODO: This component needs to be renamed and refactored
 const StyledDateInputWrapper = styled.div`
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
+  max-width: 48%;
+  flex-basis: ${(props) => (props.flexBasis ? props.flexBasis : 'auto')};
 `
 
 const DateInput = (props) => {
-  const { title, date, fullWidth, onChange, readonly } = props
+  const { title, date, fullWidth, onChange, readonly, flexBasis } = props
   let defaultDate = date ? date : new Date()
 
   const [showDatePicker, setShowDatePicker] = useState(false)
@@ -96,7 +102,7 @@ const DateInput = (props) => {
   }, [])
 
   return (
-    <StyledDateInputWrapper fullWidth={fullWidth} ref={boxRef}>
+    <StyledDateInputWrapper fullWidth={fullWidth} ref={boxRef} flexBasis={flexBasis}>
       <Label title={title} />
       <BaseInputBox
         onBlur={onBlur}

@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
 import FCodeLogo from '../../asset/logo/F-Code.png'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
+import { compareDate } from '../../utils/helper'
 // import Avatar from './../../asset/image/Avatar.png'
-import { get } from './../../utils/ApiCaller'
-import productApi from './../../utils/productApi'
+import { get, put } from './../../utils/ApiCaller'
+// import productApi from './../../utils/productApi'
 import CreateEventModal from './CreateEventModal'
-import Event, { EventEntity, StatusEnum } from './Event'
+import EditEventModal from './EditEventModal'
+import Event, { StatusEnum } from './Event'
 import ViewEventModal from './ViewEventModal'
 import {
   HeaderBrand,
@@ -25,52 +27,92 @@ import {
 } from './style'
 
 const Home = () => {
-  //data get from BE
-  const [data, setData] = useState({})
+  const token = LocalStorageUtils.getItem('token')
+
   const [showCreateModal, toggleCreateModal] = useState(false)
   const [showViewModal, toggleViewModal] = useState({
     show: false,
     event: {},
     status: {},
   })
+  const [showEditModal, toggleEditModal] = useState({
+    show: false,
+    event: {},
+  })
   const [events, setEvents] = useState([])
   const [upcomingEvents, setUpcomingEvents] = useState([])
-  const navigate = useNavigate()
-  useEffect(() => {
-    const token = LocalStorageUtils.getItem('token')
-    const userId = LocalStorageUtils.getUser().id
-    const getData = async () => {
-      const response = await productApi.getUser(userId, token)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [currentAvatar, setCurrentAvatar] = useState(null)
 
-      setData(response?.data.data)
-      if (response?.status === 403) {
-        LocalStorageUtils.removeItem('token')
-        return <Navigate to="/login" replace />
-      }
+  useEffect(() => {
+    const fetchUser = async () => {
+      const result = await LocalStorageUtils.getUser()
+      setCurrentUser(result.user)
+      setCurrentAvatar(result.avatar)
     }
-    getData()
-  }, [])
+    if (!currentUser || !currentAvatar) {
+      fetchUser()
+    }
+  }, [currentUser, currentAvatar])
+
+  const navigate = useNavigate()
+  // useEffect(() => {
+  //   const token = LocalStorageUtils.getItem('token')
+  //   const userId = LocalStorageUtils.getJWTUser().id
+  //   const getData = async () => {
+  //     const response = await productApi.getUser(userId, token)
+  //     console.log('Response', response)
+  //     setCurrentUser(response?.data.data)
+  //     if (response?.status === 403) {
+  //       LocalStorageUtils.removeItem('token')
+  //       return <Navigate to="/login" replace />
+  //     }
+  //   }
+  //   getData()
+  // }, [])
 
   useEffect(() => {
     const token = LocalStorageUtils.getItem('token')
     const fetchEvent = async () => {
-      const eventsReceiver = await get('/api/events', {}, { token: token }).then((response) => {
-        if (response.data.status === 403) {
+      const eventsReceiver = await get('/api/events', {}, { token: token })
+        .then((response) => {
+          if (response.data?.status !== 200) {
+            LocalStorageUtils.removeItem('token')
+            navigate('/')
+            return []
+          }
+          return response.data.data
+        })
+        .catch((e) => {
+          if (e.code === 'ERR_NETWORK') {
+          }
           LocalStorageUtils.removeItem('token')
           navigate('/')
           return []
+        })
+
+      const eventDateComparator = (a, b) => {
+        const startDateCompare = compareDate(new Date(a.start_date), new Date(b.start_date))
+        if (startDateCompare === 0) {
+          const endDateCompare = compareDate(new Date(a.end_date), new Date(b.end_date))
+          return endDateCompare
+        } else {
+          return startDateCompare
         }
-        return response.data.data
-      })
-      setEvents(eventsReceiver.filter((item) => item.status !== 'upcoming') || [])
-      setUpcomingEvents(eventsReceiver.filter((item) => item.status === 'upcoming') || [])
+      }
+      setEvents(
+        eventsReceiver
+          .filter((item) => compareDate(new Date(item.start_date), new Date()) === 0)
+          .sort(eventDateComparator) || []
+      )
+      setUpcomingEvents(
+        eventsReceiver
+          .filter((item) => compareDate(new Date(item.start_date), new Date()) === 1)
+          .sort(eventDateComparator) || []
+      )
     }
     fetchEvent()
-  }, [navigate])
-
-  const images = [
-    'https://images.unsplash.com/photo-1654252312924-b97fe8335258?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-  ]
+  }, [token, navigate])
 
   const displayEventModal = (data) => {
     toggleViewModal({
@@ -79,17 +121,42 @@ const Home = () => {
       status: StatusEnum[data.status],
     })
   }
+  const displayEditModal = (data) => {
+    toggleEditModal({
+      show: true,
+      event: data,
+    })
+  }
   const closeEventModal = () =>
     toggleViewModal({
       show: false,
       event: {},
       status: {},
     })
+  const closeEditModal = () =>
+    toggleEditModal((prev) => ({
+      ...prev,
+      show: false,
+      event: {},
+    }))
+  const onSubmitEdit = async (newEvent) => {
+    const token = LocalStorageUtils.getToken()
+    await put(`/api/events/${newEvent.id}`, { ...newEvent }, {}, { token: token })
+    navigate('/login', { replace: true })
+  }
+  const onToggleEdit = (event) => {
+    displayEditModal(event)
+  }
+  const onLogout = () => {
+    LocalStorageUtils.deleteUser()
+    navigate('/login')
+  }
+
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between" alignItems="center">
         <HeaderBrand src={FCodeLogo} size={120} />
-        <ProfileInformation user={data} />
+        <ProfileInformation user={currentUser} avatar={currentAvatar} onLogout={onLogout} />
       </HeaderWrapper>
       <ContentWrapper>
         <Content>
@@ -117,7 +184,12 @@ const Home = () => {
           <Divider />
           <Flexbox flexDirection="column">
             {upcomingEvents.map((event, index) => (
-              <Event key={index} event={event} onClick={() => displayEventModal(event)} />
+              <Event
+                key={index}
+                event={event}
+                onClick={() => displayEventModal(event)}
+                onEditToggle={() => displayEditModal(event)}
+              />
             ))}
           </Flexbox>
         </Content>
@@ -126,13 +198,19 @@ const Home = () => {
         show={showCreateModal}
         onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
-        onSubmit={(newItem) => console.log(new EventEntity(newItem))}
+        onSubmit={() => navigate('/login', { replace: true })}
       />
       <ViewEventModal
         data={showViewModal}
         // onClick={() => toggleViewModal(true)}
         onClose={closeEventModal}
+        onToggleEdit={onToggleEdit}
       />
+      {showEditModal.show ? (
+        <EditEventModal data={showEditModal} onClose={closeEditModal} onSubmit={onSubmitEdit} />
+      ) : (
+        <></>
+      )}
     </HomeWrapper>
   )
 }

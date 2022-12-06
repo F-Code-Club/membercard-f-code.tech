@@ -43,7 +43,7 @@ const Auth = () => {
         <Icon
           name="arrow-forward"
           style={{
-            'margin-left': '5px',
+            marginLeft: '5px',
             transform: 'translateY(0.5px)',
           }}
         />

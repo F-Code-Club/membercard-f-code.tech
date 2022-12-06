@@ -31,13 +31,26 @@ const StyledWrapper = styled.div`
 `
 
 const TextArea = (props) => {
-  const { title, ...rest } = props
+  // States
+  const { title, onChange, value, ...rest } = props
+
+  // Change handlers
+  const onTextChange = (event) => {
+    const eventValue = event.target.value
+    onChange(eventValue)
+  }
+
   return (
     <Wrapper>
       <Label title={title} />
       <StyledWrapper fullWidth={props.fullWidth}>
         <BaseInputBox fullWidth={props.fullWidth}>
-          <StyledTextArea placeholder={props.placeholder} {...rest} />
+          <StyledTextArea
+            value={value}
+            placeholder={props.placeholder}
+            onChange={onTextChange}
+            {...rest}
+          />
         </BaseInputBox>
       </StyledWrapper>
     </Wrapper>
