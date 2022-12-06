@@ -7,7 +7,7 @@ import Flexbox from '../../components/Flexbox'
 import Wrapper from '../../components/Wrapper'
 import Icon from './../../components/Icon'
 
-import AvaUnknown from '../../asset/noAvaUnknow/Avaunknow.jpg'
+// import AvaUnknown from '../../asset/noAvaUnknow/Avaunknow.jpg'
 import { leadingZero, WEEKDAYS_SHORT, MONTHS_SHORT, formatDate, useCSS } from '../../utils/helper'
 import Profile from './../../asset/image/Security_Consultant.png'
 import theme from './../../theme'
