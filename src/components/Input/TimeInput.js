@@ -34,9 +34,10 @@ const StyledTimeInput = styled.div`
 
 const StyledTimePickerWrapper = styled.div`
   position: absolute;
-  bottom: 110%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
+  z-index: 999;
 `
 
 // TODO: This component needs to be renamed
@@ -128,6 +129,7 @@ const TimeInput = (props) => {
         isFocused={isFocused}
         onClick={() => onClick(true)}
         fullWidth={fullWidth}
+        position="static"
       >
         <TimeInputBox value={formatTime24(currentTime)} />
         <Icon name="time" size="18" />

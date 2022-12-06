@@ -1,3 +1,5 @@
+import simpleDateFormat from './SimpleDateFormat'
+
 export const WEEKDAYS_LONG = [
   'Sunday',
   'Monday',
@@ -37,14 +39,19 @@ export const MONTHS_SHORT = [
   'Dec',
 ]
 
-export const convertStringToTime = (time) => {
+export const convertStringToTime = (time, date) => {
+  let result = null
+  if (!time) return result
+
+  result = date || new Date()
   const splitter = time.split(':')
-  let result = new Date()
   result.setHours(splitter[0])
   result.setMinutes(splitter[1])
   result.setSeconds(splitter[2])
+
   return result
 }
+
 export const formatDate = (
   date,
   { useShortDate = false, hasWeekday = true, hasDate = true, hasMonth = true, hasYear = true } = {}
@@ -74,7 +81,7 @@ export const formatDate = (
 
   const dateTime = {
     weekDay: weekdays[date.getDay()],
-    day: formatDateOrdinal(date.getDate()),
+    day: date.getDate(),
     month: months[date.getMonth()],
     year: date.getFullYear(),
   }
@@ -84,6 +91,12 @@ export const formatDate = (
   }${hasYear ? dateTime.year : ''}`
 }
 
+/**
+ * Format upcoming date time
+ * @param {Date} start the start date
+ * @param {Date} end the end date
+ * @returns {string} a string representing the date time
+ */
 export const formatUpcomingTime = (start, end) => {
   const [startDate, startMonth, startYear, startHour, startMinute] = [
     start.getDate(),
@@ -129,6 +142,11 @@ export const useCSS = (rules) => {
   return result
 }
 
+/**
+ * Add leading zero to time value if needed.
+ * @param {number} time the time value
+ * @returns {string} a string representing the time value
+ */
 export const leadingZero = (time) => {
   return time < 10 ? '0' + time : time
 }
@@ -137,26 +155,61 @@ export const leadingZero = (time) => {
  * Compare two dates. If arguments are illegal, return NaN
  * @param {Date} first the first date to be compared
  * @param {Date} second the second date to be compared
- * @returns a number (-1, 0, 1) represents for less than, equal and greater than, respectively
+ * @returns {number} a number (-1, 0, 1) represents for less than, equal and greater than, respectively
  */
 export const compareDate = (first, second) => {
   if (first == null || second == null) return NaN
 
-  first.setHours(0, 0, 0, 0)
-  second.setHours(0, 0, 0, 0)
+  const tempFirst = new Date(first)
+  const tempSecond = new Date(second)
+  tempFirst.setHours(0, 0, 0, 0)
+  tempSecond.setHours(0, 0, 0, 0)
 
-  if (first.getTime() === second.getTime()) {
+  if (tempFirst.getTime() === tempSecond.getTime()) {
     return 0
-  } else if (first.getTime() < second.getTime()) {
+  } else if (tempFirst.getTime() < tempSecond.getTime()) {
     return -1
   } else {
     return 1
   }
 }
 
+/**
+ * Generate String-type time value.
+ * @param {Date} time object containing time value
+ * @returns formatted time according to the pattern 'HH:MM:SS'
+ */
 export const formatTime = (time) => {
+  if (!time) return '00:00:00'
+
   const hours = leadingZero(convertStringToTime(time).getHours())
   const minutes = leadingZero(convertStringToTime(time).getMinutes())
+  const seconds = leadingZero(convertStringToTime(time).getSeconds())
 
-  return hours + ':' + minutes
+  return `${hours}:${minutes}:${seconds}`
+}
+
+export const formatTimeByPattern = (date, pattern) => {
+  let dateFormatter = new simpleDateFormat()
+  dateFormatter.applyPattern(pattern)
+  return dateFormatter.format(date)
+}
+
+/**
+ * Generate the semester of an event according to the start date
+ * @param {Date} startDate the start date of the event
+ * @returns {string} the generated semester of the event
+ */
+export const generateSemester = (startDate) => {
+  const SEMESTERS = {
+    SP: [1, 2, 3, 4],
+    SU: [5, 6, 7, 8],
+    FA: [9, 10, 11, 12],
+  }
+  for (let semester in SEMESTERS) {
+    if (SEMESTERS[semester].includes(startDate.getMonth() + 1)) {
+      return `${semester}${startDate.getFullYear()}`
+    }
+  }
+  return 'SP2022'
 }

@@ -19,6 +19,7 @@ const StyledFlexbox = styled.div`
   align-items: ${(props) => props.alignItems};
   flex-direction: ${(props) => props.flexDirection};
   gap: ${(props) => parsePixelNumber(props.gap)}px;
+  position: ${(props) => (props.position ? props.position : 'static')};
 `
 
 export { StyledFlexbox }

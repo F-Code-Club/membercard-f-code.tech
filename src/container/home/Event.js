@@ -3,6 +3,8 @@ import { useState } from 'react'
 import Flexbox from './../../components/Flexbox'
 import Wrapper from './../../components/Wrapper'
 
+import { put } from '../../utils/ApiCaller'
+import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import { compareDate, formatUpcomingTime, leadingZero } from '../../utils/helper'
 import theme from './../../theme'
 import {
@@ -11,6 +13,7 @@ import {
   StyledEventIndicator,
   StyledEventStatus,
   StyledEventWrapper,
+  StyledEventSemester,
 } from './style'
 
 export const StatusEnum = {
@@ -18,11 +21,11 @@ export const StatusEnum = {
     indicatorColor: theme.teal,
     statusString: 'On-going',
   },
-  cancel: {
+  cancelled: {
     indicatorColor: theme.red1,
     statusString: 'Canceled',
   },
-  end: {
+  ended: {
     headingColor: theme.slate4,
     indicatorColor: theme.slate4,
     textDecoration: 'line-through',
@@ -44,6 +47,20 @@ const EventHeading = (props) => ComponentWrapper(StyledEventHeading, props)
 const EventDescription = (props) => ComponentWrapper(StyledEventDescription, props)
 const EventStatus = (props) => ComponentWrapper(StyledEventStatus, props)
 
+const onChangeStatus = async (event) => {
+  const token = LocalStorageUtils.getToken()
+  const standardizedStartDate = event.start_date.split('T')[0]
+  const standardizedEndDate = event.end_date.split('T')[0]
+  const response = await put(
+    `/api/events/${event.id}`,
+    { ...event, start_date: standardizedStartDate, end_date: standardizedEndDate },
+    {},
+    { token: token }
+    // eslint-disable-next-line no-console
+  ).catch((err) => console.error(err))
+  return response
+}
+
 export class EventEntity {
   static ONGOING = 'ongoing'
   static UPCOMING = 'upcoming'
@@ -53,20 +70,22 @@ export class EventEntity {
   constructor(data) {
     this.id = data.id
     this.name = data.name
-    this.startDate = new Date(data.start_date)
+    this.start_date = new Date(data.start_date)
     const [startHours, startMinutes] = data.start_time.split(':')
-    this.startDate.setHours(startHours, startMinutes, 0)
-    this.endDate = new Date(data.end_date)
+    this.start_date.setHours(startHours, startMinutes, 0)
+    this.end_date = new Date(data.end_date ? data.end_date : data.start_date)
     const [endHours, endMinutes] = data.end_time.split(':')
-    this.endDate.setHours(endHours, endMinutes, 0)
+    this.end_date.setHours(endHours, endMinutes, 0)
     this.semester = data.semester
     this.location = data.location
     this.description = data.description
 
+    const oldStatus = data.status
     const today = new Date()
-    if (!data.status) {
-      if (compareDate(this.startDate, this.endDate) === 0) {
-        const compare = compareDate(this.startDate, today)
+    if (!(data.status === EventEntity.CANCELLED)) {
+      if (compareDate(this.start_date, this.end_date) === 0) {
+        const compare = compareDate(this.start_date, today)
+
         if (compare === 0) {
           this.status = EventEntity.ONGOING
         } else if (compare > 0) {
@@ -75,8 +94,8 @@ export class EventEntity {
           this.status = EventEntity.ENDED
         }
       } else {
-        const startCompare = compareDate(this.startDate, today)
-        const endCompare = compareDate(this.endDate, today)
+        const startCompare = compareDate(this.start_date, today)
+        const endCompare = compareDate(this.end_date, today)
 
         if (startCompare <= 0 && endCompare >= 0) {
           this.status = EventEntity.ONGOING
@@ -86,6 +105,9 @@ export class EventEntity {
           this.status = EventEntity.ENDED
         }
       }
+      if (this.status !== oldStatus) {
+        onChangeStatus({ ...data, status: this.status })
+      }
     } else {
       this.status = data.status
     }
@@ -94,18 +116,14 @@ export class EventEntity {
 
 const Event = (props) => {
   let { event, onClick } = props
-  let { id, name, startDate, endDate, location, description, status, semester } = new EventEntity(
-    event
-  )
-  endDate = endDate == null ? startDate : endDate
+  let { name, start_date, end_date, location, status, semester } = new EventEntity(event)
 
-  const [eventId, setEventId] = useState(id)
-  const [eventName, setEventName] = useState(name)
-  const [eventStartDate, setEventStartDate] = useState(new Date(startDate.getTime()))
-  const [eventEndDate, setEventEndDate] = useState(new Date(endDate.getTime()))
-  const [eventStatus, setEventStatus] = useState(status)
-  const [eventLocation, setEventLocation] = useState(location)
-  const [eventSemester, setEventSemester] = useState(semester)
+  const [eventName] = useState(name)
+  const [eventStartDate] = useState(new Date(start_date))
+  const [eventEndDate] = useState(new Date(end_date))
+  const [eventStatus] = useState(status)
+  const [eventLocation] = useState(location)
+  const [eventSemester] = useState(semester)
 
   return (
     <Wrapper onClick={onClick}>
@@ -121,7 +139,9 @@ const Event = (props) => {
                 color={StatusEnum[eventStatus].headingColor}
                 textDecoration={StatusEnum[eventStatus].textDecoration}
               >
-                {eventName}
+                <>
+                  {eventName} <StyledEventSemester>{`(${eventSemester})`}</StyledEventSemester>
+                </>
               </EventHeading>
               <EventStatus
                 textDecoration={StatusEnum[eventStatus].textDecoration}
@@ -144,9 +164,9 @@ const Event = (props) => {
               <EventDescription color={StatusEnum[eventStatus].headingColor}>
                 <strong>Location:</strong> {eventLocation}
               </EventDescription>
-              <EventDescription color={StatusEnum[eventStatus].headingColor}>
+              {/* <EventDescription color={StatusEnum[eventStatus].headingColor}>
                 <strong>Semester:</strong> {eventSemester}
-              </EventDescription>
+              </EventDescription> */}
             </Flexbox>
           </Flexbox>
         </Flexbox>
