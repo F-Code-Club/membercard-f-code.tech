@@ -8,10 +8,16 @@ import SubModal from './../../../../components/Modal/SubModal/index'
 // import { SubHeading } from './../style'
 
 const StatusUpdater = (props) => {
-  const { user, show, onClose } = props
-  // console.log(user)
+  const { user, show, onClose, eventId } = props
+
   return (
-    <SubModal title={user.name} subTitle={user.member_id} show={show} onClose={onClose}>
+    <SubModal
+      title={user.name}
+      subTitle={user.member_id}
+      show={show}
+      eventId={eventId}
+      onClose={onClose}
+    >
       <Wrapper>
         <SelectionInput></SelectionInput>
       </Wrapper>

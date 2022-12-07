@@ -4,7 +4,8 @@ import styled from 'styled-components'
 
 import theme from '../../theme'
 import BaseInputBox from './InputBox'
-import Label from './Label'
+
+// import Label from './Label'
 
 const StyledTextInput = styled.input.attrs({
   type: 'text',
@@ -14,8 +15,9 @@ const StyledTextInput = styled.input.attrs({
   font-weight: inherit;
   border: none;
   outline: none;
+  width: 280px;
   background-color: transparent;
-  width: 100%;
+
   white-space: wrap;
   color: ${theme.low_contrast};
 
@@ -27,7 +29,7 @@ const StyledTextInput = styled.input.attrs({
   }
 `
 
-const TextInput = (props) => {
+const TextInputVer2 = (props) => {
   // States
   const { title, placeholder, value, onChange, ...rest } = props
   const [isFocused, setFocused] = useState(false)
@@ -44,9 +46,9 @@ const TextInput = (props) => {
     onChange(data)
   }
 
+  // <Label title={title} />
   return (
     <div {...rest}>
-      <Label title={title} />
       <BaseInputBox isFocused={isFocused}>
         <StyledTextInput
           onFocus={onFocus}
@@ -62,4 +64,4 @@ const TextInput = (props) => {
   )
 }
 
-export default TextInput
+export default TextInputVer2

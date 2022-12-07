@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import Select, { components } from 'react-select'
 import styled from 'styled-components'
 
+import { UpdateButton } from '../Button'
+import Flexbox from '../Flexbox'
 import Wrapper from '../Wrapper'
 import theme from './../../theme'
+import TextInputVer2 from './TextInputVe2'
 
 const StyledSelectionBox = styled(Select)``
 
@@ -36,18 +39,43 @@ const SelectionInput = ({}) => {
       label: 'Not yet',
     },
   ]
+  const [bonus, setBonus] = useState(0)
+  const handleBonusChange = (newBonus) => {
+    console.log(newBonus)
+    setBonus(newBonus)
+  }
+  const [statusUpdate, setStatusUpdate] = useState('')
+  const handleStatusChange = (newStatus) => {
+    setStatusUpdate(newStatus)
+  }
   return (
     <Wrapper>
-      <StyledSelectionBox
-        options={options}
-        components={{ Control: StyledControl, IndicatorSeparator: styledIndicatorSeparator }}
-        theme={(curTheme) => {
-          return {
-            ...curTheme,
-            borderRadius: 10,
-          }
-        }}
-      />
+      <Flexbox flexDirection="column" alignItems="flex-end">
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <StyledSelectionBox
+            options={options}
+            onChange={(e) => {
+              handleStatusChange(e.label)
+            }}
+            components={{ Control: StyledControl, IndicatorSeparator: styledIndicatorSeparator }}
+            theme={(curTheme) => {
+              return {
+                ...curTheme,
+                borderRadius: 10,
+              }
+            }}
+          />
+          <TextInputVer2 placeholder="Bonus or Minus" onChange={handleBonusChange} />
+        </div>
+        <UpdateButton onClick={() => console.log(statusUpdate)}>Update</UpdateButton>
+      </Flexbox>
     </Wrapper>
   )
 }

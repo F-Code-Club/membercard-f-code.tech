@@ -1,9 +1,8 @@
 import React from 'react'
 
-import { GreenButton } from '../../../components/Button'
-
+import { put } from '../../../utils/ApiCaller'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
-import productApi from '../../../utils/productApi'
+// import productApi from '../../../utils/productApi'
 // import { StyledEventIndicator } from '../../../container/home/style'
 import { CloseButton } from '../../Button'
 import {
@@ -17,12 +16,16 @@ import Wrapper from './../../Wrapper/index'
 import { SubHeading as SubTitle } from './style'
 
 const SubModal = (props) => {
-  const UpdateAttend = () => {
+  const { eventId, subTitle } = props
+  const UpdateAttend = async () => {
     const token = LocalStorageUtils.getToken()
-    const userId = LocalStorageUtils.getJWTUser().id
-    console.log(userId)
-    productApi
-      .setAttendance(userId, 1653496208366, token)
+    console.log(token)
+    const response = await put(
+      '/api/check-attendance',
+      { member_id: subTitle, event_id: eventId, status: 'absent' },
+      {},
+      { token: token }
+    )
       .then((res) => {
         console.log(res)
       })
@@ -41,11 +44,11 @@ const SubModal = (props) => {
             <SubTitle>{props.subTitle}</SubTitle>
           </StyledModalHeader>
           <StyledModalBody>{props.children}</StyledModalBody>
-          <GreenButton onClick={UpdateAttend}>Update</GreenButton>
         </StyledModalContent>
       </Wrapper>
     </StyledModal>
   )
+  //          <UpdateButton onClick={UpdateAttend}>Update</UpdateButton>
 }
 
 export default SubModal

@@ -113,6 +113,7 @@ const AttendanceStatusModal = (props) => {
         ))}
       </Flexbox>
       <StatusUpdater
+        eventId={eventId}
         show={statusUpdater}
         user={currentUser}
         onClose={() => toggleStatusUpdater(false)}
