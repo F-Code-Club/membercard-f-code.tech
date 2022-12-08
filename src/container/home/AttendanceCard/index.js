@@ -20,7 +20,9 @@ const AttendanceCard = (props) => {
   window.addEventListener('error', function (error) {
     if (cardReader && cardReader.status) {
       console.error(error)
-      cardReader.setStatus(error.message + ' (Your browser may not support this feature.)')
+      setCardReader({
+        log: error.message + ' (Your browser may not support this feature.)',
+      })
       error.preventDefault()
     }
   })

@@ -15,7 +15,7 @@ const StyledTextInput = styled.input.attrs({
   font-weight: inherit;
   border: none;
   outline: none;
-  width: 280px;
+  width: 100%;
   background-color: transparent;
 
   white-space: wrap;

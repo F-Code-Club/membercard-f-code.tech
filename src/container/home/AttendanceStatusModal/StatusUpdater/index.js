@@ -19,7 +19,7 @@ const StatusUpdater = (props) => {
       onClose={onClose}
     >
       <Wrapper>
-        <SelectionInput></SelectionInput>
+        <SelectionInput eventId={eventId} memberId={user.member_id} onClose={onClose} />
       </Wrapper>
     </SubModal>
   )

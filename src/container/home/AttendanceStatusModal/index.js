@@ -30,6 +30,7 @@ const MemberStatus = (props) => {
 const AttendanceStatusModal = (props) => {
   const { show, onClose, eventId } = props
   const token = LocalStorageUtils.getItem('token')
+  const [statusChange, setStatusUpdate] = useState()
   const [data, setData] = useState([
     {
       name: 'Nguyen Nghiax',
@@ -61,11 +62,13 @@ const AttendanceStatusModal = (props) => {
         setData([{ name: 'Unknown error', member_id: 'Unknown error', status: 'not yet' }])
         return
       }
+
       setData(result)
     }
 
     getAllMembers()
-  }, [eventId, token])
+  }, [token, eventId])
+
   const enumStatus = {
     attended: {
       color: theme.cyan2,
@@ -97,20 +100,21 @@ const AttendanceStatusModal = (props) => {
   })
   const openStatusUpdater = (member) => {
     setCurrentUser(member)
-    console.log(member)
     toggleStatusUpdater(true)
   }
   return (
     <Modal show={show} title="Attendance Status" onClose={onClose}>
       <Flexbox justifyContent="center" flexDirection="column">
-        {data.map((member, index) => (
-          <MemberStatus
-            key={index + 'member'}
-            data={member}
-            status={enumStatus[member.status]}
-            onClick={() => openStatusUpdater(member)}
-          ></MemberStatus>
-        ))}
+        {data.map((member, index) => {
+          return (
+            <MemberStatus
+              key={index + 'member'}
+              data={member}
+              status={enumStatus[member.status]}
+              onClick={() => openStatusUpdater(member)}
+            ></MemberStatus>
+          )
+        })}
       </Flexbox>
       <StatusUpdater
         eventId={eventId}
