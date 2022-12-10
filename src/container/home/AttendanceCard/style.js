@@ -19,3 +19,38 @@ export const StyledCardTitle = styled.p`
   letter-spacing: 0em;
   text-align: center;
 `
+export const StyledModalTitle = styled.h4`
+  font-size: 2.35rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+  @media (max-width: 375px) {
+    font-size: 1.5rem;
+  }
+`
+export const SubHeading = styled.h4`
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: ${(props) => props.fontSize || 1.2}rem;
+  color: ${theme.low_contrast};
+  line-height: 17px;
+`
+export const StyledStatusTitle = styled.div`
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 36px;
+  // text-align: center;
+  color: ${theme.cyan1};
+`
+export const StyledStatusWarning = styled.div`
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 36px;
+  // text-align: center;
+  color: ${theme.yellow1};
+`

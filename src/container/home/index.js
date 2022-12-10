@@ -6,11 +6,11 @@ import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
 import FCodeLogo from '../../asset/logo/F-Code.png'
+// import { UserContext } from '../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import { compareDate } from '../../utils/helper'
 // import Avatar from './../../asset/image/Avatar.png'
 import { get, put } from './../../utils/ApiCaller'
-// import productApi from './../../utils/productApi'
 import CreateEventModal from './CreateEventModal'
 import EditEventModal from './EditEventModal'
 import Event, { StatusEnum } from './Event'
@@ -28,7 +28,6 @@ import {
 
 const Home = () => {
   const token = LocalStorageUtils.getItem('token')
-
   const [showCreateModal, toggleCreateModal] = useState(false)
   const [showViewModal, toggleViewModal] = useState({
     show: false,
@@ -53,7 +52,7 @@ const Home = () => {
     if (!currentUser || !currentAvatar) {
       fetchUser()
     }
-  }, [currentUser, currentAvatar])
+  }, [currentUser, currentAvatar, token])
 
   const navigate = useNavigate()
   // useEffect(() => {
@@ -81,6 +80,7 @@ const Home = () => {
             navigate('/')
             return []
           }
+
           return response.data.data
         })
         .catch((e) => {

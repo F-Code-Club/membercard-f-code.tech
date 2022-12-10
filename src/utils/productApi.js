@@ -38,17 +38,25 @@ class productApi {
   }
 
   //attendance apis
-  setAttendance(userId, eventId, token) {
-    return post(
-      '/api/check-attendance',
-      { memeber_id: userId, event_id: eventId },
+  // setAttendance(userId, eventId, token) {
+  //   return post(
+  //     '/api/check-attendance',
+  //     { memeber_id: userId, event_id: eventId },
+  //     {},
+  //     { token: token }
+  //   ).catch((err) => console.log(err))
+  // }
+  getAttendance(userId, eventId, token) {
+    return get(
+      'api/check-attendance?member_id=' + userId + '&event_id=' + eventId,
       {},
       { token: token }
     ).catch((err) => console.log(err))
   }
-  getAttendance(userId, eventId, token) {
-    return get(
-      'api/check-attendance?member_id=' + userId + '&event_id=' + eventId,
+  setAttendance(memberId, eventId, status, token) {
+    return post(
+      '/api/check-attendance',
+      { member_id: memberId, event_id: eventId, status: status },
       {},
       { token: token }
     ).catch((err) => console.log(err))
