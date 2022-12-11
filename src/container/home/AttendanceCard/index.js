@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Button } from '../../../components/Button'
 import Divider from '../../../components/Divider'
 import Modal from '../../../components/Modal'
+// import { toastWarning } from '../../../components/ToastNotification'
 import Wrapper from '../../../components/Wrapper'
 import Flexbox from './../../../components/Flexbox'
 import TextArea from './../../../components/Input/TextArea'
@@ -11,9 +12,11 @@ import { UserContext } from '../../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import { leadingZero } from '../../../utils/helper'
 import { compareDate } from '../../../utils/helper'
+import { formatTimeLate } from '../../../utils/helper'
 import productApi from '../../../utils/productApi'
 import CardSvg from './../../../asset/image/Card.svg'
 import AlertAttendance from './AlertAttendance'
+import ErrorAttendance from './ErrorAttend'
 // import { cardReader } from './../../../utils/CardReader'
 import { StyledCardTitle, StyledImage } from './style'
 
@@ -32,13 +35,17 @@ const AttendanceCard = (props) => {
     show: false,
     status: '',
   })
+  const [errors, setErrors] = useState({ show: false, errors: '', status: '' })
   // const openViewList = () => {
   //   toggleListAttendance({
   //     show: true,
   //   })
   // }
   const closeAlertModal = () => {
-    setHashId({ log: '', status: '' })
+    setErrors({
+      show: false,
+      errors: '',
+    })
     setAlertAttend({
       show: false,
       status: '',
@@ -127,42 +134,42 @@ const AttendanceCard = (props) => {
       new Date().getMinutes()
     )}:00`
 
-    const TimeLate = `${leadingZero(new Date().getHours())}:${leadingZero(
-      new Date().getMinutes() + 5
-    )}:00`
-    // split the time
-    // convert timestamp
-    console.log('line 140: ', TimeLate)
-    console.log('line 141: ', TimeNow)
-    console.log('line 142: ', event.start_time)
-    console.log('line 143: ', event.start_time <= TimeNow)
+    const TimeLate = formatTimeLate(event.start_time)
     if (user.id === Id) {
-      const result = await productApi.setAttendance(user.id, event.id, 'attended', token)
-      if (result.data.status === 200 && compareDate(new Date(event.start_date), new Date()) === 0) {
+      if (compareDate(new Date(event.start_date), new Date()) === 0) {
         console.log('correct date')
         if (event.start_time <= TimeNow && TimeNow <= TimeLate) {
           console.log('present')
+          const result = await productApi.setAttendance(user.id, event.id, 'attended', token)
+          if (result.data.status === 400) {
+            setErrors({ show: true, errors: result.data.message, status: 'warning' })
+            return {
+              show: false,
+              status: '',
+            }
+          }
           return {
             show: true,
             status: 'present',
           }
-        }
-        if (event.start_time <= TimeNow && TimeNow <= TimeLate) {
+        } else {
+          const result = await productApi.setAttendance(user.id, event.id, 'late', token)
+
+          if (result.data.status === 400) {
+            setErrors({ show: true, errors: result.data.message, status: 'warning' })
+            return {
+              show: false,
+              status: '',
+            }
+          }
           return { show: true, status: 'late' }
         }
       }
-      if (result.data.status === 400) {
-        console.log(result.data.message)
-      }
     } else {
-      console.log(`user with ${cardReader.log} is not in the database`)
+      console.log(`user with ${Id} is not in the database`)
     }
-
     return null
   }
-  // if (alertAttend.status === 'present' || alertAttend.status === 'late') {
-  //   setCardReader({ isLoading: false })
-  // }
 
   return (
     <Modal show={data.show} title="Check Attendance" onClose={onClose}>
@@ -188,6 +195,7 @@ const AttendanceCard = (props) => {
         onClose={closeAlertModal}
         status={alertAttend.status}
       />
+      <ErrorAttendance user={user} errors={errors} onClose={closeAlertModal} />
     </Modal>
   )
 }

@@ -30,7 +30,7 @@ const MemberStatus = (props) => {
 const AttendanceStatusModal = (props) => {
   const { show, onClose, eventId } = props
   const token = LocalStorageUtils.getItem('token')
-  const [statusChange, setStatusUpdate] = useState()
+
   const [data, setData] = useState([
     {
       name: 'Nguyen Nghiax',
@@ -63,7 +63,7 @@ const AttendanceStatusModal = (props) => {
         return
       }
 
-      setData(result)
+      await setData(result)
     }
 
     getAllMembers()

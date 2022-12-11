@@ -36,6 +36,17 @@ export const SubHeading = styled.h4`
   color: ${theme.low_contrast};
   line-height: 17px;
 `
+export const SubHeading2 = styled(SubHeading)`
+  font-family: 'Inter';
+  margin-top: 10px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1rem;
+  color: ${theme.low_contrast};
+  line-height: 17px;
+  text-align: center;
+`
+
 export const StyledStatusTitle = styled.div`
   font-family: 'Inter';
   font-style: normal;
@@ -53,4 +64,13 @@ export const StyledStatusWarning = styled.div`
   line-height: 36px;
   // text-align: center;
   color: ${theme.yellow1};
+`
+export const StyledStatusError = styled.div`
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 36px;
+  // text-align: center;
+  color: ${theme.red1};
 `

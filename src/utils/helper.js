@@ -188,6 +188,15 @@ export const formatTime = (time) => {
 
   return `${hours}:${minutes}:${seconds}`
 }
+export const formatTimeLate = (time) => {
+  if (!time) return '00:00:00'
+
+  const hours = leadingZero(convertStringToTime(time).getHours())
+  const minutes = leadingZero(convertStringToTime(time).getMinutes() + 5)
+  const seconds = leadingZero(convertStringToTime(time).getSeconds())
+
+  return `${hours}:${minutes}:${seconds}`
+}
 
 export const formatTimeByPattern = (date, pattern) => {
   let dateFormatter = new simpleDateFormat()
