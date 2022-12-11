@@ -6,7 +6,6 @@ import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
 import FCodeLogo from '../../asset/logo/F-Code.png'
-// import { UserContext } from '../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import { compareDate } from '../../utils/helper'
 // import Avatar from './../../asset/image/Avatar.png'

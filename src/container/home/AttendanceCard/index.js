@@ -18,13 +18,14 @@ import AlertAttendance from './AlertAttendance'
 import { StyledCardTitle, StyledImage } from './style'
 
 const AttendanceCard = (props) => {
-  const { hashId, setHashId, user, eventId, setUser } = useContext(UserContext)
+  const { hashId, setHashId, eventId, user, setUser } = useContext(UserContext)
   const token = LocalStorageUtils.getToken()
   //, openViewList
-  const { data, onClose, openViewList } = props
+  const { data, onClose, openViewList, event } = props
   const [cardReader, setCardReader] = useState({
-    log: 'https://member.f-code.tech/member?id=1297048744daa025a0e0f5a6a3256164',
+    log: '',
     status: '',
+    isLoading: false,
   })
   //funct handlers
   const [alertAttend, setAlertAttend] = useState({
@@ -41,6 +42,7 @@ const AttendanceCard = (props) => {
     setAlertAttend({
       show: false,
       status: '',
+      isLoading: false,
     })
   }
   // 1297048744daa025a0e0f5a6a3256164
@@ -54,19 +56,28 @@ const AttendanceCard = (props) => {
     }
   })
   const onScan = async () => {
-    setCardReader({
-      log: 'Start Scanning',
-      status: null,
-    })
+    // setCardReader({
+    //   log: 'Start Scanning',
+    //   status: null,
+    //   isLoading: false,
+    // })
 
     console.log('Scanning')
     const arrayBufferToString = (buffer, encoding) => {
       var blob = new Blob([buffer], { type: 'text/plain' })
       var reader = new FileReader()
-      reader.onload = function (evt) {
+      reader.onload = async function (evt) {
         const Id = evt.target.result.split('=')
-        console.log(Id[1])
-        setCardReader({ log: `${Id[1]}`, status: '' })
+        await fetchUserByID(Id[1]).then(async (user) => {
+          setUser(user)
+          await CheckAttendance(user, Id[1]).then((res) => {
+            if (res) {
+              setAlertAttend(res)
+            }
+          })
+        })
+
+        setCardReader({ log: `${Id[1]}`, status: '', isLoading: true })
       }
       reader.readAsText(blob, encoding)
     }
@@ -83,46 +94,10 @@ const AttendanceCard = (props) => {
         arrayBufferToString(message.records[0].data.buffer, 'UTF-8')
       })
     } catch (error) {
-      setCardReader({ log: 'Argh! ' + error, status: error.message })
+      setCardReader({ log: 'Argh! ' + error, status: error.message, isLoading: false })
     }
   }
 
-  const CheckAttendance = async () => {
-    const TimeNow = `${leadingZero(new Date().getHours())}:${leadingZero(
-      new Date().getMinutes()
-    )}:00`
-
-    const TimeLate = `${leadingZero(new Date().getHours())}:${leadingZero(
-      new Date().getMinutes() + 5
-    )}:00`
-
-    if (user.id === hashId.log) {
-      const result = await productApi.setAttendance(user.member_id, eventId.id, 'attended', token)
-      if (
-        result.data.status === 200 &&
-        compareDate(new Date(eventId.start_date), new Date()) === 0
-      ) {
-        console.log('correct date')
-
-        if (eventId.start_time >= TimeNow && eventId.start_time <= TimeLate) {
-          setAlertAttend({ show: true, status: 'present' })
-          console.log('present')
-        } else {
-          setAlertAttend({ show: true, status: 'late' })
-          console.log('you are late')
-        }
-      }
-      if (result.data.status === 400) {
-        console.log(result.data.message)
-      }
-    } else {
-      console.log(`user with ${hashId.log} is not in the database`)
-    }
-  }
-  const fethcUserByID = async () => {
-    const userID = await productApi.getUser(hashId.log, token)
-    await setUser(userID.data.data)
-  }
   useEffect(() => {
     if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)) {
       // Let's log a warning if the sample is not supposed to execute on this
@@ -136,11 +111,59 @@ const AttendanceCard = (props) => {
     }
 
     onScan()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  fethcUserByID()
-  CheckAttendance()
-  setHashId(cardReader)
-  console.log(hashId)
+
+  const fetchUserByID = async (cardReader) => {
+    return await productApi.getUser(cardReader, token).then((res) => {
+      console.log('line 119')
+      return res.data.data
+    })
+    // console.log('line 117: ', userID.data.data)
+  }
+  const CheckAttendance = async (user, Id) => {
+    console.log('check run')
+    const TimeNow = `${leadingZero(new Date().getHours())}:${leadingZero(
+      new Date().getMinutes()
+    )}:00`
+
+    const TimeLate = `${leadingZero(new Date().getHours())}:${leadingZero(
+      new Date().getMinutes() + 5
+    )}:00`
+    // split the time
+    // convert timestamp
+    console.log('line 140: ', TimeLate)
+    console.log('line 141: ', TimeNow)
+    console.log('line 142: ', event.start_time)
+    console.log('line 143: ', event.start_time <= TimeNow)
+    if (user.id === Id) {
+      const result = await productApi.setAttendance(user.id, event.id, 'attended', token)
+      if (result.data.status === 200 && compareDate(new Date(event.start_date), new Date()) === 0) {
+        console.log('correct date')
+        if (event.start_time <= TimeNow && TimeNow <= TimeLate) {
+          console.log('present')
+          return {
+            show: true,
+            status: 'present',
+          }
+        }
+        if (event.start_time <= TimeNow && TimeNow <= TimeLate) {
+          return { show: true, status: 'late' }
+        }
+      }
+      if (result.data.status === 400) {
+        console.log(result.data.message)
+      }
+    } else {
+      console.log(`user with ${cardReader.log} is not in the database`)
+    }
+
+    return null
+  }
+  // if (alertAttend.status === 'present' || alertAttend.status === 'late') {
+  //   setCardReader({ isLoading: false })
+  // }
+
   return (
     <Modal show={data.show} title="Check Attendance" onClose={onClose}>
       <Wrapper minHeight="450px">

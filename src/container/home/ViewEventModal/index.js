@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { BlueButton, Button, GreenButton, RedButton } from '../../../components/Button'
 import Flexbox from '../../../components/Flexbox'
@@ -7,13 +7,11 @@ import Divider from './../../../components/Divider'
 import TextArea from './../../../components/Input/TextArea'
 import Modal from './../../../components/Modal'
 
-import { UserContext } from '../../../utils/IdMemberHashContext/user.context'
 import AttendanceCard from '../AttendanceCard'
 import { formatDate, formatTime } from './../../../utils/helper'
 import AttendanceStatusModal from './../AttendanceStatusModal/index'
 
 const ViewEvent = (props) => {
-  const { setEventId } = useContext(UserContext)
   // States
   const { data, onClose, onToggleEdit } = props
   const { show, event, status } = data
@@ -58,8 +56,10 @@ const ViewEvent = (props) => {
     setCurrent(tmp)
   }
   useEffect(() => {
+    console.log('test on event change')
     onEventChange(event)
   }, [event])
+
   const openAttendanceCard = () => {
     toggleAttendanceCard({
       show: true,
@@ -81,7 +81,6 @@ const ViewEvent = (props) => {
       show: false,
     })
   }
-  setEventId(event)
 
   return (
     <Modal show={show} title={event.name} onClose={onClose} indicator={status}>
@@ -143,6 +142,7 @@ const ViewEvent = (props) => {
         <Button onClick={() => onToggleEdit(current)}>Edit Event</Button>
       </Flexbox>
       <AttendanceCard
+        event={event}
         data={showAttendanceCard}
         openViewList={openViewList}
         onClose={closeAttendanceCard}

@@ -19,7 +19,7 @@ import {
 
 const AlertAttendance = (props) => {
   const { user, show, onClose, status } = props
-
+  console.log(status)
   return (
     <AttendanceModalAlert show={show} onClose={onClose}>
       {user && (
