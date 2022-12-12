@@ -8,12 +8,14 @@ import Wrapper from '../../../components/Wrapper'
 import Flexbox from './../../../components/Flexbox'
 import TextArea from './../../../components/Input/TextArea'
 
+import { put } from '../../../utils/ApiCaller'
 import { UserContext } from '../../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import { leadingZero } from '../../../utils/helper'
 import { compareDate } from '../../../utils/helper'
 import { formatTimeLate } from '../../../utils/helper'
 import productApi from '../../../utils/productApi'
+// import { getAllMembers } from '../AttendanceStatusModal'
 import CardSvg from './../../../asset/image/Card.svg'
 import AlertAttendance from './AlertAttendance'
 import ErrorAttendance from './ErrorAttend'
@@ -21,10 +23,11 @@ import ErrorAttendance from './ErrorAttend'
 import { StyledCardTitle, StyledImage } from './style'
 
 const AttendanceCard = (props) => {
-  const { hashId, setHashId, eventId, user, setUser } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
+
   const token = LocalStorageUtils.getToken()
   //, openViewList
-  const { data, onClose, openViewList, event } = props
+  const { data, onClose, openViewList, event, getAllMembers } = props
   const [cardReader, setCardReader] = useState({
     log: '',
     status: '',
@@ -79,6 +82,13 @@ const AttendanceCard = (props) => {
           setUser(user)
           await CheckAttendance(user, Id[1]).then((res) => {
             if (res) {
+              const resUpdatePoints = put(
+                '/api/user/' + `${Id[1]}` + '/change-point',
+                { points: 10 },
+                {},
+                { token: token }
+              ).catch((err) => console.log(err))
+              getAllMembers()
               setAlertAttend(res)
             }
           })
@@ -123,10 +133,8 @@ const AttendanceCard = (props) => {
 
   const fetchUserByID = async (cardReader) => {
     return await productApi.getUser(cardReader, token).then((res) => {
-      console.log('line 119')
       return res.data.data
     })
-    // console.log('line 117: ', userID.data.data)
   }
   const CheckAttendance = async (user, Id) => {
     console.log('check run')

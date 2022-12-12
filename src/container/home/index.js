@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 
 import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
@@ -8,6 +8,7 @@ import Flexbox from './../../components/Flexbox'
 import FCodeLogo from '../../asset/logo/F-Code.png'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import { compareDate } from '../../utils/helper'
+import productApi from '../../utils/productApi'
 // import Avatar from './../../asset/image/Avatar.png'
 import { get, put } from './../../utils/ApiCaller'
 import CreateEventModal from './CreateEventModal'
@@ -42,32 +43,33 @@ const Home = () => {
   const [currentUser, setCurrentUser] = useState(null)
   const [currentAvatar, setCurrentAvatar] = useState(null)
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const result = await LocalStorageUtils.getUser()
-      setCurrentUser(result.user)
-      setCurrentAvatar(result.avatar)
-    }
-    if (!currentUser || !currentAvatar) {
-      fetchUser()
-    }
-  }, [currentUser, currentAvatar, token])
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const result = await LocalStorageUtils.getUser()
+  //     console.log(result)
+  //     setCurrentUser(result.user)
+  //     setCurrentAvatar(result.avatar)
+  //   }
+  //   if (!currentUser || !currentAvatar) {
+  //     fetchUser()
+  //   }
+  // }, [currentUser, currentAvatar, token])
 
   const navigate = useNavigate()
-  // useEffect(() => {
-  //   const token = LocalStorageUtils.getItem('token')
-  //   const userId = LocalStorageUtils.getJWTUser().id
-  //   const getData = async () => {
-  //     const response = await productApi.getUser(userId, token)
-  //     console.log('Response', response)
-  //     setCurrentUser(response?.data.data)
-  //     if (response?.status === 403) {
-  //       LocalStorageUtils.removeItem('token')
-  //       return <Navigate to="/login" replace />
-  //     }
-  //   }
-  //   getData()
-  // }, [])
+  useEffect(() => {
+    const token = LocalStorageUtils.getItem('token')
+    const userId = LocalStorageUtils.getJWTUser().id
+    const getData = async () => {
+      const response = await productApi.getUser(userId, token)
+
+      setCurrentUser(response?.data.data)
+      if (response?.status === 403) {
+        LocalStorageUtils.removeItem('token')
+        return <Navigate to="/login" replace />
+      }
+    }
+    getData()
+  }, [])
 
   useEffect(() => {
     const token = LocalStorageUtils.getItem('token')
@@ -99,6 +101,7 @@ const Home = () => {
           return startDateCompare
         }
       }
+
       setEvents(
         eventsReceiver
           .filter((item) => compareDate(new Date(item.start_date), new Date()) === 0)
@@ -155,7 +158,7 @@ const Home = () => {
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between" alignItems="center">
         <HeaderBrand src={FCodeLogo} size={120} />
-        <ProfileInformation user={currentUser} avatar={currentAvatar} onLogout={onLogout} />
+        <ProfileInformation user={currentUser} onLogout={onLogout} />
       </HeaderWrapper>
       <ContentWrapper>
         <Content>

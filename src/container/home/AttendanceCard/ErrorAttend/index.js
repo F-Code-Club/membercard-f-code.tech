@@ -11,7 +11,7 @@ import { StyledStatusWarning, SubHeading2, StyledStatusError } from '../style'
 
 const ErrorAttendance = (props) => {
   const { user, errors, onClose } = props
-  console.log('ErrorAttendance: ', errors)
+
   return (
     <AttendanceModalAlert show={errors.show} onClose={onClose}>
       {user && (

@@ -21,19 +21,30 @@ export const UserContext = createContext({
   setHashId: () => null,
   setUser: () => null,
   setEventId: () => null,
+  setGetAllMembers: () => null,
   hashId: null,
   user: null,
   eventId: null,
   isLoading: false,
+  getAllMembers: null,
 })
 
 export const UserProvider = ({ children }) => {
   const [hashId, setHashId] = useState(null)
   const [user, setUser] = useState(null)
-  const [eventId, setEventId] = useState(null)
+  const [getAllMembers, setGetAllMembers] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const value = { hashId, setHashId, user, setUser, eventId, setEventId, isLoading, setIsLoading }
+  const value = {
+    hashId,
+    setHashId,
+    user,
+    setUser,
+    getAllMembers,
+    setGetAllMembers,
+    isLoading,
+    setIsLoading,
+  }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

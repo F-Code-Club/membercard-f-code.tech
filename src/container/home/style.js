@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import Buffer from 'buffer'
 import styled from 'styled-components'
 
 import { BaseButton } from '../../components/Button/BaseButton'
@@ -7,9 +8,9 @@ import Flexbox from '../../components/Flexbox'
 import Wrapper from '../../components/Wrapper'
 import Icon from './../../components/Icon'
 
-// import AvaUnknown from '../../asset/noAvaUnknow/Avaunknow.jpg'
+import AvaUnknown from '../../asset/noAvaUnknow/Avaunknow.jpg'
 import { leadingZero, WEEKDAYS_SHORT, MONTHS_SHORT, formatDate, useCSS } from '../../utils/helper'
-import Profile from './../../asset/image/Security_Consultant.png'
+// import Profile from './../../asset/image/Security_Consultant.png'
 import theme from './../../theme'
 
 const StyledCreateButton = styled(BaseButton)`
@@ -131,7 +132,7 @@ const StyledProfileMenu = styled.div`
 `
 
 export const ProfileInformation = (props) => {
-  let { user, avatar, onLogout } = props
+  let { user, onLogout } = props
 
   if (user === null || user === undefined || user.first_name === undefined) {
     user = {
@@ -140,8 +141,21 @@ export const ProfileInformation = (props) => {
       member_id: 'N/A',
     }
   }
-
-  if (avatar === null || avatar === undefined) avatar = Profile
+  // console.log(user.avatar)
+  // if (avatar === null || avatar === undefined) avatar = Profile
+  const convertAvatar = (avatar) => {
+    // if (!avatar || avatar.length === 0) {
+    //   return Profile
+    // }
+    try {
+      let buffer = Buffer.Buffer
+      let result = buffer.from(avatar || []).toString('base64')
+      return `data:image/png;base64,${result}`
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+  }
 
   const [isMenuHidden, setIsMenuHidden] = useState(true)
 
@@ -151,7 +165,11 @@ export const ProfileInformation = (props) => {
         <StyledProfileName>Hi, {`${user?.first_name} ${user?.last_name}`}</StyledProfileName>
         <StyledProfileRollNumber>{user?.member_id}</StyledProfileRollNumber>
       </Flexbox>
-      <ProfileImage src={avatar} size={50} onClick={() => setIsMenuHidden((prev) => !prev)} />
+      <ProfileImage
+        src={user.avatar ? convertAvatar(user.avatar) : AvaUnknown}
+        size={50}
+        onClick={() => setIsMenuHidden((prev) => !prev)}
+      />
       <StyledProfileMenu isHidden={isMenuHidden}>
         <BaseButton onClick={onLogout}>Log out</BaseButton>
       </StyledProfileMenu>

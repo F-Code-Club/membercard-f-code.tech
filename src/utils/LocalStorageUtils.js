@@ -81,6 +81,7 @@ class LocalStorageUtils {
         if (token) {
           try {
             const { memberId } = jwt_decode(token)
+
             const fetchedUser = await get(`/api/user/${memberId}`, {}, { token: token }).then(
               (res) => res.data.data
             )

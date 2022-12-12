@@ -19,7 +19,7 @@ const SubModal = (props) => {
   const { eventId, subTitle } = props
   const UpdateAttend = async () => {
     const token = LocalStorageUtils.getToken()
-    console.log(token)
+
     const response = await put(
       '/api/check-attendance',
       { member_id: subTitle, event_id: eventId, status: 'absent' },

@@ -7,6 +7,8 @@ import Divider from './../../../components/Divider'
 import TextArea from './../../../components/Input/TextArea'
 import Modal from './../../../components/Modal'
 
+import { get } from '../../../utils/ApiCaller'
+import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import AttendanceCard from '../AttendanceCard'
 import { formatDate, formatTime } from './../../../utils/helper'
 import AttendanceStatusModal from './../AttendanceStatusModal/index'
@@ -15,6 +17,7 @@ const ViewEvent = (props) => {
   // States
   const { data, onClose, onToggleEdit } = props
   const { show, event, status } = data
+
   if (event.end_date === null) event.end_date = event.start_date // If the end date is null, automatically set it to the start date
   const [current, setCurrent] = useState({
     id: event.id,
@@ -35,7 +38,13 @@ const ViewEvent = (props) => {
   const [showListAttendance, toggleListAttendance] = useState({
     show: false,
   })
-
+  const [dataMember, setDataMember] = useState([
+    {
+      name: 'Nguyen Nghiax',
+      member_id: 'SE123213',
+      status: 'not yet',
+    },
+  ])
   // Change handlers
   const onEventChange = (event) => {
     if (!event) {
@@ -81,7 +90,33 @@ const ViewEvent = (props) => {
       show: false,
     })
   }
-
+  //get all memeber
+  const getAllMembers = async () => {
+    const token = LocalStorageUtils.getToken()
+    const result = await get(
+      '/api/check-attendance/members',
+      { event_id: event.id },
+      {
+        token: token,
+      }
+    )
+      .then((response) => {
+        if (response.data.status === 200) {
+          return response.data.data
+        }
+        return response.data.message
+      })
+      .catch((error) => {
+        console.log(error)
+        return null
+      })
+    if (result === null || !(result instanceof Array)) {
+      setDataMember([{ name: 'Unknown error', member_id: 'Unknown error', status: 'not yet' }])
+      return
+    }
+    console.log(result)
+    await setDataMember(result)
+  }
   return (
     <Modal show={show} title={event.name} onClose={onClose} indicator={status}>
       <Flexbox flexDirection="column" gap={10}>
@@ -142,12 +177,15 @@ const ViewEvent = (props) => {
         <Button onClick={() => onToggleEdit(current)}>Edit Event</Button>
       </Flexbox>
       <AttendanceCard
+        getAllMembers={getAllMembers}
         event={event}
         data={showAttendanceCard}
         openViewList={openViewList}
         onClose={closeAttendanceCard}
       />
       <AttendanceStatusModal
+        dataMember={dataMember}
+        getAllMembers={getAllMembers}
         show={showListAttendance.show}
         onClose={closeViewList}
         eventId={current.id}
