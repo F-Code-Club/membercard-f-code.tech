@@ -11,6 +11,7 @@ import Flexbox from './../../components/Flexbox'
 
 import { post } from '../../utils/ApiCaller'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
+import { generateStingToISOtime } from '../../utils/helper'
 import { generateSemester, leadingZero } from '../../utils/helper'
 import { ConfirmationParagraph } from './style'
 
@@ -43,6 +44,24 @@ const CreateEventModal = (props) => {
   }
 
   const handleSubmit = async () => {
+    const testEvent = {
+      description: description,
+      location: location,
+      name: title,
+      point: 10,
+      startTime: generateStingToISOtime(
+        `${startDate.getFullYear()}-${
+          startDate.getMonth() + 1
+        }-${startDate.getDate()} ${leadingZero(startDate.getHours())}:${leadingZero(
+          startDate.getMinutes()
+        )}:00`
+      ),
+      endTime: generateStingToISOtime(
+        `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()} ${leadingZero(
+          endDate.getHours()
+        )}:${leadingZero(endDate.getMinutes())}:00`
+      ),
+    }
     const event = {
       name: title,
       start_date: `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`,
@@ -56,7 +75,14 @@ const CreateEventModal = (props) => {
     }
     const token = LocalStorageUtils.getToken()
 
-    const response = await post('/api/events', { ...event }, {}, { token: token }).catch((err) =>
+    const response = await post(
+      '/event/new',
+      { ...testEvent },
+      {},
+      {
+        Authorization: token,
+      }
+    ).catch((err) =>
       // eslint-disable-next-line no-console
       console.error(err)
     )

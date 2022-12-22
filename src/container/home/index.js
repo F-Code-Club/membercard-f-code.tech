@@ -73,14 +73,20 @@ const Home = () => {
   useEffect(() => {
     const token = LocalStorageUtils.getItem('token')
     const fetchEvent = async () => {
-      const eventsReceiver = await get('/api/events', {}, { token: token })
+      const eventsReceiver = await get(
+        '/event/all',
+        {},
+        {
+          Authorization: token,
+        }
+      )
         .then((response) => {
-          if (response.data?.status !== 200) {
+          if (response.data?.code !== 200) {
             LocalStorageUtils.removeItem('token')
             navigate('/')
             return []
           }
-
+          console.log('line 89: ', response.data.data)
           return response.data.data
         })
         .catch((e) => {
@@ -92,9 +98,9 @@ const Home = () => {
         })
 
       const eventDateComparator = (a, b) => {
-        const startDateCompare = compareDate(new Date(a.start_date), new Date(b.start_date))
+        const startDateCompare = compareDate(new Date(a.startTime), new Date(b.startTime))
         if (startDateCompare === 0) {
-          const endDateCompare = compareDate(new Date(a.end_date), new Date(b.end_date))
+          const endDateCompare = compareDate(new Date(a.endTime), new Date(b.endTime))
           return endDateCompare
         } else {
           return startDateCompare
@@ -103,12 +109,12 @@ const Home = () => {
 
       setEvents(
         eventsReceiver
-          .filter((item) => compareDate(new Date(item.start_date), new Date()) === 0)
+          .filter((item) => compareDate(new Date(item.startTime), new Date()) === 0)
           .sort(eventDateComparator) || []
       )
       setUpcomingEvents(
         eventsReceiver
-          .filter((item) => compareDate(new Date(item.start_date), new Date()) === 1)
+          .filter((item) => compareDate(new Date(item.startTime), new Date()) === 1)
           .sort(eventDateComparator) || []
       )
     }
@@ -199,7 +205,7 @@ const Home = () => {
         show={showCreateModal}
         onClick={() => toggleCreateModal(true)}
         onClose={() => toggleCreateModal(false)}
-        onSubmit={() => navigate('/login', { replace: true })}
+        onSubmit={() => navigate('/auth', { replace: true })}
       />
       <ViewEventModal
         data={showViewModal}

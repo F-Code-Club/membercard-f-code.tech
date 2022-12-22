@@ -6,6 +6,7 @@ import Wrapper from './../../components/Wrapper'
 import { put } from '../../utils/ApiCaller'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import { compareDate, formatUpcomingTime, leadingZero } from '../../utils/helper'
+import { formatTimeForApi } from '../../utils/helper'
 import theme from './../../theme'
 import {
   StyledEventDescription,
@@ -49,13 +50,15 @@ const EventStatus = (props) => ComponentWrapper(StyledEventStatus, props)
 
 const onChangeStatus = async (event) => {
   const token = LocalStorageUtils.getToken()
-  const standardizedStartDate = event.start_date.split('T')[0]
-  const standardizedEndDate = event.end_date.split('T')[0]
+  const standardizedStartDate = event.startTime.split('T')[0]
+  const standardizedEndDate = event.endTime.split('T')[0]
   const response = await put(
-    `/api/events/${event.id}`,
-    { ...event, start_date: standardizedStartDate, end_date: standardizedEndDate },
+    `/event`,
+    { ...event, startTime: standardizedStartDate, endTime: standardizedEndDate },
     {},
-    { token: token }
+    {
+      Authorization: token,
+    }
     // eslint-disable-next-line no-console
   ).catch((err) => console.error(err))
   return response
@@ -65,23 +68,39 @@ export class EventEntity {
   static ONGOING = 'ongoing'
   static UPCOMING = 'upcoming'
   static ENDED = 'ended'
-  static CANCELLED = 'cancelled'
-
+  static ACTIVE = 'active'
+  static INACTIVE = 'inactive'
   constructor(data) {
+    //handle change from oldAPI to newAPI
+    const eventStartTime = new Date(data.startTime)
+    const eventEndTime = new Date(data.endTime)
+    const startDateNewApi = data.startTime.split('T')[0]
+    const endDateNewApi = data.endTime.split('T')[0]
+    const startTime = formatTimeForApi(eventStartTime)
+    const endTime = formatTimeForApi(eventEndTime)
+    //
     this.id = data.id
     this.name = data.name
-    this.start_date = new Date(data.start_date)
-    const [startHours, startMinutes] = data.start_time.split(':')
+    this.start_date = new Date(startDateNewApi)
+
+    const [startHours, startMinutes] = startTime.split(':')
     this.start_date.setHours(startHours, startMinutes, 0)
-    this.end_date = new Date(data.end_date ? data.end_date : data.start_date)
-    const [endHours, endMinutes] = data.end_time.split(':')
+
+    ////
+    this.end_date = new Date(endDateNewApi ? endDateNewApi : startDateNewApi)
+    ////
+    const [endHours, endMinutes] = endTime.split(':')
     this.end_date.setHours(endHours, endMinutes, 0)
     this.semester = data.semester
     this.location = data.location
     this.description = data.description
 
     const oldStatus = data.status
+    // 1: active
+    // 2: inactive
+    //active or inactive for check attendance
     const today = new Date()
+    // if else status below is to check when the event status
     if (!(data.status === EventEntity.CANCELLED)) {
       if (compareDate(this.start_date, this.end_date) === 0) {
         const compare = compareDate(this.start_date, today)

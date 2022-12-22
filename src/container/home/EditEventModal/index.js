@@ -24,7 +24,6 @@ const EditEventModal = (props) => {
   const [eventEndDate, setEventEndDate] = useState(tempEnd || new Date())
   const [eventLocation, setEventLocation] = useState(place)
   const [eventDescription, setEventDescription] = useState(description)
-
   if (Object.keys(event).length === 0) return <></>
   // Change handlers
   const handleSubmit = () => {
@@ -36,6 +35,13 @@ const EditEventModal = (props) => {
       if (!date) return ''
       return formatTimeByPattern(date, 'yyyy-MM-dd')
     }
+    const formatDateAsSQLDate2 = (date) => {
+      if (!date) return ''
+      return formatTimeByPattern(date, 'yyyy-MM-dd')
+    }
+    console.log('line 27: ', standardizeStartDate)
+    console.log('line 28: ', standardizeStartDate)
+
     onSubmit({
       id: id,
       name: eventTitle,

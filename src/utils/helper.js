@@ -188,6 +188,15 @@ export const formatTime = (time) => {
 
   return `${hours}:${minutes}:${seconds}`
 }
+export const formatTimeForApi = (time) => {
+  if (!time) return '00:00:00'
+
+  const hours = leadingZero(time.getHours())
+  const minutes = leadingZero(time.getMinutes())
+  const seconds = leadingZero(time.getSeconds())
+
+  return `${hours}:${minutes}:${seconds}`
+}
 export const formatTimeLate = (time) => {
   if (!time) return '00:00:00'
 
@@ -221,4 +230,9 @@ export const generateSemester = (startDate) => {
     }
   }
   return 'SP2022'
+}
+
+export const generateStingToISOtime = (date) => {
+  let result = new Date(date)
+  return result.toISOString()
 }
