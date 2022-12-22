@@ -28,4 +28,13 @@ const StyledUpdateButton = styled(BaseButton)`
   padding: 0.5rem 2rem;
   width: 40%;
 `
-export { StyledBlueButton, StyledGreenButton, StyledRedButton, StyledUpdateButton }
+const StyledBaseButtonNew = styled(BaseButton)`
+  margin-top: 10px;
+`
+export {
+  StyledBlueButton,
+  StyledGreenButton,
+  StyledRedButton,
+  StyledUpdateButton,
+  StyledBaseButtonNew,
+}

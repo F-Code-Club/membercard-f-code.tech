@@ -111,6 +111,7 @@ class LocalStorageUtils {
         }
       }
     }
+    return undefined
   }
 
   deleteUser() {

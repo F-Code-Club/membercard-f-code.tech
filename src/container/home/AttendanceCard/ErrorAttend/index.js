@@ -18,9 +18,9 @@ const ErrorAttendance = (props) => {
         <Flexbox justifyContent="center" flexDirection="column" alignItems="center">
           {errors.status === 'error' ? <ErrorButton /> : <WarningButton />}
           {errors.status === 'error' ? (
-            <StyledStatusError>this is error</StyledStatusError>
+            <StyledStatusError>Error</StyledStatusError>
           ) : (
-            <StyledStatusWarning>this is warning</StyledStatusWarning>
+            <StyledStatusWarning>Warning</StyledStatusWarning>
           )}
           <SubHeading2>{errors.errors}</SubHeading2>
         </Flexbox>

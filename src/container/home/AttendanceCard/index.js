@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react'
 
-import { Button } from '../../../components/Button'
+import { ButtonNew } from '../../../components/Button'
 import Divider from '../../../components/Divider'
 import Modal from '../../../components/Modal'
-// import { toastWarning } from '../../../components/ToastNotification'
+import { toastError } from '../../../components/ToastNotification'
 import Wrapper from '../../../components/Wrapper'
 import Flexbox from './../../../components/Flexbox'
 import TextArea from './../../../components/Input/TextArea'
@@ -104,11 +104,13 @@ const AttendanceCard = (props) => {
       }
       const ndef = new NDEFReader()
       await ndef.scan()
-      ndef.addEventListener('readingerror', () => {
-        log('Argh! Cannot read data from the NFC tag. Try another one?')
+      ndef.addEventListener('readingError', () => {
+        console.log('Argh! Cannot read data from the NFC tag. Try another one?')
       })
       ndef.addEventListener('reading', ({ message }) => {
-        arrayBufferToString(message.records[0].data.buffer, 'UTF-8')
+        if (message.records[0].data == null) {
+          toastError('data is null')
+        } else arrayBufferToString(message.records[0].data.buffer, 'UTF-8')
       })
     } catch (error) {
       setCardReader({ log: 'Argh! ' + error, status: error.message, isLoading: false })
@@ -174,7 +176,7 @@ const AttendanceCard = (props) => {
         }
       }
     } else {
-      console.log(`user with ${Id} is not in the database`)
+      toastError(`user with ${Id} is not in the database`)
     }
     return null
   }
@@ -195,8 +197,8 @@ const AttendanceCard = (props) => {
         </Flexbox>
       </Wrapper>
       <Divider variant="dashed" />
-      <TextArea value={cardReader.log}></TextArea>
-      <Button onClick={openViewList}>View List</Button>
+      <TextArea margin-bottom="10px" value={cardReader.log}></TextArea>
+      <ButtonNew onClick={openViewList}>View List</ButtonNew>
       <AlertAttendance
         user={user}
         show={alertAttend.show}

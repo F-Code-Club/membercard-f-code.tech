@@ -24,7 +24,7 @@ const AlertAttendance = (props) => {
     <AttendanceModalAlert show={show} onClose={onClose}>
       {user && (
         <Flexbox justifyContent="center" flexDirection="column" alignItems="center">
-          <StyledCardTitle> welcome</StyledCardTitle>
+          <StyledCardTitle> Welcome</StyledCardTitle>
           <StyledModalTitle>{user.first_name + ' ' + user.last_name}</StyledModalTitle>
           <SubHeading>{user.member_id}</SubHeading>
           {status === 'present' ? <CheckMarkButton /> : <WarningButton />}
