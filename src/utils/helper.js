@@ -159,7 +159,6 @@ export const leadingZero = (time) => {
  */
 export const compareDate = (first, second) => {
   if (first == null || second == null) return NaN
-
   const tempFirst = new Date(first)
   const tempSecond = new Date(second)
   tempFirst.setHours(0, 0, 0, 0)

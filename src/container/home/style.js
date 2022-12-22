@@ -133,7 +133,7 @@ const StyledProfileMenu = styled.div`
 
 export const ProfileInformation = (props) => {
   let { user, onLogout } = props
-  console.log('line 136: ', user)
+
   if (user === null || user === undefined || user.firstName === undefined) {
     user = {
       firstName: 'N/A',

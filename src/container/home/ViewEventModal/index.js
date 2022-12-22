@@ -10,6 +10,7 @@ import Modal from './../../../components/Modal'
 import { get } from '../../../utils/ApiCaller'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import AttendanceCard from '../AttendanceCard'
+import { formatTimeForApi } from './../../../utils/helper'
 import { formatDate, formatTime } from './../../../utils/helper'
 import AttendanceStatusModal from './../AttendanceStatusModal/index'
 
@@ -18,19 +19,29 @@ const ViewEvent = (props) => {
   const { data, onClose, onToggleEdit } = props
   const { show, event, status } = data
 
-  if (event.end_date === null) event.end_date = event.start_date // If the end date is null, automatically set it to the start date
+  if (event.endTime === null) event.endTime = event.startTime // If the end date is null, automatically set it to the start date
+  //handle change from oldAPI to newAPI
+  const viewStartTime = new Date(event.startTime)
+  const viewEndTime = new Date(event.endTime)
+  const startDateNewApi = new Date(event?.startTime?.split('T')[0])
+  const endDateNewApi = event?.endTime?.split('T')[0]
+  const startTime = formatTimeForApi(viewStartTime)
+  const endTime = formatTimeForApi(viewEndTime)
+
+  //handle change from oldAPI to newAPI
   const [current, setCurrent] = useState({
     id: event.id,
     name: event.name,
     place: event.location,
-    start: new Date(event.start_date || '2002-12-12'),
-    end: new Date(event.end_date || '2002-12-12'),
-    start_time: event.start_time || '',
-    end_time: event.end_time || '',
+    start: startDateNewApi,
+    end: new Date(endDateNewApi || '2003-05-08'),
+    start_time: startTime || '',
+    end_time: endTime || '',
     description: event.description,
     status: event.status,
     semester: event.semester,
   })
+
   const [showAttendanceCard, toggleAttendanceCard] = useState({
     show: false,
     eventId: current.id,
@@ -50,14 +61,23 @@ const ViewEvent = (props) => {
     if (!event) {
       return
     }
+    //handle change from oldAPI to newAPI
+    const viewOnChangeStartTime = new Date(event.startTime)
+    const viewOnChangeEndTime = new Date(event.endTime)
+    const startOnChangeDateNewApi = new Date(event?.startTime?.split('T')[0])
+    const endOnChangeDateNewApi = event?.endTime?.split('T')[0]
+    const startOnChangeTime = formatTimeForApi(viewOnChangeStartTime)
+    const endOnChangeTime = formatTimeForApi(viewOnChangeEndTime)
+
+    //handle change from oldAPI to newAPI
     const tmp = {
       id: event.id,
       name: event.name,
       place: event.location,
-      start: new Date(event.start_date),
-      end: new Date(event.end_date),
-      start_time: event.start_time || '',
-      end_time: event.end_time || '',
+      start: new Date(startOnChangeDateNewApi),
+      end: new Date(endOnChangeDateNewApi),
+      start_time: startOnChangeTime || '',
+      end_time: endOnChangeTime || '',
       description: event.description,
       status: event.status || {},
       semester: event.semester,
@@ -92,16 +112,17 @@ const ViewEvent = (props) => {
   }
   //get all memeber
   const getAllMembers = async () => {
+    console.log('run')
     const token = LocalStorageUtils.getToken()
     const result = await get(
-      '/api/check-attendance/members',
-      { event_id: event.id },
+      `/attendance/eventId/${event.id}`,
+      {},
       {
-        token: token,
+        Authorization: token,
       }
     )
       .then((response) => {
-        if (response.data.status === 200) {
+        if (response.status === 200) {
           return response.data.data
         }
         return response.data.message
@@ -114,9 +135,10 @@ const ViewEvent = (props) => {
       setDataMember([{ name: 'Unknown error', member_id: 'Unknown error', status: 'not yet' }])
       return
     }
-    console.log(result)
+
     await setDataMember(result)
   }
+
   return (
     <Modal show={show} title={event.name} onClose={onClose} indicator={status}>
       <Flexbox flexDirection="column" gap={10}>

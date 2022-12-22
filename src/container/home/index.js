@@ -81,6 +81,7 @@ const Home = () => {
         }
       )
         .then((response) => {
+          console.log(response)
           if (response.data?.code !== 200) {
             LocalStorageUtils.removeItem('token')
             navigate('/')
@@ -106,10 +107,11 @@ const Home = () => {
           return startDateCompare
         }
       }
-
       setEvents(
         eventsReceiver
-          .filter((item) => compareDate(new Date(item.startTime), new Date()) === 0)
+          .filter((item) => {
+            return compareDate(new Date(item.startTime), new Date()) === 0
+          })
           .sort(eventDateComparator) || []
       )
       setUpcomingEvents(
@@ -148,8 +150,8 @@ const Home = () => {
     }))
   const onSubmitEdit = async (newEvent) => {
     const token = LocalStorageUtils.getToken()
-    await put(`/api/events/${newEvent.id}`, { ...newEvent }, {}, { token: token })
-    navigate('/login', { replace: true })
+    await put(`/event`, { ...newEvent }, {}, { authorization: token })
+    navigate('/auth', { replace: true })
   }
   const onToggleEdit = (event) => {
     displayEditModal(event)
