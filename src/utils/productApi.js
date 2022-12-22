@@ -23,8 +23,14 @@ class productApi {
   }
 
   //member apis
-  getUser(userId, token) {
-    return get('/api/user/' + userId, {}, { token: token }).catch((err) => {
+  getUser(token) {
+    return get(
+      '/member/own',
+      {},
+      {
+        Authorization: token,
+      }
+    ).catch((err) => {
       console.log(err)
     })
   }
@@ -33,7 +39,9 @@ class productApi {
       'api/user/' + userId + 'change-point',
       { points: point },
       {},
-      { token: token }
+      {
+        Authorization: token,
+      }
     ).catch((err) => console.log(err))
   }
 
@@ -43,14 +51,18 @@ class productApi {
   //     '/api/check-attendance',
   //     { memeber_id: userId, event_id: eventId },
   //     {},
-  //     { token: token }
+  // //       {
+  //   Authorization: token,
+  // }
   //   ).catch((err) => console.log(err))
   // }
   getAttendance(userId, eventId, token) {
     return get(
       'api/check-attendance?member_id=' + userId + '&event_id=' + eventId,
       {},
-      { token: token }
+      {
+        Authorization: token,
+      }
     ).catch((err) => console.log(err))
   }
   setAttendance(memberId, eventId, status, token) {
@@ -58,7 +70,9 @@ class productApi {
       '/api/check-attendance',
       { member_id: memberId, event_id: eventId, status: status },
       {},
-      { token: token }
+      {
+        Authorization: token,
+      }
     ).catch((err) => console.log(err))
   }
 }

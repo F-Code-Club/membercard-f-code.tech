@@ -14,11 +14,14 @@ import {
 } from './style'
 
 const Auth = () => {
-  const ApiUrl = process.env.REACT_APP_API_URL + '/api/auth/'
+  const ApiUrl = process.env.REACT_APP_API_URL + '/login/member'
   // get token from the url after successful signed in
   let location = useLocation()
   const UrlParams = new URLSearchParams(location.search)
+  console.log('line 21: ', UrlParams.get('success'))
+
   if (UrlParams.get('success') === 'true') {
+    console.log('line 22: ', UrlParams.get('success'))
     // save token to localStorage
     let response = {
       success: UrlParams.get('success'),
@@ -38,7 +41,7 @@ const Auth = () => {
       </LoginHeading>
       <LoginDescription>A simple platform for event management.</LoginDescription>
       <LoginDivider width={120} />
-      <LoginButton href={ApiUrl + 'google'}>
+      <LoginButton href={ApiUrl}>
         Sign in with Google account{' '}
         <Icon
           name="arrow-forward"

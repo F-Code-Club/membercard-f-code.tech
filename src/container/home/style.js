@@ -133,12 +133,12 @@ const StyledProfileMenu = styled.div`
 
 export const ProfileInformation = (props) => {
   let { user, onLogout } = props
-
-  if (user === null || user === undefined || user.first_name === undefined) {
+  console.log(user)
+  if (user === null || user === undefined || user.firstName === undefined) {
     user = {
-      first_name: 'N/A',
-      last_name: 'N/A',
-      member_id: 'N/A',
+      firstName: 'N/A',
+      lastName: 'N/A',
+      studentId: 'N/A',
     }
   }
   // console.log(user.avatar)
@@ -162,11 +162,11 @@ export const ProfileInformation = (props) => {
   return (
     <StyledProfileInformationWrapper alignItems="center" gap="10px" position="relative">
       <Flexbox flexDirection="column" gap="2px">
-        <StyledProfileName>Hi, {`${user?.first_name} ${user?.last_name}`}</StyledProfileName>
-        <StyledProfileRollNumber>{user?.member_id}</StyledProfileRollNumber>
+        <StyledProfileName>Hi, {`${user?.firstName} ${user?.lastName}`}</StyledProfileName>
+        <StyledProfileRollNumber>{user?.studentId}</StyledProfileRollNumber>
       </Flexbox>
       <ProfileImage
-        src={user.avatar ? convertAvatar(user.avatar) : AvaUnknown}
+        src={user.avatarUrl ? `${user.avatarUrl}` : AvaUnknown}
         size={50}
         onClick={() => setIsMenuHidden((prev) => !prev)}
       />

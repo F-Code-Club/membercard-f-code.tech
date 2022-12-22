@@ -9,8 +9,8 @@ import { PublicRoute } from './PublicRoute'
 
 export const publicRoute = [
   {
-    name: 'login',
-    path: '/login',
+    name: 'auth',
+    path: '/auth',
     element: <Auth />,
   },
 ]

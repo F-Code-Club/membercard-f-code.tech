@@ -58,14 +58,13 @@ const Home = () => {
   const navigate = useNavigate()
   useEffect(() => {
     const token = LocalStorageUtils.getItem('token')
-    const userId = LocalStorageUtils.getJWTUser().id
     const getData = async () => {
-      const response = await productApi.getUser(userId, token)
+      const response = await productApi.getUser(token)
 
-      setCurrentUser(response?.data.data)
+      await setCurrentUser(response?.data.data)
       if (response?.status === 403) {
         LocalStorageUtils.removeItem('token')
-        return <Navigate to="/login" replace />
+        return <Navigate to="/auth" replace />
       }
     }
     getData()
@@ -151,7 +150,7 @@ const Home = () => {
   }
   const onLogout = () => {
     LocalStorageUtils.deleteUser()
-    navigate('/login')
+    navigate('/auth')
   }
 
   return (
