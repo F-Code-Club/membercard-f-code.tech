@@ -68,7 +68,7 @@ const ViewEvent = (props) => {
     const endOnChangeDateNewApi = event?.endTime?.split('T')[0]
     const startOnChangeTime = formatTimeForApi(viewOnChangeStartTime)
     const endOnChangeTime = formatTimeForApi(viewOnChangeEndTime)
-
+    console.log(event.id)
     //handle change from oldAPI to newAPI
     const tmp = {
       id: event.id,
@@ -114,14 +114,9 @@ const ViewEvent = (props) => {
   const getAllMembers = async () => {
     console.log('run')
     const token = LocalStorageUtils.getToken()
-    const result = await get(
-      `/attendance/eventId/${event.id}`,
-      {},
-      {
-        Authorization: token,
-      }
-    )
+    const result = await get(`/attendance/eventId/${event.id}`, {}, { authorization: token })
       .then((response) => {
+        console.log(response)
         if (response.status === 200) {
           return response.data.data
         }

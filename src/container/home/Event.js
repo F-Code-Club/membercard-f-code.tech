@@ -56,9 +56,7 @@ const onChangeStatus = async (event) => {
     `/event`,
     { ...event, startTime: standardizedStartDate, endTime: standardizedEndDate },
     {},
-    {
-      Authorization: token,
-    }
+    { authorization: token }
     // eslint-disable-next-line no-console
   ).catch((err) => console.error(err))
   return response

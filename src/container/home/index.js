@@ -73,13 +73,7 @@ const Home = () => {
   useEffect(() => {
     const token = LocalStorageUtils.getItem('token')
     const fetchEvent = async () => {
-      const eventsReceiver = await get(
-        '/event/all',
-        {},
-        {
-          Authorization: token,
-        }
-      )
+      const eventsReceiver = await get('/event/all', {}, { authorization: token })
         .then((response) => {
           console.log(response)
           if (response.data?.code !== 200) {

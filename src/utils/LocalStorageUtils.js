@@ -8,7 +8,8 @@ import {
   LOCALSTORAGE_USER_NAME,
 } from '../config'
 import Profile from './../asset/image/Avatar.png'
-import { get } from './ApiCaller'
+
+// import { get } from './ApiCaller'
 
 const convertAvatar = (avatar) => {
   if (!avatar || avatar.length === 0) {
@@ -56,7 +57,7 @@ class LocalStorageUtils {
   getJWTUser() {
     if (typeof localStorage !== 'undefined') {
       const token = this.getItem(LOCALSTORAGE_TOKEN_NAME)
-
+      console.log(token)
       if (token) {
         try {
           const jwtUser = jwt_decode(token)
@@ -71,49 +72,49 @@ class LocalStorageUtils {
     return undefined
   }
 
-  async getUser() {
-    if (typeof localStorage !== 'undefined') {
-      const token = this.getItem(LOCALSTORAGE_TOKEN_NAME)
-      const user = this.getItem(LOCALSTORAGE_USER_NAME)
-      const avatar = this.getItem(LOCALSTORAGE_AVATAR_NAME)
-      if (user && avatar) {
-        return { user: user, avatar: avatar }
-      } else {
-        if (token) {
-          try {
-            const { memberId } = jwt_decode(token)
+  // async getUser() {
+  //   if (typeof localStorage !== 'undefined') {
+  //     const token = this.getItem(LOCALSTORAGE_TOKEN_NAME)
+  //     const user = this.getItem(LOCALSTORAGE_USER_NAME)
+  //     const avatar = this.getItem(LOCALSTORAGE_AVATAR_NAME)
+  //     if (user && avatar) {
+  //       return { user: user, avatar: avatar }
+  //     } else {
+  //       if (token) {
+  //         try {
+  //           const { memberId } = jwt_decode(token)
 
-            const fetchedUser = await get(`/api/user/${memberId}`, {}, { token: token }).then(
-              (res) => res.data.data
-            )
+  //           const fetchedUser = await get(`/api/user/${memberId}`, {}, { token: token }).then(
+  //             (res) => res.data.data
+  //           )
 
-            const simplifiedUser = {
-              id: fetchedUser.id,
-              member_id: fetchedUser.member_id,
-              last_name: fetchedUser.last_name,
-              first_name: fetchedUser.first_name,
-              school_email: fetchedUser.school_email,
-            }
-            const simplifiedAvatar = convertAvatar(fetchedUser.avartar)
+  //           const simplifiedUser = {
+  //             id: fetchedUser.id,
+  //             member_id: fetchedUser.member_id,
+  //             last_name: fetchedUser.last_name,
+  //             first_name: fetchedUser.first_name,
+  //             school_email: fetchedUser.school_email,
+  //           }
+  //           const simplifiedAvatar = convertAvatar(fetchedUser.avartar)
 
-            this.setItem(LOCALSTORAGE_AVATAR_NAME, simplifiedAvatar)
-            this.setItem(LOCALSTORAGE_USER_NAME, simplifiedUser)
+  //           this.setItem(LOCALSTORAGE_AVATAR_NAME, simplifiedAvatar)
+  //           this.setItem(LOCALSTORAGE_USER_NAME, simplifiedUser)
 
-            return { user: simplifiedUser, avatar: simplifiedAvatar }
-          } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err)
-            if (err.response && err.response.status === 401) {
-              this.deleteUser()
-            }
-          }
-        } else {
-          return token
-        }
-      }
-    }
-    return undefined
-  }
+  //           return { user: simplifiedUser, avatar: simplifiedAvatar }
+  //         } catch (err) {
+  //           // eslint-disable-next-line no-console
+  //           console.log(err)
+  //           if (err.response && err.response.status === 401) {
+  //             this.deleteUser()
+  //           }
+  //         }
+  //       } else {
+  //         return token
+  //       }
+  //     }
+  //   }
+  //   return undefined
+  // }
 
   deleteUser() {
     localStorage.removeItem(LOCALSTORAGE_AVATAR_NAME)

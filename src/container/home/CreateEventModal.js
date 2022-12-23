@@ -42,13 +42,16 @@ const CreateEventModal = (props) => {
   const handleDescriptionChange = (newDescription) => {
     setDescription(newDescription)
   }
-
+  const [point, setPoint] = useState('')
+  const handlePointChange = (newPoint) => {
+    setPoint(newPoint)
+  }
   const handleSubmit = async () => {
     const testEvent = {
       description: description,
       location: location,
       name: title,
-      point: 10,
+      point: point,
       startTime: generateStingToISOtime(
         `${startDate.getFullYear()}-${
           startDate.getMonth() + 1
@@ -96,12 +99,21 @@ const CreateEventModal = (props) => {
   return (
     <Modal show={show} title="Create new event" onClose={onClose}>
       <Flexbox flexDirection="column" gap={10}>
-        <TextInput
-          title="Title"
-          placeholder="Insert title here..."
-          onChange={handleTitleChange}
-          value={title}
-        />
+        <Flexbox gap={10} justifyContent="space-between">
+          <TextInput
+            title="Title"
+            placeholder="Insert title here..."
+            onChange={handleTitleChange}
+            value={title}
+          />
+          <TextInput
+            title="Point"
+            type="number"
+            placeholder="Insert Point here..."
+            onChange={handlePointChange}
+            value={point}
+          />
+        </Flexbox>
         <Flexbox gap={10} justifyContent="space-between">
           <DateInput
             // fullWidth={true}
@@ -139,6 +151,7 @@ const CreateEventModal = (props) => {
           onChange={handleLocationChange}
           value={location}
         />
+
         <TextArea
           title="Description"
           placeholder="Your description goes here"

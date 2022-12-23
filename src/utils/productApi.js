@@ -28,7 +28,7 @@ class productApi {
       '/member/own',
       {},
       {
-        Authorization: token,
+        authorization: token,
       }
     ).catch((err) => {
       console.log(err)
@@ -40,7 +40,7 @@ class productApi {
       { points: point },
       {},
       {
-        Authorization: token,
+        authorization: token,
       }
     ).catch((err) => console.log(err))
   }
@@ -60,9 +60,7 @@ class productApi {
     return get(
       'api/check-attendance?member_id=' + userId + '&event_id=' + eventId,
       {},
-      {
-        Authorization: token,
-      }
+      { authorization: token }
     ).catch((err) => console.log(err))
   }
   setAttendance(memberId, eventId, status, token) {
@@ -70,9 +68,7 @@ class productApi {
       '/api/check-attendance',
       { member_id: memberId, event_id: eventId, status: status },
       {},
-      {
-        Authorization: token,
-      }
+      { authorization: token }
     ).catch((err) => console.log(err))
   }
 }

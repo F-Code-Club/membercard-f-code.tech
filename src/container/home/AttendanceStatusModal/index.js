@@ -17,11 +17,11 @@ const MemberStatus = (props) => {
     <StyledWrapper onClick={onClick}>
       <Flexbox justifyContent="space-between" alignItems="center">
         <Flexbox gap={5} justifyContent="center" flexDirection="column">
-          <Heading>{data.name}</Heading>
-          <SubHeading>{data.member_id}</SubHeading>
+          <Heading>{data.lastName}</Heading>
+          <SubHeading>{data.studentId}</SubHeading>
         </Flexbox>
         <StatusBadge color={status.color} textColor={status.textColor}>
-          {data.status}
+          {data.state}
         </StatusBadge>
       </Flexbox>
     </StyledWrapper>
@@ -64,17 +64,17 @@ const AttendanceStatusModal = (props) => {
   }, [token, eventId])
 
   const enumStatus = {
-    attended: {
+    ON_TIME: {
       color: theme.cyan2,
       textColor: theme.cyan1,
       statusString: 'present',
     },
-    late: {
+    LATE: {
       color: theme.yellow2,
       textColor: theme.yellow1,
       statusString: 'late',
     },
-    absent: {
+    ABSENT: {
       color: theme.red3,
       textColor: theme.red1,
       statusString: 'absent',
@@ -104,7 +104,7 @@ const AttendanceStatusModal = (props) => {
             <MemberStatus
               key={index + 'member'}
               data={member}
-              status={enumStatus[member.status]}
+              status={enumStatus[member.state]}
               onClick={() => openStatusUpdater(member)}
             ></MemberStatus>
           )

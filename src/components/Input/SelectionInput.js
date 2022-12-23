@@ -51,10 +51,6 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
       value: 'attended',
       label: 'Attended',
     },
-    {
-      value: 'not yet',
-      label: 'Not yet',
-    },
   ]
 
   const [data, setData] = useState()
@@ -66,14 +62,31 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
   const handleStatusChange = (newStatus) => {
     setStatusUpdate(newStatus)
   }
-  console.log(user)
+
   const UpdateAttend = async () => {
     const token = LocalStorageUtils.getToken()
+    const formateAttendUpdate = {
+      date: 'string',
+      eventId: 0,
+      eventName: 'string',
+      id: 0,
+      lastName: 'string',
+      memberId: 0,
+      state: 'LATE',
+      studentId: 'string',
+    }
+    const formatUpdatePoint = {
+      date: 'string',
+      id: 0,
+      memberId: 0,
+      quantity: 0,
+      reason: 'string',
+    }
     const resUpdateAttend = await put(
-      '/api/check-attendance',
-      { member_id: user.id, event_id: eventId, status: statusUpdate },
+      '/attendance',
+      formateAttendUpdate,
       {},
-      { token: token }
+      { authorization: token }
     )
       .then((res) => {
         if (res.status === 200) {
@@ -83,10 +96,10 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
       .catch((err) => console.log(err))
 
     const resUpdatePoints = await put(
-      '/api/user/' + user.id + '/change-point',
-      { points: bonus },
+      '/pluspoint',
+      formatUpdatePoint,
       {},
-      { token: token }
+      { authorization: token }
     ).catch((err) => console.log(err))
 
     onClose()
@@ -95,7 +108,7 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
     const getUserInfo = async () => {
       const token = LocalStorageUtils.getToken()
       const result = await productApi
-        .getUser(user.id, token)
+        .getUser(token)
         .then((result) => {
           return result.data.data
         })
@@ -106,7 +119,7 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  console.log('line 109: ', data)
   return (
     <Wrapper>
       {user && data && (
