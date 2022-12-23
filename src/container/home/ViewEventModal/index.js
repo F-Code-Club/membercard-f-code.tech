@@ -10,8 +10,7 @@ import Modal from './../../../components/Modal'
 import { get } from '../../../utils/ApiCaller'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import AttendanceCard from '../AttendanceCard'
-import { formatTimeForApi } from './../../../utils/helper'
-import { formatDate, formatTime } from './../../../utils/helper'
+import { formatTimeForApi, formatDate, formatTime } from './../../../utils/helper'
 import AttendanceStatusModal from './../AttendanceStatusModal/index'
 
 const ViewEvent = (props) => {
@@ -20,6 +19,7 @@ const ViewEvent = (props) => {
   const { show, event, status } = data
 
   if (event.endTime === null) event.endTime = event.startTime // If the end date is null, automatically set it to the start date
+
   //handle change from oldAPI to newAPI
   const viewStartTime = new Date(event.startTime)
   const viewEndTime = new Date(event.endTime)
@@ -27,13 +27,13 @@ const ViewEvent = (props) => {
   const endDateNewApi = event?.endTime?.split('T')[0]
   const startTime = formatTimeForApi(viewStartTime)
   const endTime = formatTimeForApi(viewEndTime)
-
   //handle change from oldAPI to newAPI
+
   const [current, setCurrent] = useState({
     id: event.id,
     name: event.name,
     place: event.location,
-    start: startDateNewApi,
+    start: new Date(startDateNewApi || '2003-05-08'),
     end: new Date(endDateNewApi || '2003-05-08'),
     start_time: startTime || '',
     end_time: endTime || '',

@@ -11,8 +11,8 @@ import Flexbox from './../../components/Flexbox'
 
 import { post } from '../../utils/ApiCaller'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
-import { generateStingToISOtime } from '../../utils/helper'
-import { generateSemester, leadingZero } from '../../utils/helper'
+import { generateStingToISOtime, leadingZero } from '../../utils/helper'
+// import { generateSemester, leadingZero } from '../../utils/helper'
 import { ConfirmationParagraph } from './style'
 
 const CreateEventModal = (props) => {
@@ -62,17 +62,17 @@ const CreateEventModal = (props) => {
         )}:${leadingZero(endDate.getMinutes())}:00`
       ),
     }
-    const event = {
-      name: title,
-      start_date: `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`,
-      end_date: `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`,
-      start_time: `${leadingZero(startDate.getHours())}:${leadingZero(startDate.getMinutes())}:00`,
-      end_time: `${leadingZero(endDate.getHours())}:${leadingZero(endDate.getMinutes())}:00`,
-      location: location,
-      description: description,
-      semester: generateSemester(startDate),
-      status: 'ongoing',
-    }
+    // const event = {
+    //   name: title,
+    //   start_date: `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`,
+    //   end_date: `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`,
+    //   start_time: `${leadingZero(startDate.getHours())}:${leadingZero(startDate.getMinutes())}:00`,
+    //   end_time: `${leadingZero(endDate.getHours())}:${leadingZero(endDate.getMinutes())}:00`,
+    //   location: location,
+    //   description: description,
+    //   semester: generateSemester(startDate),
+    //   status: 'ongoing',
+    // }
     const token = LocalStorageUtils.getToken()
 
     const response = await post(
@@ -80,13 +80,14 @@ const CreateEventModal = (props) => {
       { ...testEvent },
       {},
       {
-        Authorization: token,
+        authorization: token,
       }
     ).catch((err) =>
       // eslint-disable-next-line no-console
       console.error(err)
     )
-    if (response.status === 200 && response.data.status === 200) {
+
+    if (response.status === 200 && response.data.code === 200) {
       onSubmit()
     }
     onClose()

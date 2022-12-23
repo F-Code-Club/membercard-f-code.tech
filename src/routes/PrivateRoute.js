@@ -6,5 +6,6 @@ import LocalStorageUtils from '../utils/LocalStorageUtils'
 
 export const PrivateRoute = () => {
   const user = LocalStorageUtils.getJWTUser()
+
   return user && user.sub?.length >= 0 ? <Outlet /> : <Navigate to="/auth" replace />
 }
