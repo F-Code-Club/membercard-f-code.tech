@@ -4,6 +4,7 @@ import { GreenButton } from '../../components/Button'
 import DateInput from '../../components/Input/DateInput'
 import TextArea from '../../components/Input/TextArea'
 import TextInput from '../../components/Input/TextInput'
+import TextInputForPoint from '../../components/Input/TextInputForPoint'
 import TimeInput from '../../components/Input/TimeInput'
 import Modal from '../../components/Modal'
 import Divider from './../../components/Divider'
@@ -106,9 +107,8 @@ const CreateEventModal = (props) => {
             onChange={handleTitleChange}
             value={title}
           />
-          <TextInput
+          <TextInputForPoint
             title="Point"
-            type="number"
             placeholder="Insert Point here..."
             onChange={handlePointChange}
             value={point}
@@ -116,14 +116,12 @@ const CreateEventModal = (props) => {
         </Flexbox>
         <Flexbox gap={10} justifyContent="space-between">
           <DateInput
-            // fullWidth={true}
             title="Start date"
             date={startDate}
             onChange={handleStartDateChange}
             flexBasis="50%"
           />
           <DateInput
-            // fullWidth={true}
             title="End date"
             date={endDate}
             onChange={handleEndDateChange}
@@ -151,7 +149,6 @@ const CreateEventModal = (props) => {
           onChange={handleLocationChange}
           value={location}
         />
-
         <TextArea
           title="Description"
           placeholder="Your description goes here"

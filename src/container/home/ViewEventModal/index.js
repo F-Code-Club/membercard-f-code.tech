@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { BlueButton, Button, GreenButton, RedButton } from '../../../components/Button'
 import Flexbox from '../../../components/Flexbox'
 import TextInput from '../../../components/Input/TextInput'
+import TextInputForPoint from '../../../components/Input/TextInputForPoint'
 import Divider from './../../../components/Divider'
 import TextArea from './../../../components/Input/TextArea'
 import Modal from './../../../components/Modal'
@@ -68,7 +69,6 @@ const ViewEvent = (props) => {
     const endOnChangeDateNewApi = event?.endTime?.split('T')[0]
     const startOnChangeTime = formatTimeForApi(viewOnChangeStartTime)
     const endOnChangeTime = formatTimeForApi(viewOnChangeEndTime)
-    console.log(event.id)
     //handle change from oldAPI to newAPI
     const tmp = {
       id: event.id,
@@ -172,6 +172,12 @@ const ViewEvent = (props) => {
         <TextInput
           title="Location"
           value={event.location}
+          onChange={(e) => onEventChange(e, event)}
+          readOnly
+        />
+        <TextInputForPoint
+          title="Point"
+          value={event.point}
           onChange={(e) => onEventChange(e, event)}
           readOnly
         />

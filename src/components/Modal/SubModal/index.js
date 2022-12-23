@@ -17,6 +17,7 @@ import { SubHeading as SubTitle } from './style'
 
 const SubModal = (props) => {
   const { eventId, subTitle } = props
+  console.log('line 20: ', props)
   const UpdateAttend = async () => {
     const token = LocalStorageUtils.getToken()
 
@@ -48,7 +49,6 @@ const SubModal = (props) => {
       </Wrapper>
     </StyledModal>
   )
-  //          <UpdateButton onClick={UpdateAttend}>Update</UpdateButton>
 }
 
 export default SubModal

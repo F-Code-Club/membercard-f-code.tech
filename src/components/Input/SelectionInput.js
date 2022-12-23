@@ -10,6 +10,7 @@ import { UpdateButton } from '../Button'
 import Flexbox from '../Flexbox'
 import Wrapper from '../Wrapper'
 import theme from './../../theme'
+import TextArea from './TextArea'
 import TextInputVer2 from './TextInputVe2'
 
 const StyledSelectionBox = styled(Select)`
@@ -61,6 +62,10 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
   const [statusUpdate, setStatusUpdate] = useState('')
   const handleStatusChange = (newStatus) => {
     setStatusUpdate(newStatus)
+  }
+  const [reason, setReason] = useState('')
+  const handleReasonChange = (newReason) => {
+    setReason(newReason)
   }
 
   const UpdateAttend = async () => {
@@ -143,7 +148,12 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
               <TextCurrentBalance>Current balance: {data.active_point}</TextCurrentBalance>
             </Flexbox>
           </Flexbox>
-
+          <TextArea
+            title="Reason"
+            placeholder="Please insert the reason here..."
+            value={reason}
+            onChange={handleReasonChange}
+          />
           <UpdateButton onClick={UpdateAttend}>Update</UpdateButton>
         </Flexbox>
       )}

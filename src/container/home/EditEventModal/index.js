@@ -6,6 +6,7 @@ import Flexbox from '../../../components/Flexbox'
 import DateInput from '../../../components/Input/DateInput'
 import TextArea from '../../../components/Input/TextArea'
 import TextInput from '../../../components/Input/TextInput'
+import TextInputForPoint from '../../../components/Input/TextInputForPoint'
 import TimeInput from '../../../components/Input/TimeInput'
 import Modal from '../../../components/Modal'
 
@@ -22,7 +23,8 @@ const EditEventModal = (props) => {
   const { data, onClose, onSubmit } = props
   const { show, event } = data
 
-  let { id, name, place, start, end, start_time, end_time, status, description, semester } = event
+  let { id, name, place, start, end, start_time, end_time, status, description, semester, point } =
+    event
 
   const [eventTitle, setEventTitle] = useState(name)
   const tempStart = convertStringToTime(start_time, new Date(start))
@@ -31,6 +33,7 @@ const EditEventModal = (props) => {
   const [eventEndDate, setEventEndDate] = useState(tempEnd || new Date())
   const [eventLocation, setEventLocation] = useState(place)
   const [eventDescription, setEventDescription] = useState(description)
+  const [pointNew, setPointNew] = useState(point)
   if (Object.keys(event).length === 0) return <></>
 
   // Change handlers
@@ -68,6 +71,9 @@ const EditEventModal = (props) => {
   }
   const handleTitleChange = (newTitle) => {
     setEventTitle(newTitle)
+  }
+  const handlePointChange = (newPoint) => {
+    setPointNew(newPoint)
   }
   const handleEndDateChange = (newDate) => {
     setEventEndDate(newDate)
@@ -125,6 +131,12 @@ const EditEventModal = (props) => {
           placeholder="Location"
           onChange={handleLocationChange}
           value={eventLocation}
+        />
+        <TextInputForPoint
+          title="Point"
+          placeholder="Point"
+          onChange={handlePointChange}
+          value={pointNew}
         />
         <TextArea
           title="Description"

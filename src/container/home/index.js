@@ -75,7 +75,6 @@ const Home = () => {
     const fetchEvent = async () => {
       const eventsReceiver = await get('/event/all', {}, { authorization: token })
         .then((response) => {
-          console.log(response)
           if (response.data?.code !== 200) {
             LocalStorageUtils.removeItem('token')
             navigate('/')
