@@ -8,18 +8,14 @@ import Wrapper from '../../../components/Wrapper'
 import Flexbox from './../../../components/Flexbox'
 import TextArea from './../../../components/Input/TextArea'
 
-import { put } from '../../../utils/ApiCaller'
+import { post } from '../../../utils/ApiCaller'
 import { UserContext } from '../../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
-import { leadingZero } from '../../../utils/helper'
-import { compareDate } from '../../../utils/helper'
-import { formatTimeLate } from '../../../utils/helper'
+import { leadingZero, formatTimeLate, compareDate } from '../../../utils/helper'
 import productApi from '../../../utils/productApi'
-// import { getAllMembers } from '../AttendanceStatusModal'
 import CardSvg from './../../../asset/image/Card.svg'
 import AlertAttendance from './AlertAttendance'
 import ErrorAttendance from './ErrorAttend'
-// import { cardReader } from './../../../utils/CardReader'
 import { StyledCardTitle, StyledImage } from './style'
 
 const AttendanceCard = (props) => {
@@ -55,6 +51,7 @@ const AttendanceCard = (props) => {
       isLoading: false,
     })
   }
+  console.log('line 54', event)
   // 1297048744daa025a0e0f5a6a3256164
   window.addEventListener('error', function (error) {
     if (cardReader && cardReader.status) {
@@ -66,27 +63,27 @@ const AttendanceCard = (props) => {
     }
   })
   const onScan = async () => {
-    // setCardReader({
-    //   log: 'Start Scanning',
-    //   status: null,
-    //   isLoading: false,
-    // })
-
     console.log('Scanning')
     const arrayBufferToString = (buffer, encoding) => {
       var blob = new Blob([buffer], { type: 'text/plain' })
       var reader = new FileReader()
       reader.onload = async function (evt) {
         const Id = evt.target.result.split('=')
-        await fetchUserByID(Id[1]).then(async (user) => {
+        await getMemberByStudentId(Id[1]).then(async (user) => {
           setUser(user)
           await CheckAttendance(user, Id[1]).then((res) => {
             if (res) {
-              const resUpdatePoints = put(
-                '/api/user/' + `${Id[1]}` + '/change-point',
-                { points: 10 },
+              const formatPlusPoint = {
+                date: event.startTime,
+                memberId: user.id,
+                quantity: event.point,
+                reason: `plus for ${event.name} `,
+              }
+              const resUpdatePoints = post(
+                '/pluspoint/new',
+                formatPlusPoint,
                 {},
-                { token: token }
+                { authorization: token }
               ).catch((err) => console.log(err))
               getAllMembers()
               setAlertAttend(res)
@@ -134,7 +131,8 @@ const AttendanceCard = (props) => {
   }, [])
 
   const fetchUserByID = async (cardReader) => {
-    return await productApi.getUser(cardReader, token).then((res) => {
+    return await productApi.getUser(token).then((res) => {
+      console.log('check user: ', res)
       return res.data.data
     })
   }
@@ -145,7 +143,7 @@ const AttendanceCard = (props) => {
     )}:00`
 
     const TimeLate = formatTimeLate(event.start_time)
-    if (user.id === Id) {
+    if (user.studentId === Id) {
       if (compareDate(new Date(event.start_date), new Date()) === 0) {
         console.log('correct date')
         if (event.start_time <= TimeNow && TimeNow <= TimeLate) {

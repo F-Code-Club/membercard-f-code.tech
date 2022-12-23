@@ -71,6 +71,20 @@ class productApi {
       { authorization: token }
     ).catch((err) => console.log(err))
   }
+
+  /// new api
+
+  getMemberByStudentId(studentId, token) {
+    return get(
+      `/member/studentId/${studentId}`,
+      {},
+      {
+        authorization: token,
+      }
+    ).catch((err) => {
+      console.log(err)
+    })
+  }
 }
 
 export default new productApi()

@@ -10,8 +10,11 @@ import { UpdateButton } from '../Button'
 import Flexbox from '../Flexbox'
 import Wrapper from '../Wrapper'
 import theme from './../../theme'
+import Label from './Label'
 import TextArea from './TextArea'
-import TextInputVer2 from './TextInputVe2'
+import TextInputForPoint from './TextInputForPoint'
+
+// import TextInputVer2 from './TextInputVe2'
 
 const StyledSelectionBox = styled(Select)`
   width: 100%;
@@ -41,16 +44,12 @@ const styledIndicatorSeparator = styled(components.IndicatorSeparator)`
 const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
   const options = [
     {
-      value: 'late',
-      label: 'Late',
-    },
-    {
-      value: 'absent',
-      label: 'Absent',
-    },
-    {
       value: 'attended',
       label: 'Attended',
+    },
+    {
+      value: 'late',
+      label: 'Late',
     },
   ]
 
@@ -129,25 +128,39 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
     <Wrapper>
       {user && data && (
         <Flexbox flexDirection="column" alignItems="flex-end">
-          <Flexbox flexDirection="row" justifyContent="space-between" gap="20px">
-            <StyledSelectionBox
-              options={options}
-              onChange={(e) => {
-                handleStatusChange(e.value)
-              }}
-              components={{ Control: StyledControl, IndicatorSeparator: styledIndicatorSeparator }}
-              theme={(curTheme) => {
-                return {
-                  ...curTheme,
-                  borderRadius: 10,
-                }
-              }}
-            />
+          <Flexbox flexDirection="row" gap={10}>
+            <div style={{ width: '100%' }}>
+              <Label title="Status" />
+              <StyledSelectionBox
+                options={options}
+                title="User"
+                onChange={(e) => {
+                  handleStatusChange(e.value)
+                }}
+                components={{
+                  Control: StyledControl,
+                  IndicatorSeparator: styledIndicatorSeparator,
+                }}
+                theme={(curTheme) => {
+                  return {
+                    ...curTheme,
+                    borderRadius: 10,
+                  }
+                }}
+              />
+            </div>
+
             <Flexbox flexDirection="column" alignItems="flex-start">
-              <TextInputVer2 placeholder="Bonus or Minus" onChange={handleBonusChange} />
+              <TextInputForPoint
+                title="Point"
+                placeholder="Bonus or Minus"
+                onChange={handleBonusChange}
+                value={bonus}
+              />
               <TextCurrentBalance>Current balance: {data.active_point}</TextCurrentBalance>
             </Flexbox>
           </Flexbox>
+
           <TextArea
             title="Reason"
             placeholder="Please insert the reason here..."

@@ -66,17 +66,7 @@ const CreateEventModal = (props) => {
         )}:${leadingZero(endDate.getMinutes())}:00`
       ),
     }
-    // const event = {
-    //   name: title,
-    //   start_date: `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`,
-    //   end_date: `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`,
-    //   start_time: `${leadingZero(startDate.getHours())}:${leadingZero(startDate.getMinutes())}:00`,
-    //   end_time: `${leadingZero(endDate.getHours())}:${leadingZero(endDate.getMinutes())}:00`,
-    //   location: location,
-    //   description: description,
-    //   semester: generateSemester(startDate),
-    //   status: 'ongoing',
-    // }
+
     const token = LocalStorageUtils.getToken()
 
     const response = await post(
