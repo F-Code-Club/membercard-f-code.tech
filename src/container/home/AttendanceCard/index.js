@@ -11,7 +11,7 @@ import TextArea from './../../../components/Input/TextArea'
 import { post } from '../../../utils/ApiCaller'
 import { UserContext } from '../../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
-import { leadingZero, formatTimeLate, compareDate } from '../../../utils/helper'
+import { leadingZero, formatTimeLate, compareDate, formatTimeForApi } from '../../../utils/helper'
 import productApi from '../../../utils/productApi'
 import CardSvg from './../../../asset/image/Card.svg'
 import AlertAttendance from './AlertAttendance'
@@ -51,7 +51,7 @@ const AttendanceCard = (props) => {
       isLoading: false,
     })
   }
-  console.log('line 54', event)
+
   // 1297048744daa025a0e0f5a6a3256164
   window.addEventListener('error', function (error) {
     if (cardReader && cardReader.status) {
@@ -69,7 +69,8 @@ const AttendanceCard = (props) => {
       var reader = new FileReader()
       reader.onload = async function (evt) {
         const Id = evt.target.result.split('=')
-        await getMemberByStudentId(Id[1]).then(async (user) => {
+        console.log('line 72: ', Id)
+        await fetchUserByID(Id[1]).then(async (user) => {
           setUser(user)
           await CheckAttendance(user, Id[1]).then((res) => {
             if (res) {
@@ -126,12 +127,14 @@ const AttendanceCard = (props) => {
       }
     }
 
-    onScan()
+    if (data.show) {
+      onScan()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [data.show])
 
-  const fetchUserByID = async (cardReader) => {
-    return await productApi.getUser(token).then((res) => {
+  const fetchUserByID = async (studentId) => {
+    return await productApi.getMemberByStudentId(studentId, token).then((res) => {
       console.log('check user: ', res)
       return res.data.data
     })
@@ -142,14 +145,25 @@ const AttendanceCard = (props) => {
       new Date().getMinutes()
     )}:00`
 
-    const TimeLate = formatTimeLate(event.start_time)
+    const TimeLate = formatTimeLate(event.startTime)
+
     if (user.studentId === Id) {
-      if (compareDate(new Date(event.start_date), new Date()) === 0) {
+      if (compareDate(new Date(event.startTime), new Date()) === 0) {
         console.log('correct date')
-        if (event.start_time <= TimeNow && TimeNow <= TimeLate) {
+        if (formatTimeForApi(event.startTime) <= TimeNow && TimeNow <= TimeLate) {
           console.log('present')
-          const result = await productApi.setAttendance(user.id, event.id, 'attended', token)
-          if (result.data.status === 400) {
+          const formatAttendance = {
+            date: event.startTime,
+            eventId: event.id,
+            eventName: event.name,
+            lastName: user.lastName,
+            memberId: user.id,
+            state: 'ON_TIME',
+            studentId: user.studentId,
+          }
+          const result = await productApi.setAttendance(formatAttendance, token)
+          console.log('line 163: ', result)
+          if (result.data.code === 400) {
             setErrors({ show: true, errors: result.data.message, status: 'warning' })
             return {
               show: false,
@@ -161,9 +175,18 @@ const AttendanceCard = (props) => {
             status: 'present',
           }
         } else {
-          const result = await productApi.setAttendance(user.id, event.id, 'late', token)
+          const formatAttendance = {
+            date: event.startTime,
+            eventId: event.id,
+            eventName: event.name,
+            lastName: user.lastName,
+            memberId: user.id,
+            state: 'LATE',
+            studentId: user.studentId,
+          }
+          const result = await productApi.setAttendance(formatAttendance, token)
 
-          if (result.data.status === 400) {
+          if (result.data.code === 400) {
             setErrors({ show: true, errors: result.data.message, status: 'warning' })
             return {
               show: false,

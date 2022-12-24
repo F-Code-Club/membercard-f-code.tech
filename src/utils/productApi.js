@@ -63,13 +63,10 @@ class productApi {
       { authorization: token }
     ).catch((err) => console.log(err))
   }
-  setAttendance(memberId, eventId, status, token) {
-    return post(
-      '/api/check-attendance',
-      { member_id: memberId, event_id: eventId, status: status },
-      {},
-      { authorization: token }
-    ).catch((err) => console.log(err))
+  setAttendance(formatAttend, token) {
+    return post('/attendance/new', formatAttend, {}, { authorization: token }).catch((err) =>
+      console.log(err)
+    )
   }
 
   /// new api
@@ -77,6 +74,17 @@ class productApi {
   getMemberByStudentId(studentId, token) {
     return get(
       `/member/studentId/${studentId}`,
+      {},
+      {
+        authorization: token,
+      }
+    ).catch((err) => {
+      console.log(err)
+    })
+  }
+  getTotalPointOfMember(memberId, token) {
+    return get(
+      `/pluspoint/memberId/${memberId}`,
       {},
       {
         authorization: token,

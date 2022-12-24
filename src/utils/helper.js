@@ -189,19 +189,20 @@ export const formatTime = (time) => {
 }
 export const formatTimeForApi = (time) => {
   if (!time) return '00:00:00'
-
-  const hours = leadingZero(time.getHours())
-  const minutes = leadingZero(time.getMinutes())
-  const seconds = leadingZero(time.getSeconds())
+  let newTime = new Date(time)
+  const hours = leadingZero(newTime.getHours())
+  const minutes = leadingZero(newTime.getMinutes())
+  const seconds = leadingZero(newTime.getSeconds())
 
   return `${hours}:${minutes}:${seconds}`
 }
 export const formatTimeLate = (time) => {
   if (!time) return '00:00:00'
+  let newTime = new Date(time)
 
-  const hours = leadingZero(convertStringToTime(time).getHours())
-  const minutes = leadingZero(convertStringToTime(time).getMinutes() + 5)
-  const seconds = leadingZero(convertStringToTime(time).getSeconds())
+  const hours = leadingZero(newTime.getHours())
+  const minutes = leadingZero(newTime.getMinutes() + 15)
+  const seconds = leadingZero(newTime.getSeconds())
 
   return `${hours}:${minutes}:${seconds}`
 }

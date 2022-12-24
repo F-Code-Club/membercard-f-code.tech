@@ -112,7 +112,6 @@ const ViewEvent = (props) => {
   }
   //get all memeber
   const getAllMembers = async () => {
-    console.log('run')
     const token = LocalStorageUtils.getToken()
     const result = await get(`/attendance/eventId/${event.id}`, {}, { authorization: token })
       .then((response) => {
@@ -212,6 +211,7 @@ const ViewEvent = (props) => {
         show={showListAttendance.show}
         onClose={closeViewList}
         eventId={current.id}
+        event={current}
       />
     </Modal>
   )

@@ -17,7 +17,7 @@ import { SubHeading as SubTitle } from './style'
 
 const SubModal = (props) => {
   const { eventId, subTitle } = props
-  console.log('line 20: ', props)
+
   const UpdateAttend = async () => {
     const token = LocalStorageUtils.getToken()
 

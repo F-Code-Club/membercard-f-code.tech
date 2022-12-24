@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import Flexbox from '../../../components/Flexbox'
 import Modal from '../../../components/Modal'
 
 // import { get } from '../../../utils/ApiCaller'
-import { UserContext } from '../../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../../utils/LocalStorageUtils'
 import theme from './../../../theme'
 import StatusUpdater from './StatusUpdater/index'
@@ -29,9 +28,8 @@ const MemberStatus = (props) => {
 }
 
 const AttendanceStatusModal = (props) => {
-  const { show, onClose, eventId, dataMember, getAllMembers } = props
+  const { show, onClose, eventId, dataMember, getAllMembers, event } = props
   const token = LocalStorageUtils.getItem('token')
-  const { setGetAllMembers } = useContext(UserContext)
 
   // const getAllMembers = async () => {
   //   const result = await get(
@@ -111,6 +109,7 @@ const AttendanceStatusModal = (props) => {
         })}
       </Flexbox>
       <StatusUpdater
+        event={event}
         getMember={getAllMembers}
         eventId={eventId}
         show={statusUpdater}

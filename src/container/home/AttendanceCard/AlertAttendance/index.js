@@ -25,8 +25,8 @@ const AlertAttendance = (props) => {
       {user && (
         <Flexbox justifyContent="center" flexDirection="column" alignItems="center">
           <StyledCardTitle> Welcome</StyledCardTitle>
-          <StyledModalTitle>{user.first_name + ' ' + user.last_name}</StyledModalTitle>
-          <SubHeading>{user.member_id}</SubHeading>
+          <StyledModalTitle>{user.firstName + ' ' + user.lastName}</StyledModalTitle>
+          <SubHeading>{user.studentId}</SubHeading>
           {status === 'present' ? <CheckMarkButton /> : <WarningButton />}
           {status === 'present' ? (
             <StyledStatusTitle>Present!</StyledStatusTitle>
@@ -37,9 +37,6 @@ const AlertAttendance = (props) => {
       )}
     </AttendanceModalAlert>
   )
-  //   title={user.first_name}
-  //   subTitle={user.member_id}
-  //   eventId = { eventId }
 }
 
 export default AlertAttendance

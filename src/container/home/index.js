@@ -80,7 +80,7 @@ const Home = () => {
             navigate('/')
             return []
           }
-          console.log('line 89: ', response.data.data)
+
           return response.data.data
         })
         .catch((e) => {
@@ -144,7 +144,7 @@ const Home = () => {
   const onSubmitEdit = async (newEvent) => {
     const token = LocalStorageUtils.getToken()
     const result = await put(`/event`, { ...newEvent }, {}, { authorization: token })
-    console.log('line 154', result)
+
     if (result.status === 200 && result.data.code === 200) {
       navigate('/auth', { replace: true })
     }

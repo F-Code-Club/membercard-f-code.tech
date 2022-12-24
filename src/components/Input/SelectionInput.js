@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Select, { components } from 'react-select'
 import styled from 'styled-components'
 
-import { put } from '../../utils/ApiCaller'
+import { put, post } from '../../utils/ApiCaller'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import productApi from '../../utils/productApi'
 import { UpdateButton } from '../Button'
@@ -41,15 +41,16 @@ const StyledControl = styled(components.Control)`
 const styledIndicatorSeparator = styled(components.IndicatorSeparator)`
   display: none;
 `
-const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
+const SelectionInput = ({ user, eventId, memberId, onClose, getMember, event }) => {
+  console.log(event)
   const options = [
     {
-      value: 'attended',
-      label: 'Attended',
+      value: 'ON_TIME',
+      label: 'ON_TIME',
     },
     {
-      value: 'late',
-      label: 'Late',
+      value: 'LATE',
+      label: 'LATE',
     },
   ]
 
@@ -58,7 +59,7 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
   const handleBonusChange = (newBonus) => {
     setBonus(newBonus)
   }
-  const [statusUpdate, setStatusUpdate] = useState('')
+  const [statusUpdate, setStatusUpdate] = useState(user.state)
   const handleStatusChange = (newStatus) => {
     setStatusUpdate(newStatus)
   }
@@ -70,21 +71,22 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
   const UpdateAttend = async () => {
     const token = LocalStorageUtils.getToken()
     const formateAttendUpdate = {
-      date: 'string',
-      eventId: 0,
-      eventName: 'string',
-      id: 0,
-      lastName: 'string',
-      memberId: 0,
-      state: 'LATE',
-      studentId: 'string',
+      date: event.start,
+      eventId: eventId,
+      eventName: event.name,
+      id: user.id,
+      lastName: user.lastName,
+      memberId: user.memberId,
+      state: statusUpdate,
+      studentId: user.studentId,
     }
-    const formatUpdatePoint = {
-      date: 'string',
-      id: 0,
-      memberId: 0,
-      quantity: 0,
-      reason: 'string',
+
+    console.log(reason)
+    const formatPlusPoint = {
+      date: event.start,
+      memberId: user.memberId,
+      quantity: bonus,
+      reason: reason,
     }
     const resUpdateAttend = await put(
       '/attendance',
@@ -93,18 +95,21 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
       { authorization: token }
     )
       .then((res) => {
+        console.log(res)
         if (res.status === 200) {
           const result = getMember()
         }
       })
       .catch((err) => console.log(err))
 
-    const resUpdatePoints = await put(
-      '/pluspoint',
-      formatUpdatePoint,
-      {},
-      { authorization: token }
-    ).catch((err) => console.log(err))
+    const resUpdatePoints = post('/pluspoint/new', formatPlusPoint, {}, { authorization: token })
+      .then((res) => {
+        console.log(res)
+        if (res.status === 200) {
+          const result = getMember()
+        }
+      })
+      .catch((err) => console.log(err))
 
     onClose()
   }
@@ -112,21 +117,31 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
     const getUserInfo = async () => {
       const token = LocalStorageUtils.getToken()
       const result = await productApi
-        .getUser(token)
+        .getTotalPointOfMember(user.memberId, token)
         .then((result) => {
           return result.data.data
         })
         .catch((err) => console.log(err))
-      setData(result)
+      await setData(result)
     }
-    getUserInfo()
+    if (user) {
+      getUserInfo()
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  console.log('line 109: ', data)
+
+  let newPoints = 0
+  if (data?.length !== 0) {
+    for (let i = 0; i < data?.length; i++) {
+      let quantity = data[i].quantity
+      newPoints += quantity
+    }
+  }
+
   return (
     <Wrapper>
-      {user && data && (
+      {user && (
         <Flexbox flexDirection="column" alignItems="flex-end">
           <Flexbox flexDirection="row" gap={10}>
             <div style={{ width: '100%' }}>
@@ -155,9 +170,8 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember }) => {
                 title="Point"
                 placeholder="Bonus or Minus"
                 onChange={handleBonusChange}
-                value={bonus}
               />
-              <TextCurrentBalance>Current balance: {data.active_point}</TextCurrentBalance>
+              <TextCurrentBalance>Current balance: {newPoints} point </TextCurrentBalance>
             </Flexbox>
           </Flexbox>
 

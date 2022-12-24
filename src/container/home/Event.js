@@ -70,12 +70,11 @@ export class EventEntity {
   static INACTIVE = 'inactive'
   constructor(data) {
     //handle change from oldAPI to newAPI
-    const eventStartTime = new Date(data.startTime)
-    const eventEndTime = new Date(data.endTime)
+
     const startDateNewApi = data.startTime.split('T')[0]
     const endDateNewApi = data.endTime.split('T')[0]
-    const startTime = formatTimeForApi(eventStartTime)
-    const endTime = formatTimeForApi(eventEndTime)
+    const startTime = formatTimeForApi(data.startTime)
+    const endTime = formatTimeForApi(data.endTime)
     //
     this.id = data.id
     this.name = data.name
