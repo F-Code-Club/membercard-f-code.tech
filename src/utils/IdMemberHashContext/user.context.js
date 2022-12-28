@@ -21,7 +21,10 @@ export const UserContext = createContext({
   setHashId: () => null,
   setUser: () => null,
   setEventId: () => null,
+  setTimeLate: () => null,
+
   setGetAllMembers: () => null,
+  timeLate: null,
   hashId: null,
   user: null,
   eventId: null,
@@ -34,8 +37,11 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [getAllMembers, setGetAllMembers] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [timeLate, setTimeLate] = useState(null)
 
   const value = {
+    timeLate,
+    setTimeLate,
     hashId,
     setHashId,
     user,

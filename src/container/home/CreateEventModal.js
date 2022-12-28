@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 
 import { GreenButton } from '../../components/Button'
 import DateInput from '../../components/Input/DateInput'
@@ -11,6 +11,7 @@ import Divider from './../../components/Divider'
 import Flexbox from './../../components/Flexbox'
 
 import { post } from '../../utils/ApiCaller'
+import { UserContext } from '../../utils/IdMemberHashContext/user.context'
 import LocalStorageUtils from '../../utils/LocalStorageUtils'
 import { generateStingToISOtime, leadingZero } from '../../utils/helper'
 // import { generateSemester, leadingZero } from '../../utils/helper'
@@ -18,7 +19,7 @@ import { ConfirmationParagraph } from './style'
 
 const CreateEventModal = (props) => {
   const { show, onClose, onSubmit } = props
-
+  const { setTimeLate, timeLate } = useContext(UserContext)
   const [title, setTitle] = useState('')
   const handleTitleChange = (newTitle) => {
     setTitle(newTitle)
@@ -28,7 +29,9 @@ const CreateEventModal = (props) => {
   const handleStartDateChange = (newDate) => {
     setStartDate(newDate)
   }
-
+  const handleTimeLate = (timeLate) => {
+    setTimeLate(timeLate)
+  }
   const [endDate, setEndDate] = useState(new Date())
   const handleEndDateChange = (newDate) => {
     setEndDate(newDate)
@@ -80,7 +83,7 @@ const CreateEventModal = (props) => {
       // eslint-disable-next-line no-console
       console.error(err)
     )
-    console.log(response)
+
     if (response.status === 200 && response.data.code === 200) {
       onSubmit()
     }
@@ -133,12 +136,21 @@ const CreateEventModal = (props) => {
           />
         </Flexbox>
         <ConfirmationParagraph startDate={startDate} endDate={endDate} />
-        <TextInput
-          title="Location"
-          placeholder="Location"
-          onChange={handleLocationChange}
-          value={location}
-        />
+        <Flexbox gap={10} justifyContent="space-between">
+          <TextInput
+            title="Location"
+            placeholder="Location"
+            onChange={handleLocationChange}
+            value={location}
+          />
+          <TextInputForPoint
+            title="Time Late"
+            placeholder="Insert Time Late here..."
+            onChange={handleTimeLate}
+            value={timeLate}
+          />
+        </Flexbox>
+
         <TextArea
           title="Description"
           placeholder="Your description goes here"

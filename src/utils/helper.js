@@ -196,12 +196,19 @@ export const formatTimeForApi = (time) => {
 
   return `${hours}:${minutes}:${seconds}`
 }
-export const formatTimeLate = (time) => {
+export const formatTimeLate = (time, timeLate) => {
   if (!time) return '00:00:00'
   let newTime = new Date(time)
-
+  console.log('line 202', timeLate)
+  console.log('line 201', timeLateCheck)
+  let timeLateCheck
+  if (timeLate) {
+    timeLateCheck = timeLate
+  } else {
+    timeLateCheck = 15
+  }
   const hours = leadingZero(newTime.getHours())
-  const minutes = leadingZero(newTime.getMinutes() + 15)
+  const minutes = leadingZero(newTime.getMinutes() + parseInt(timeLateCheck))
   const seconds = leadingZero(newTime.getSeconds())
 
   return `${hours}:${minutes}:${seconds}`

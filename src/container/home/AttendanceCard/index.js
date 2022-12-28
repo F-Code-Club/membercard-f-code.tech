@@ -19,7 +19,7 @@ import ErrorAttendance from './ErrorAttend'
 import { StyledCardTitle, StyledImage } from './style'
 
 const AttendanceCard = (props) => {
-  const { user, setUser } = useContext(UserContext)
+  const { user, setUser, timeLate } = useContext(UserContext)
 
   const token = LocalStorageUtils.getToken()
   //, openViewList
@@ -69,7 +69,7 @@ const AttendanceCard = (props) => {
       var reader = new FileReader()
       reader.onload = async function (evt) {
         const Id = evt.target.result.split('=')
-        console.log('line 72: ', Id)
+
         await fetchUserByID(Id[1]).then(async (user) => {
           if (user.code === 400) {
             setErrors({ show: true, errors: result.data.message, status: 'warning' })
@@ -153,9 +153,12 @@ const AttendanceCard = (props) => {
       new Date().getMinutes()
     )}:00`
 
-    const TimeLate = formatTimeLate(event.startTime)
+    const TimeLate = formatTimeLate(event.startTime, timeLate)
+    console.log('line 157', TimeLate)
+    var md5 = require('md5')
+    let hashId = md5(user.studentId)
 
-    if (user.studentId === Id) {
+    if (hashId === Id) {
       if (compareDate(new Date(event.startTime), new Date()) === 0) {
         console.log('correct date')
         if (formatTimeForApi(event.startTime) <= TimeNow && TimeNow <= TimeLate) {
@@ -170,7 +173,7 @@ const AttendanceCard = (props) => {
             studentId: user.studentId,
           }
           const result = await productApi.setAttendance(formatAttendance, token)
-          console.log('line 163: ', result)
+
           if (result.data.code === 400) {
             setErrors({ show: true, errors: result.data.message, status: 'warning' })
             return {

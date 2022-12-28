@@ -12,7 +12,9 @@ import Wrapper from '../Wrapper'
 import theme from './../../theme'
 import Label from './Label'
 import TextArea from './TextArea'
-import TextInputForPoint from './TextInputForPoint'
+import TextInput from './TextInput'
+
+// import TextInputForPoint from './TextInputForPoint'
 
 // import TextInputVer2 from './TextInputVe2'
 
@@ -42,7 +44,6 @@ const styledIndicatorSeparator = styled(components.IndicatorSeparator)`
   display: none;
 `
 const SelectionInput = ({ user, eventId, memberId, onClose, getMember, event }) => {
-  console.log(event)
   const options = [
     {
       value: 'ON_TIME',
@@ -81,7 +82,6 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember, event }) 
       studentId: user.studentId,
     }
 
-    console.log(reason)
     const formatPlusPoint = {
       date: event.start,
       memberId: user.memberId,
@@ -95,7 +95,6 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember, event }) 
       { authorization: token }
     )
       .then((res) => {
-        console.log(res)
         if (res.status === 200) {
           const result = getMember()
         }
@@ -104,7 +103,6 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember, event }) 
 
     const resUpdatePoints = post('/pluspoint/new', formatPlusPoint, {}, { authorization: token })
       .then((res) => {
-        console.log(res)
         if (res.status === 200) {
           const result = getMember()
         }
@@ -166,11 +164,7 @@ const SelectionInput = ({ user, eventId, memberId, onClose, getMember, event }) 
             </div>
 
             <Flexbox flexDirection="column" alignItems="flex-start">
-              <TextInputForPoint
-                title="Point"
-                placeholder="Bonus or Minus"
-                onChange={handleBonusChange}
-              />
+              <TextInput title="Point" placeholder="Bonus or Minus" onChange={handleBonusChange} />
               <TextCurrentBalance>Current balance: {newPoints} point </TextCurrentBalance>
             </Flexbox>
           </Flexbox>

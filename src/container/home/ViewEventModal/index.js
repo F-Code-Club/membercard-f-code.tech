@@ -115,7 +115,6 @@ const ViewEvent = (props) => {
     const token = LocalStorageUtils.getToken()
     const result = await get(`/attendance/eventId/${event.id}`, {}, { authorization: token })
       .then((response) => {
-        console.log(response)
         if (response.status === 200) {
           return response.data.data
         }

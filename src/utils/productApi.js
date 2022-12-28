@@ -79,7 +79,7 @@ class productApi {
         authorization: token,
       }
     ).catch((err) => {
-      console.log(err)
+      console.log('line 43: ', err)
     })
   }
   getTotalPointOfMember(memberId, token) {
