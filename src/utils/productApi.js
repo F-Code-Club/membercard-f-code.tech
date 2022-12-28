@@ -73,7 +73,7 @@ class productApi {
 
   getMemberByStudentId(studentId, token) {
     return get(
-      `/member/studentId/${studentId}`,
+      `/card/${studentId}`,
       {},
       {
         authorization: token,

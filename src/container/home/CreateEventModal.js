@@ -80,7 +80,7 @@ const CreateEventModal = (props) => {
       // eslint-disable-next-line no-console
       console.error(err)
     )
-
+    console.log(response)
     if (response.status === 200 && response.data.code === 200) {
       onSubmit()
     }

@@ -59,6 +59,7 @@ const onChangeStatus = async (event) => {
     { authorization: token }
     // eslint-disable-next-line no-console
   ).catch((err) => console.error(err))
+  console.log(response)
   return response
 }
 
@@ -121,9 +122,9 @@ export class EventEntity {
           this.status = EventEntity.ENDED
         }
       }
-      if (this.status !== oldStatus) {
-        onChangeStatus({ ...data, status: this.status })
-      }
+      // if (this.status !== oldStatus) {
+      //   onChangeStatus({ ...data, status: this.status })
+      // }
     } else {
       this.status = data.status
     }

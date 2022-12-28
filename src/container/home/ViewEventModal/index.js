@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { BlueButton, Button, GreenButton, RedButton } from '../../../components/Button'
+import { Button, GreenButton } from '../../../components/Button'
 import Flexbox from '../../../components/Flexbox'
 import TextInput from '../../../components/Input/TextInput'
 import TextInputForPoint from '../../../components/Input/TextInputForPoint'
@@ -110,7 +110,7 @@ const ViewEvent = (props) => {
       show: false,
     })
   }
-  //get all memeber
+  //get all member
   const getAllMembers = async () => {
     const token = LocalStorageUtils.getToken()
     const result = await get(`/attendance/eventId/${event.id}`, {}, { authorization: token })
@@ -187,14 +187,16 @@ const ViewEvent = (props) => {
         <GreenButton onClick={openAttendanceCard} D>
           Check attendance
         </GreenButton>
-        <Flexbox gap={10}>
-          <BlueButton fullWidth={true} onClick={openAttendanceCard}>
-            Start
-          </BlueButton>
-          <RedButton fullWidth={true} onClick={openAttendanceCard}>
-            End
-          </RedButton>
-        </Flexbox>
+        {/*
+          <Flexbox gap={10}>
+            <BlueButton fullWidth={true} onClick={openAttendanceCard}>
+              Start
+            </BlueButton>
+            <RedButton fullWidth={true} onClick={openAttendanceCard}>
+              End
+            </RedButton>
+          </Flexbox>
+  */}
         <Button onClick={openViewList}>View List</Button>
         <Button onClick={() => onToggleEdit(current)}>Edit Event</Button>
       </Flexbox>

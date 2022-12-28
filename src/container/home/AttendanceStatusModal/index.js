@@ -16,7 +16,7 @@ const MemberStatus = (props) => {
     <StyledWrapper onClick={onClick}>
       <Flexbox justifyContent="space-between" alignItems="center">
         <Flexbox gap={5} justifyContent="center" flexDirection="column">
-          <Heading>{data.lastName}</Heading>
+          <Heading>{data.firstName + ' ' + data.lastName}</Heading>
           <SubHeading>{data.studentId}</SubHeading>
         </Flexbox>
         <StatusBadge color={status.color} textColor={status.textColor}>
@@ -71,16 +71,6 @@ const AttendanceStatusModal = (props) => {
       color: theme.yellow2,
       textColor: theme.yellow1,
       statusString: 'late',
-    },
-    ABSENT: {
-      color: theme.red3,
-      textColor: theme.red1,
-      statusString: 'absent',
-    },
-    'not yet': {
-      color: theme.slate3,
-      textColor: theme.slate4,
-      statusString: 'not yet',
     },
   }
 

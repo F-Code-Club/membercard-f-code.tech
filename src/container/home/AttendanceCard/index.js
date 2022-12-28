@@ -71,25 +71,33 @@ const AttendanceCard = (props) => {
         const Id = evt.target.result.split('=')
         console.log('line 72: ', Id)
         await fetchUserByID(Id[1]).then(async (user) => {
-          setUser(user)
-          await CheckAttendance(user, Id[1]).then((res) => {
-            if (res) {
-              const formatPlusPoint = {
-                date: event.startTime,
-                memberId: user.id,
-                quantity: event.point,
-                reason: `plus for ${event.name} `,
-              }
-              const resUpdatePoints = post(
-                '/pluspoint/new',
-                formatPlusPoint,
-                {},
-                { authorization: token }
-              ).catch((err) => console.log(err))
-              getAllMembers()
-              setAlertAttend(res)
+          if (user.code === 400) {
+            setErrors({ show: true, errors: result.data.message, status: 'warning' })
+            return {
+              show: false,
+              status: '',
             }
-          })
+          } else {
+            setUser(user)
+            await CheckAttendance(user, Id[1]).then((res) => {
+              if (res) {
+                const formatPlusPoint = {
+                  date: event.startTime,
+                  memberId: user.id,
+                  quantity: event.point,
+                  reason: `plus for ${event.name} `,
+                }
+                const resUpdatePoints = post(
+                  '/pluspoint/new',
+                  formatPlusPoint,
+                  {},
+                  { authorization: token }
+                ).catch((err) => console.log(err))
+                getAllMembers()
+                setAlertAttend(res)
+              }
+            })
+          }
         })
 
         setCardReader({ log: `${Id[1]}`, status: '', isLoading: true })
@@ -187,7 +195,7 @@ const AttendanceCard = (props) => {
           const result = await productApi.setAttendance(formatAttendance, token)
 
           if (result.data.code === 400) {
-            setErrors({ show: true, errors: result.data.message, status: 'warning' })
+            setErrors({ show: true, errors: result.data.message, status: 'error' })
             return {
               show: false,
               status: '',

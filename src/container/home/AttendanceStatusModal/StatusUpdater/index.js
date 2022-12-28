@@ -9,10 +9,10 @@ import SubModal from './../../../../components/Modal/SubModal/index'
 
 const StatusUpdater = (props) => {
   const { user, show, onClose, eventId, getMember, event } = props
-
+  console.log('Line 12: ', user)
   return (
     <SubModal
-      title={user.lastName}
+      title={` ${user.firstName} ${user.lastName} `}
       subTitle={user.studentId}
       show={show}
       eventId={eventId}
