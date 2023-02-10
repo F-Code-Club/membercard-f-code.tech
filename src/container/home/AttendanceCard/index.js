@@ -81,18 +81,6 @@ const AttendanceCard = (props) => {
             setUser(user)
             await CheckAttendance(user, Id[1]).then((res) => {
               if (res) {
-                const formatPlusPoint = {
-                  date: event.startTime,
-                  memberId: user.id,
-                  quantity: event.point,
-                  reason: `plus for ${event.name} `,
-                }
-                const resUpdatePoints = post(
-                  '/pluspoint/new',
-                  formatPlusPoint,
-                  {},
-                  { authorization: token }
-                ).catch((err) => console.log(err))
                 getAllMembers()
                 setAlertAttend(res)
               }
@@ -116,7 +104,10 @@ const AttendanceCard = (props) => {
       ndef.addEventListener('reading', ({ message }) => {
         if (message.records[0].data == null) {
           toastError('data is null')
-        } else arrayBufferToString(message.records[0].data.buffer, 'UTF-8')
+          return
+        } else {
+          arrayBufferToString(message.records[0].data.buffer, 'UTF-8')
+        }
       })
     } catch (error) {
       setCardReader({ log: 'Argh! ' + error, status: error.message, isLoading: false })
@@ -154,7 +145,7 @@ const AttendanceCard = (props) => {
     )}:00`
 
     const TimeLate = formatTimeLate(event.startTime, timeLate)
-    console.log('line 157', TimeLate)
+
     var md5 = require('md5')
     let hashId = md5(user.studentId)
 
@@ -173,7 +164,18 @@ const AttendanceCard = (props) => {
             studentId: user.studentId,
           }
           const result = await productApi.setAttendance(formatAttendance, token)
-
+          const formatPlusPoint = {
+            date: event.startTime,
+            memberId: user.id,
+            quantity: event.point,
+            reason: `plus for ${event.name} `,
+          }
+          const resUpdatePoints = post(
+            '/pluspoint/new',
+            formatPlusPoint,
+            {},
+            { authorization: token }
+          ).catch((err) => console.log(err))
           if (result.data.code === 400) {
             setErrors({ show: true, errors: result.data.message, status: 'warning' })
             return {
@@ -186,6 +188,7 @@ const AttendanceCard = (props) => {
             status: 'present',
           }
         } else {
+          console.log('run latest update')
           const formatAttendance = {
             date: event.startTime,
             eventId: event.id,
@@ -196,7 +199,18 @@ const AttendanceCard = (props) => {
             studentId: user.studentId,
           }
           const result = await productApi.setAttendance(formatAttendance, token)
-
+          const formatPlusPoint = {
+            date: event.startTime,
+            memberId: user.id,
+            quantity: event.point / 2,
+            reason: `plus for ${event.name} `,
+          }
+          const resUpdatePoints = post(
+            '/pluspoint/new',
+            formatPlusPoint,
+            {},
+            { authorization: token }
+          ).catch((err) => console.log(err))
           if (result.data.code === 400) {
             setErrors({ show: true, errors: result.data.message, status: 'error' })
             return {
