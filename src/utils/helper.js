@@ -199,8 +199,7 @@ export const formatTimeForApi = (time) => {
 export const formatTimeLate = (time, timeLate) => {
   if (!time) return '00:00:00'
   let newTime = new Date(time)
-  console.log('line 202', timeLate)
-  console.log('line 201', timeLateCheck)
+
   let timeLateCheck
   if (timeLate) {
     timeLateCheck = timeLate

@@ -24,7 +24,7 @@ const CreateEventModal = (props) => {
   const handleTitleChange = (newTitle) => {
     setTitle(newTitle)
   }
-
+  const [stfate, setState] = useState()
   const [startDate, setStartDate] = useState(new Date())
   const handleStartDateChange = (newDate) => {
     setStartDate(newDate)

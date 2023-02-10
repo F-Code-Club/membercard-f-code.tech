@@ -14,7 +14,7 @@ import {
 } from './style'
 
 const Auth = () => {
-  const ApiUrl = process.env.REACT_APP_API_URL + '/login/member'
+  const ApiUrl = process.env.REACT_APP_API_URL + '/login/member/card'
   // get token from the url after successful signed in
   let location = useLocation()
   const UrlParams = new URLSearchParams(location.search)
