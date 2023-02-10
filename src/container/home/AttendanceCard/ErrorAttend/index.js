@@ -11,10 +11,10 @@ import { StyledStatusWarning, SubHeading2, StyledStatusError } from '../style'
 
 const ErrorAttendance = (props) => {
   const { user, errors, onClose } = props
-
+  console.log(errors.status === 'error')
   return (
     <AttendanceModalAlert show={errors.show} onClose={onClose}>
-      {user && (
+      {(user || errors) && (
         <Flexbox justifyContent="center" flexDirection="column" alignItems="center">
           {errors.status === 'error' ? <ErrorButton /> : <WarningButton />}
           {errors.status === 'error' ? (

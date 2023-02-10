@@ -71,8 +71,8 @@ const AttendanceCard = (props) => {
         const Id = evt.target.result.split('=')
 
         await fetchUserByID(Id[1]).then(async (user) => {
-          if (user.code === 400) {
-            setErrors({ show: true, errors: result.data.message, status: 'warning' })
+          if (user === null) {
+            setErrors({ show: true, errors: 'Unknown user', status: 'error' })
             return {
               show: false,
               status: '',
