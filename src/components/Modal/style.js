@@ -16,7 +16,7 @@ const StyledModal = styled.div`
   z-index: 999;
 `
 const StyledModalContent = styled.div`
-  padding: 2rem;
+  padding: 1rem 2rem;
   background-color: ${theme.plum};
   border-radius: 10px;
 `
