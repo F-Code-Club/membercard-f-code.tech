@@ -160,7 +160,7 @@ const Home = () => {
   return (
     <HomeWrapper>
       <HeaderWrapper justifyContent="space-between" alignItems="center">
-        <HeaderBrand src={FCodeLogo} size={120} />
+        <HeaderBrand src={FCodeLogo} />
         <ProfileInformation user={currentUser} onLogout={onLogout} />
       </HeaderWrapper>
       <ContentWrapper>

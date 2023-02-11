@@ -41,7 +41,7 @@ export const CreateButton = (props) => {
 }
 
 export const HeaderWrapper = styled(Flexbox)`
-  // margin-bottom: 10px;
+  margin-bottom: 10px;
 `
 
 const StyledHeaderBrand = styled.div`
