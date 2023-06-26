@@ -44,6 +44,8 @@ export const StatusBadge = styled.div`
   justify-content: center;
   align-items: center;
   width: 80px;
+  min-width: 80px;
+
   height: 25px;
   border-radius: 5px;
   background-color: ${(props) => props.color};

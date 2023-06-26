@@ -14,13 +14,13 @@ const MemberStatus = (props) => {
 
   return (
     <StyledWrapper onClick={onClick}>
-      <Flexbox justifyContent="space-between" alignItems="center">
+      <Flexbox justifyContent="space-between" alignItems="center" gap="5px">
         <Flexbox gap={5} justifyContent="center" flexDirection="column">
           <Heading>{data.firstName + ' ' + data.lastName}</Heading>
           <SubHeading>{data.studentId}</SubHeading>
         </Flexbox>
         <StatusBadge color={status.color} textColor={status.textColor}>
-          {data.state}
+          {data.state == 'ON_TIME' ? 'ON TIME' : 'LATE'}
         </StatusBadge>
       </Flexbox>
     </StyledWrapper>
